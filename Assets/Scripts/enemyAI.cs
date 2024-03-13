@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class enemyAI : MonoBehaviour {
@@ -14,9 +15,12 @@ public class enemyAI : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         transform.LookAt(player.transform);
         transform.position += transform.forward * walkspeed * Time.deltaTime;
+    }
+
+    private void FixedUpdate() {
+
     }
 }

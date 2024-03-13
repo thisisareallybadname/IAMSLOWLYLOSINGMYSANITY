@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -19,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 movement;
     private Vector3 yMovement;
     private Vector3 dashMovement;
+    private Boolean isDashing;
 
     private float movementSpeed;
     private float gravity;
@@ -59,9 +61,6 @@ public class PlayerMovement : MonoBehaviour
         controller = GetComponent<CharacterController>();
 
         movement = (transform.forward * Input.GetAxis("Vertical")) + (transform.right * Input.GetAxis("Horizontal"));
-
-        Debug.Log(touchingGround);
-
         updateCamera();
 
         if (touchingGround && Input.GetAxis("Jump") > 0.25f)
@@ -94,8 +93,8 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void updateVMEffects() { 
-        VM.transform.localPosition = Vector3.Lerp(VM.transform.localPosition, bobEffect(movement.magnitude * 0.01f, 0.01f), 3 * Time.deltaTime);
-        VM.transform.localRotation = Quaternion.Euler(0, 0, -bobY(movement.magnitude * 2f, 0.01f) + 1.15f);
+        VM.transform.localPosition = Vector3.Lerp(VM.transform.localPosition, bobEffect(movement.magnitude * 0.01f, 0.05f) - new Vector3(0, 0.5f, 0), 3 * Time.deltaTime);
+        VM.transform.localRotation = Quaternion.Euler(0, 0, -bobY(movement.magnitude * 2f, 0.05f) + 1.15f);
         tick += 1f; // TO BE REPLACED
     }
 
@@ -116,7 +115,7 @@ public class PlayerMovement : MonoBehaviour
 
         updateVMEffects();
 
-        playerCam.transform.localPosition = cameraBob;
+        playerCam.transform.localPosition = new Vector3(0, 1f, 0) + cameraBob;
         playerCam.transform.rotation = Quaternion.Euler(rotationX, rotationY, 0);
         transform.localRotation = Quaternion.Euler(0f, rotationY, -bobY(movement.magnitude * 2f, 0.01f) + 1.15f);
 
@@ -125,10 +124,24 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator Dash(CharacterController characterController, float dashSpeed, Vector3 movement)
     {
         for (float i = 0f; i < 10; i += 1f) {
+            if (isDashing == false) {
+                isDashing = true;
+            }
             characterController.Move(movement * 25 * dashSpeed * Time.deltaTime);
             yield return new WaitForSeconds(0.01f);
         }
+        isDashing = false;
 
+    }
+
+    private void FixedUpdate()
+    {
+        Collider[] minorTouchers = Physics.OverlapBox(transform.position, transform.localScale / 2, transform.localRotation, LayerMask.NameToLayer("Hitboxes"));
+        Debug.Log(minorTouchers.Length);
+    }
+
+    Boolean Dashing() {
+        return isDashing;
     }
 
 }

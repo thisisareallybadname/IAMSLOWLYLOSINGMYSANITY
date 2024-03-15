@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class enemyAI : MonoBehaviour {
 
-    public GameObject player;
+    private GameObject player;
     public int walkspeed;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        player = GameObject.Find("player");
     }
 
     // Update is called once per frame

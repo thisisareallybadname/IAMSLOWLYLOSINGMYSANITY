@@ -30,22 +30,6 @@ public class PlayerKnockback : MonoBehaviour {
         }
     }
 
-    private void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.tag.Equals("Enemy")) {
-            takeKnockback = true;
-
-        }
-
-    }
-
-    private void OnCollisionExit(Collision collision) {
-        if (collision.gameObject.tag.Equals("Enemy")) {
-            takeKnockback = false;
-
-        }
-
-    }
-
     IEnumerator KnockbackPlayer()
     {
         if (takeKnockback) {

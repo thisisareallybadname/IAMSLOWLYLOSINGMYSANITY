@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -19,6 +20,8 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 movement;
     private Vector3 yMovement;
     private Vector3 dashMovement;
+    private float dashDuration;
+    private bool isDashing;
 
     private float movementSpeed;
     private float gravity;
@@ -39,6 +42,10 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 cameraBob;
     private float tick = 0f;
 
+    // dash vars
+    private bool dashDebounce = false;
+    private float dashCooldown = 0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,23 +57,19 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
 
         movementSpeed = walkspeed;
 
         touchingGround = Physics.CheckSphere(groundChecker.transform.position, 0.2f);
         controller = GetComponent<CharacterController>();
 
-        movement = (transform.forward * Input.GetAxis("Vertical")) + (transform.right * Input.GetAxis("Horizontal"));
-
-        Debug.Log(touchingGround);
+        movement = (transform.forward * Input.GetAxisRaw("Vertical")) + (transform.right * Input.GetAxisRaw("Horizontal"));
 
         updateCamera();
 
         if (touchingGround && Input.GetAxis("Jump") > 0.25f)
         {
-            Debug.Log("JUMP");
             yMovement.y = jumpHeight;
         }
 
@@ -80,14 +83,34 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
+    private void FixedUpdate() { 
+        if (dashDebounce && dashCooldown < 3) {
+            dashCooldown += Time.deltaTime;
+
+        }
+
+        if (dashCooldown > 1) {
+            dashDebounce = false;
+            dashCooldown = 0;
+        }
+
+        if (isDashing) {
+            dashDuration += Time.deltaTime;
+
+        } else {
+            dashDuration = 0;
+        }
+        tick += Time.deltaTime;
+    }
+
     // this is for camerabob stuff
 
     float bobX(float amp, float speed) { 
-        return Mathf.Sin(tick * speed / 2) * amp * 3f;
+        return Mathf.Sin(tick * 500 * speed / 2) * amp * 3f;
     }
 
     float bobY(float amp, float speed) {
-        return Mathf.Abs(Mathf.Cos(tick * speed / 2)) * amp;
+        return Mathf.Abs(Mathf.Cos(tick * 500 * speed / 2)) * amp;
     }
     Vector3 bobEffect(float amp, float speed) {
         return new Vector3(bobX(amp * 3f, speed * 2), bobY(amp, speed), 0);
@@ -96,7 +119,7 @@ public class PlayerMovement : MonoBehaviour
     void updateVMEffects() { 
         VM.transform.localPosition = Vector3.Lerp(VM.transform.localPosition, bobEffect(movement.magnitude * 0.01f, 0.01f), 3 * Time.deltaTime);
         VM.transform.localRotation = Quaternion.Euler(0, 0, -bobY(movement.magnitude * 2f, 0.01f) + 1.15f);
-        tick += 1f; // TO BE REPLACED
+        
     }
 
     // update camera
@@ -104,7 +127,6 @@ public class PlayerMovement : MonoBehaviour
 
         camVector = playerCam.transform.position;
         cameraBob = Vector3.Lerp(VM.transform.localPosition, bobEffect(movement.magnitude * 0.01f, 0.01f), 3 * Time.deltaTime);
-        cameraBob.x = -cameraBob.x; // lemme cook
 
         mouseX = Input.GetAxisRaw("Mouse X") * lookspeed * Time.deltaTime;
         mouseY = Input.GetAxisRaw("Mouse Y") * lookspeed * Time.deltaTime;
@@ -116,7 +138,7 @@ public class PlayerMovement : MonoBehaviour
 
         updateVMEffects();
 
-        playerCam.transform.localPosition = cameraBob;
+        playerCam.transform.localPosition = cameraBob + new Vector3(0, 0.5f, 0);
         playerCam.transform.rotation = Quaternion.Euler(rotationX, rotationY, 0);
         transform.localRotation = Quaternion.Euler(0f, rotationY, -bobY(movement.magnitude * 2f, 0.01f) + 1.15f);
 
@@ -124,11 +146,17 @@ public class PlayerMovement : MonoBehaviour
 
     IEnumerator Dash(CharacterController characterController, float dashSpeed, Vector3 movement)
     {
-        for (float i = 0f; i < 10; i += 1f) {
-            characterController.Move(movement * 25 * dashSpeed * Time.deltaTime);
-            yield return new WaitForSeconds(0.01f);
+        if (!dashDebounce)
+        {
+            dashDebounce = true;
+            isDashing = true;
+            while (dashDuration < 0.25f) {
+                characterController.Move(movement * 5 * dashSpeed * Time.deltaTime);
+                yield return new WaitForSeconds(0.025f * Time.deltaTime);
+            }
+
+            isDashing = false;
+            
         }
-
     }
-
 }

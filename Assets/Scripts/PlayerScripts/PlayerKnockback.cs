@@ -19,7 +19,6 @@ public class PlayerKnockback : MonoBehaviour {
     void Update() {
 
         StartCoroutine(KnockbackPlayer());
-        Debug.Log(kbValue);
         if (knockbackDebounce) {
             while (kbValue < 0.5f) {
                 kbValue += Time.deltaTime;

@@ -16,6 +16,8 @@ public class PlayerMovement : MonoBehaviour
     public float jumpHeight; // same thing as above
     public GameObject VM; // ViewModel field, the fake set of arms in first person mode
 
+    public VMEffects viewModelEffects;
+
     // movement 
     private Vector3 movement;
     private Vector3 yMovement;
@@ -53,6 +55,7 @@ public class PlayerMovement : MonoBehaviour
         Cursor.visible = false;
         yMovement = Vector3.zero;
         gravity = -9.8f * 2;
+        viewModelEffects = GetComponent<VMEffects>();
 
     }
 
@@ -65,8 +68,6 @@ public class PlayerMovement : MonoBehaviour
         controller = GetComponent<CharacterController>();
 
         movement = (transform.forward * Input.GetAxisRaw("Vertical")) + (transform.right * Input.GetAxisRaw("Horizontal"));
-
-        updateCamera();
 
         if (touchingGround && Input.GetAxis("Jump") > 0.25f)
         {
@@ -83,7 +84,10 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    private void FixedUpdate() { 
+    private void FixedUpdate() {
+
+        viewModelEffects.setMovespeed(movement.magnitude);
+
         if (dashDebounce && dashCooldown < 3) {
             dashCooldown += Time.deltaTime;
 
@@ -103,47 +107,6 @@ public class PlayerMovement : MonoBehaviour
         tick += Time.deltaTime;
     }
 
-    // this is for camerabob stuff
-
-    float bobX(float amp, float speed) { 
-        return Mathf.Sin(tick * 500 * speed / 2) * amp * 3f;
-    }
-
-    float bobY(float amp, float speed) {
-        return Mathf.Abs(Mathf.Cos(tick * 500 * speed / 2)) * amp;
-    }
-    Vector3 bobEffect(float amp, float speed) {
-        return new Vector3(bobX(amp * 3f, speed * 2), bobY(amp, speed), 0);
-    }
-
-    void updateVMEffects() { 
-        VM.transform.localPosition = Vector3.Lerp(VM.transform.localPosition, bobEffect(movement.magnitude * 0.01f, 0.01f), 3 * Time.deltaTime);
-        VM.transform.localRotation = Quaternion.Euler(0, 0, -bobY(movement.magnitude * 2f, 0.01f) + 1.15f);
-        
-    }
-
-    // update camera
-    void updateCamera() {
-
-        camVector = playerCam.transform.position;
-        cameraBob = Vector3.Lerp(VM.transform.localPosition, bobEffect(movement.magnitude * 0.01f, 0.01f), 3 * Time.deltaTime);
-
-        mouseX = Input.GetAxisRaw("Mouse X") * lookspeed * Time.deltaTime;
-        mouseY = Input.GetAxisRaw("Mouse Y") * lookspeed * Time.deltaTime;
-
-        // camera movement or smth
-        rotationX -= mouseY;
-        rotationX = Mathf.Clamp(rotationX, -90f, 90f);
-        rotationY += mouseX;
-
-        updateVMEffects();
-
-        playerCam.transform.localPosition = cameraBob + new Vector3(0, 0.5f, 0);
-        playerCam.transform.rotation = Quaternion.Euler(rotationX, rotationY, 0);
-        transform.localRotation = Quaternion.Euler(0f, rotationY, -bobY(movement.magnitude * 2f, 0.01f) + 1.15f);
-
-    }
-
     IEnumerator Dash(CharacterController characterController, float dashSpeed, Vector3 movement)
     {
         if (!dashDebounce)
@@ -158,5 +121,10 @@ public class PlayerMovement : MonoBehaviour
             isDashing = false;
             
         }
+    }
+
+    public float getWalkspeed()
+    {
+        return walkspeed;
     }
 }

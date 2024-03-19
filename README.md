@@ -1,2 +1,1 @@
-# ![image](https://github.com/thisisareallybadname/IAMSLOWLYLOSINGMYSANITY/assets/161801289/5019d550-f065-448f-9608-0aa05151ff47)![Uploading image.png…]()
-
+#![image](https://github.com/thisisareallybadname/IAMSLOWLYLOSINGMYSANITY/assets/161801289/3a42607c-3562-4567-90e3-9d09efa46a9e)

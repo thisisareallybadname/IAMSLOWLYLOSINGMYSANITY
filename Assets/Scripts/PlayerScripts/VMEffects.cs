@@ -35,15 +35,15 @@ public class VMEffects : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update() {
-        movespeed = playerMovespeed > 0.25 ? 1 : 0;
+    void FixedUpdate() {
+        movespeed = playerMovespeed > 0.5 ? 1 : 0;
 
-        bobX = Mathf.Cos(tick * bobSpeed) * movespeed * 35;
-        bobY = -Mathf.Abs(Mathf.Sin(tick * bobSpeed)) * movespeed * 20;
+        bobX = Mathf.Cos(tick * bobSpeed) * movespeed * 10;
+        bobY = -Mathf.Abs(Mathf.Sin(tick * bobSpeed)) * movespeed * 10;
         
         if (movespeed == 0) {
             bobX = 0;
-            bobY = -Mathf.Abs(Mathf.Sin(tick)) * 50;
+            bobY = -Mathf.Abs(Mathf.Sin(tick) / 5) * 50;
         }
 
         bobVector = new Vector3(bobX * 2f, bobY * 1.25f, 0) * 0.5f * Time.deltaTime;

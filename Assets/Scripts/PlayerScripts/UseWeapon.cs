@@ -31,7 +31,7 @@ public class PlayerAttack : MonoBehaviour
             Debug.Log("*click*");
             if (Physics.Raycast(shootPos.transform.position, shootPos.transform.forward, 100))
             {
-                Debug.Log("Fun fact: Did you know that when Sisyphus Prime says 'DESTROY', he will beat the ever-living shit out of you?");
+                Debug.Log("pew pew");
             }
         }
     }

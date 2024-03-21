@@ -26,6 +26,7 @@ public class VMEffects : MonoBehaviour
 
     public float bobSpeed;
 
+    Vector3 force;
     
 
     // Start is called before the first frame update
@@ -38,20 +39,19 @@ public class VMEffects : MonoBehaviour
     void FixedUpdate() {
         movespeed = playerMovespeed > 0.5 ? 1 : 0;
 
-        bobX = Mathf.Cos(tick * bobSpeed) * movespeed * 10;
-        bobY = -Mathf.Abs(Mathf.Sin(tick * bobSpeed)) * movespeed * 10;
+        bobX = Mathf.Cos(tick * bobSpeed) * movespeed * 7.5f;
+        bobY = -Mathf.Abs(Mathf.Sin(tick * bobSpeed)) * movespeed * 7.5f;
         
         if (movespeed == 0) {
             bobX = 0;
             bobY = -Mathf.Abs(Mathf.Sin(tick) / 5) * 50;
+        
         }
 
         bobVector = new Vector3(bobX * 2f, bobY * 1.25f, 0) * 0.5f * Time.deltaTime;
 
-        
-
-        viewModel.transform.localPosition = Vector3.Lerp(viewModel.transform.localPosition, bobVector, 3 * Time.deltaTime);
-
+        this.applyForce(bobVector);
+        viewModel.transform.localPosition = Vector3.Lerp(viewModel.transform.localPosition, force, 3 * Time.deltaTime);
         tick += Time.deltaTime;
         
 
@@ -60,5 +60,9 @@ public class VMEffects : MonoBehaviour
 
     public void setMovespeed(float speed) {
         playerMovespeed = speed;
+    }
+
+    public void applyForce(Vector3 newForce) {
+        this.force = newForce;
     }
 }

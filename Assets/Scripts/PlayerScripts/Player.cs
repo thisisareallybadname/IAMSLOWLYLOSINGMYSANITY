@@ -28,19 +28,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool touchingGround;
 
-    // camera fields
-    private float mouseX;
-    private float mouseY;
-
-    private Vector3 camVector;
-    private Vector3 offset;
-
-    private float rotationX;
-    private float rotationY;
-
-    // fields for ViewModel effects
-    private Vector3 cameraBob;
-    private float tick = 0f;
+    public VMEffects vmEffects;
 
     // dash vars
     private bool dashDebounce = false;
@@ -63,10 +51,9 @@ public class PlayerMovement : MonoBehaviour
 
         touchingGround = Physics.CheckSphere(groundChecker.transform.position, 0.2f);
         controller = GetComponent<CharacterController>();
+        vmEffects = GetComponent<VMEffects>();
 
         movement = (transform.forward * Input.GetAxisRaw("Vertical")) + (transform.right * Input.GetAxisRaw("Horizontal"));
-
-        updateCamera();
 
         if (touchingGround && Input.GetAxis("Jump") > 0.25f)
         {
@@ -80,6 +67,8 @@ public class PlayerMovement : MonoBehaviour
         yMovement.y += gravity * Time.deltaTime;
         controller.Move(movement * movementSpeed * Time.deltaTime);
         controller.Move(yMovement * Time.deltaTime);
+
+        vmEffects.setMovement(movement.magnitude);
 
     }
 
@@ -100,48 +89,6 @@ public class PlayerMovement : MonoBehaviour
         } else {
             dashDuration = 0;
         }
-        tick += Time.deltaTime;
-    }
-
-    // this is for camerabob stuff
-
-    float bobX(float amp, float speed) { 
-        return Mathf.Sin(tick * 500 * speed / 2) * amp * 3f;
-    }
-
-    float bobY(float amp, float speed) {
-        return Mathf.Abs(Mathf.Cos(tick * 500 * speed / 2)) * amp;
-    }
-    Vector3 bobEffect(float amp, float speed) {
-        return new Vector3(bobX(amp * 3f, speed * 2), bobY(amp, speed), 0);
-    }
-
-    void updateVMEffects() { 
-        VM.transform.localPosition = Vector3.Lerp(VM.transform.localPosition, bobEffect(movement.magnitude * 0.01f, 0.01f), 3 * Time.deltaTime);
-        VM.transform.localRotation = Quaternion.Euler(0, 0, -bobY(movement.magnitude * 2f, 0.01f) + 1.15f);
-        
-    }
-
-    // update camera
-    void updateCamera() {
-
-        camVector = playerCam.transform.position;
-        cameraBob = Vector3.Lerp(VM.transform.localPosition, bobEffect(movement.magnitude * 0.01f, 0.01f), 3 * Time.deltaTime);
-
-        mouseX = Input.GetAxisRaw("Mouse X") * lookspeed * Time.deltaTime;
-        mouseY = Input.GetAxisRaw("Mouse Y") * lookspeed * Time.deltaTime;
-
-        // camera movement or smth
-        rotationX -= mouseY;
-        rotationX = Mathf.Clamp(rotationX, -90f, 90f);
-        rotationY += mouseX;
-
-        updateVMEffects();
-
-        playerCam.transform.localPosition = cameraBob + new Vector3(0, 0.5f, 0);
-        playerCam.transform.rotation = Quaternion.Euler(rotationX, rotationY, 0);
-        transform.localRotation = Quaternion.Euler(0f, rotationY, -bobY(movement.magnitude * 2f, 0.01f) + 1.15f);
-
     }
 
     IEnumerator Dash(CharacterController characterController, float dashSpeed, Vector3 movement)

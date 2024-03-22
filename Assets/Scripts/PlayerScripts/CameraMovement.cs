@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer.Internal;
 using UnityEngine;
 
 public class NewBehaviourScript : MonoBehaviour
@@ -15,8 +16,7 @@ public class NewBehaviourScript : MonoBehaviour
     // Start is called before the first frame update
     void Start() {
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false; 
-        
+        Cursor.visible = true;
     }
 
     // Update is called once per frame

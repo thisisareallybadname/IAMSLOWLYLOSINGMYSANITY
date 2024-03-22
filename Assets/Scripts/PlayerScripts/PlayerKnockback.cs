@@ -19,7 +19,6 @@ public class PlayerKnockback : MonoBehaviour {
     void Update() {
 
         StartCoroutine(KnockbackPlayer());
-        Debug.Log(kbValue);
         if (knockbackDebounce) {
             while (kbValue < 0.5f) {
                 kbValue += Time.deltaTime;
@@ -35,6 +34,14 @@ public class PlayerKnockback : MonoBehaviour {
         if (takeKnockback) {
             controller.Move(transform.forward * -100 * Time.deltaTime);
             yield return null;
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag.Equals("Enemy")) {
+            Debug.Log("JUDGEMENT!");
+
         }
     }
 }

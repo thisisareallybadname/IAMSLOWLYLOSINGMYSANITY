@@ -9,7 +9,7 @@ public class SpawnEnemy : MonoBehaviour
     public GameObject enemy;
 
     private float timer;
-    private bool canSpawn;
+    public bool canSpawn;
     private int random;
 
     void Start()
@@ -20,14 +20,16 @@ public class SpawnEnemy : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        timer += Time.deltaTime;
+        if (canSpawn) { 
+            timer += Time.deltaTime;
 
-        if (timer >= 0.25f) {
-            timer = 0;
+            if (timer >= 0.25f) {
+                timer = 0;
 
-            random = Random.Range(0, 3);
-            Instantiate(enemy, spawns[random].transform.position, Quaternion.identity);
+                random = Random.Range(0, 3);
+                Instantiate(enemy, spawns[random].transform.position, Quaternion.identity);
 
+            }
         }
     }
 }

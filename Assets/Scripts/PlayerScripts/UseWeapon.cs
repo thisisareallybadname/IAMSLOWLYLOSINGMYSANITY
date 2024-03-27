@@ -10,7 +10,6 @@ using UnityEngine.Playables;
 public class FireWeapon : MonoBehaviour
 {
     private GameObject weapon;
-    private GameObject VM;
     private GameObject shootPos;
     private RaycastHit hit;
     private GameObject enemy;
@@ -23,8 +22,13 @@ public class FireWeapon : MonoBehaviour
 
     private bool attacking;
 
-    public  Camera playerCamera;
     private VMEffects recoilForce;
+
+    public GameObject hand;
+    private VMEffects handRecoil;
+    public String handName;
+    private bool isRightHand;
+    private bool mouseDown;
 
     private Vector3[] positions = new Vector3[2];
 
@@ -32,23 +36,28 @@ public class FireWeapon : MonoBehaviour
     void Start()
     {
         weapon = GameObject.Find("weapon");
-        VM = GameObject.Find("ViewModel");
         shootPos = GameObject.Find("ShootPos");
         recoilForce = GetComponent<VMEffects>();
         
-        tracer = shootPos.GetComponent<LineRenderer>();
-        tracer.enabled = false;
-        tracer.positionCount = 2;
-        tracer.startWidth = 0.25f;
-        tracer.endWidth = 0.25f;
+        //tracer = shootPos.GetComponent<LineRenderer>();
+        //tracer.enabled = false;
+        //tracer.positionCount = 2;
+        //tracer.startWidth = 0.25f;
+        //tracer.endWidth = 0.25f;
+
+        handRecoil = hand.GetComponent<VMEffects>();
+        isRightHand = handName.Equals("right arm");
 
     }
 
     private void Update() {
+        if (isRightHand) {
+            mouseDown = Input.GetMouseButton(1);
 
-    }
+        } else {
+            mouseDown = Input.GetMouseButton(0);
 
-    private void FixedUpdate() {
+        }
 
         if (attackCooldown >= attackSpeed) {
             attackCooldown = 0;
@@ -58,56 +67,61 @@ public class FireWeapon : MonoBehaviour
             attackCooldown += Time.deltaTime;
 
         }
+    }
 
-        if (Input.GetMouseButton(0))
+    private void FixedUpdate() {
+
+        if (mouseDown)
         {
-            if (canAttack) {
+            if (canAttack)
+            {
                 StartCoroutine(UseWeapon());
 
             }
         }
     }
 
-    IEnumerator UseWeapon() {
+    IEnumerator MakeTracer(Vector3 start, Vector3 end) {
 
         if (canAttack) {
-            positions[0] = shootPos.transform.position;
+            positions[0] = start;
 
             tracer.enabled = true;
             tracer.positionCount = 2;
 
-            if (Physics.Raycast(shootPos.transform.position + shootPos.transform.forward, shootPos.transform.forward, out hit, Mathf.Infinity)) {
-                //Debug.DrawRay(shootPos.transform.position + shootPos.transform.forward, shootPos.transform.forward * hit.distance, Color.black);
-                if (hit.collider.gameObject.tag.Equals("Enemy"))
-                {
-                    enemy = hit.collider.gameObject;
-                    enemy.GetComponent<Enemy>().takeDamage(3);
-
-                }
-
-                positions[1] = hit.point;
-            }
-            else {
-                positions[1] = shootPos.transform.position + shootPos.transform.forward * 100;
-
-            }
-
-            recoilForce.applyForce(new Vector3(0, 0f, -0.25f), 20);
-
-            attacking = true;
-
             tracer.SetPositions(positions);
-            canAttack = false;
             yield return new WaitForSeconds(0.15f);
-            recoilForce.applyForce(new Vector3(0, 0f, 0.25f), 3);
-
             tracer.enabled = false;
-            attacking = false;
         }
     }
 
     public bool isFiring() {
         return attacking;
+    }
+
+    IEnumerator UseWeapon() {
+        canAttack = false;
+        Vector3 start = shootPos.transform.position;
+        Vector3 end;
+
+        if (Physics.Raycast(shootPos.transform.position + shootPos.transform.forward, shootPos.transform.forward, out hit, Mathf.Infinity)) {
+            if (hit.collider.gameObject.tag.Equals("Enemy")) {
+                enemy = hit.collider.gameObject;
+                enemy.GetComponent<Enemy>().takeDamage(3);
+
+            }
+
+            end = hit.point;
+
+        } else {
+            end = shootPos.transform.position + shootPos.transform.forward * 100;
+
+        }
+
+        recoilForce.applyForce(new Vector3(0, 0, -0.5f), 1, new Vector3(-30, 0, 30));
+        
+        //MakeTracer(start, end);
+        yield return null;
     }
 
     

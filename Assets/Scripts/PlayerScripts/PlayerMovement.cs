@@ -55,7 +55,6 @@ public class PlayerMovement : MonoBehaviour
         Cursor.visible = false;
         yMovement = Vector3.zero;
         gravity = -9.8f * 2;
-        viewModelEffects = GetComponent<VMEffects>();
 
     }
 
@@ -86,7 +85,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate() {
 
-        viewModelEffects.setMovespeed(movement.magnitude);
 
         if (dashDebounce && dashCooldown < 3) {
             dashCooldown += Time.deltaTime;
@@ -126,5 +124,9 @@ public class PlayerMovement : MonoBehaviour
     public float getWalkspeed()
     {
         return walkspeed;
+    }
+
+    public float getMovespeed() {
+        return movement.magnitude;
     }
 }

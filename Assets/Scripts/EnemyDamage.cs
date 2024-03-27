@@ -10,21 +10,34 @@ public class Enemy : MonoBehaviour {
     private bool tookDamage;
     private bool startCooldown;
 
+    private bool dead;
+    private float ragdollTimer;
+    public float lieOnFloorMaxTime;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        dead = false;
     }
 
     // Update is called once per frame
     void Update() {
         
         if (health <= 0) {
-            Destroy(this.gameObject);
-
+            GetComponent<enemyAI>().enabled = false;
+            dead = true;
         }
 
-        
+        if (dead) {
+            if (ragdollTimer >= lieOnFloorMaxTime) {
+                Destroy(gameObject);
+
+            } else {
+                ragdollTimer += Time.deltaTime;
+
+            }
+
+        }
         
 
     }
@@ -32,4 +45,5 @@ public class Enemy : MonoBehaviour {
     public void takeDamage(float damage) {
         health -= damage;
     }
+
 }

@@ -3,18 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
+using UnityEditor.Timeline;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Playables;
 
 public class FireWeapon : MonoBehaviour
 {
-    private GameObject weapon;
-    private GameObject shootPos;
+    public GameObject shootPos;
     private RaycastHit hit;
     private GameObject enemy;
 
-    private LineRenderer tracer;
+    public LineRenderer tracer;
 
     private bool canAttack;
     public float attackSpeed;
@@ -30,20 +30,20 @@ public class FireWeapon : MonoBehaviour
     private bool isRightHand;
     private bool mouseDown;
 
+    public float damage;
+    public GameObject weapon;
+
     private Vector3[] positions = new Vector3[2];
 
     // Start is called before the first frame update
     void Start()
     {
-        weapon = GameObject.Find("weapon");
-        shootPos = GameObject.Find("ShootPos");
         recoilForce = GetComponent<VMEffects>();
         
-        //tracer = shootPos.GetComponent<LineRenderer>();
-        //tracer.enabled = false;
-        //tracer.positionCount = 2;
-        //tracer.startWidth = 0.25f;
-        //tracer.endWidth = 0.25f;
+        tracer.enabled = false;
+        tracer.positionCount = 2;
+        tracer.startWidth = 0.25f;
+        tracer.endWidth = 0.25f;
 
         handRecoil = hand.GetComponent<VMEffects>();
         isRightHand = handName.Equals("right arm");
@@ -71,10 +71,8 @@ public class FireWeapon : MonoBehaviour
 
     private void FixedUpdate() {
 
-        if (mouseDown)
-        {
-            if (canAttack)
-            {
+        if (mouseDown) {
+            if (canAttack) {
                 StartCoroutine(UseWeapon());
 
             }
@@ -83,16 +81,14 @@ public class FireWeapon : MonoBehaviour
 
     IEnumerator MakeTracer(Vector3 start, Vector3 end) {
 
-        if (canAttack) {
+        
             positions[0] = start;
-
-            tracer.enabled = true;
             tracer.positionCount = 2;
-
+            tracer.enabled = true;
             tracer.SetPositions(positions);
             yield return new WaitForSeconds(0.15f);
             tracer.enabled = false;
-        }
+        
     }
 
     public bool isFiring() {
@@ -107,7 +103,7 @@ public class FireWeapon : MonoBehaviour
         if (Physics.Raycast(shootPos.transform.position + shootPos.transform.forward, shootPos.transform.forward, out hit, Mathf.Infinity)) {
             if (hit.collider.gameObject.tag.Equals("Enemy")) {
                 enemy = hit.collider.gameObject;
-                enemy.GetComponent<Enemy>().takeDamage(3);
+                enemy.GetComponent<Enemy>().takeDamage(damage);
 
             }
 
@@ -118,9 +114,9 @@ public class FireWeapon : MonoBehaviour
 
         }
 
-        recoilForce.applyForce(new Vector3(0, 0, -0.5f), 1, new Vector3(-30, 0, 30));
+        recoilForce.applyForce(new Vector3(0, 0.15f, -0.15f), 1, new Vector3(-5f, 0, 0));
         
-        //MakeTracer(start, end);
+        MakeTracer(start, end);
         yield return null;
     }
 

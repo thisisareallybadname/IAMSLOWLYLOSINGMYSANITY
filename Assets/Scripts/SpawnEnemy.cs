@@ -9,6 +9,7 @@ public class SpawnEnemy : MonoBehaviour
     public GameObject enemy;
 
     private float timer;
+    public float limit;
     public bool canSpawn;
     private int random;
 
@@ -23,7 +24,7 @@ public class SpawnEnemy : MonoBehaviour
         if (canSpawn) { 
             timer += Time.deltaTime;
 
-            if (timer >= 0.25f) {
+            if (timer >= limit) {
                 timer = 0;
 
                 random = Random.Range(0, 3);

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour {
 
-    private float health = 5;
+    public float health = 5;
     private GameObject collidingGameObject;
     private float hitDebounce;
     private bool canTakeDamage;
@@ -17,8 +17,6 @@ public class PlayerHealth : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-
-        Debug.Log(health);
 
         if (!canTakeDamage) {
             hitDebounce += Time.fixedDeltaTime;

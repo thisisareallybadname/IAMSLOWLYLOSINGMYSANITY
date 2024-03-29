@@ -26,7 +26,7 @@ public class VMEffects : MonoBehaviour
     private float movespeed;
 
     public float bobSpeed;
-    private float forceSpeed;
+    private float forceSpeed = 1;
 
     private Vector3 currentPosition;
     private Vector3 currentRotation;
@@ -76,7 +76,7 @@ public class VMEffects : MonoBehaviour
     }
 
     public void applyForce(Vector3 newForce, float speed, Vector3 newRotation) {
-        currentPosition += newForce;
+        currentPosition = newForce + positionOffset;
         currentRotation += newRotation;
         forceSpeed = speed;
     }

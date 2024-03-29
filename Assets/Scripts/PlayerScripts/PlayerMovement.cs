@@ -14,9 +14,6 @@ public class PlayerMovement : MonoBehaviour
     public float lookspeed; // aim sensitivity
     public float walkspeed; // name is pretty self explanatory
     public float jumpHeight; // same thing as above
-    public GameObject VM; // ViewModel field, the fake set of arms in first person mode
-
-    public VMEffects viewModelEffects;
 
     // movement 
     private Vector3 movement;
@@ -64,8 +61,6 @@ public class PlayerMovement : MonoBehaviour
         movementSpeed = walkspeed;
 
         touchingGround = Physics.CheckSphere(groundChecker.transform.position, 0.2f);
-        controller = GetComponent<CharacterController>();
-
         movement = (transform.forward * Input.GetAxisRaw("Vertical")) + (transform.right * Input.GetAxisRaw("Horizontal"));
 
         if (touchingGround && Input.GetAxis("Jump") > 0.25f)

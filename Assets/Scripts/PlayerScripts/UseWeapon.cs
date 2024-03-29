@@ -14,6 +14,7 @@ public class FireWeapon : MonoBehaviour
     private RaycastHit hit;
     private GameObject enemy;
 
+
     public LineRenderer tracer;
 
     private bool canAttack;
@@ -77,6 +78,8 @@ public class FireWeapon : MonoBehaviour
 
             }
         }
+
+        weapon.transform.localPosition = hand.transform.localPosition + new Vector3(0, 0, 1);
     }
 
     IEnumerator MakeTracer(Vector3 start, Vector3 end) {
@@ -113,11 +116,15 @@ public class FireWeapon : MonoBehaviour
             end = shootPos.transform.position + shootPos.transform.forward * 100;
 
         }
+        positions[0] = start;
+        positions[1] = end;
 
+        tracer.SetPositions(positions);
+        tracer.enabled = true;
         recoilForce.applyForce(new Vector3(0, 0.15f, -0.15f), 1, new Vector3(-5f, 0, 0));
-        
-        MakeTracer(start, end);
-        yield return null;
+
+        yield return new WaitForSeconds(0.1f);
+        tracer.enabled = false;
     }
 
     

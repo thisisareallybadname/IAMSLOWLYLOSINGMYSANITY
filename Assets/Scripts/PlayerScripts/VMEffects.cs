@@ -77,7 +77,7 @@ public class VMEffects : MonoBehaviour
 
     public void applyForce(Vector3 newForce, float speed, Vector3 newRotation) {
         currentPosition = newForce + positionOffset;
-        currentRotation += newRotation;
+        currentRotation = newRotation + angleOffset;
         forceSpeed = speed;
     }
 

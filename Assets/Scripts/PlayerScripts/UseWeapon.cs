@@ -121,7 +121,7 @@ public class FireWeapon : MonoBehaviour
 
         tracer.SetPositions(positions);
         tracer.enabled = true;
-        recoilForce.applyForce(new Vector3(0, 0.15f, -0.5f), 1, new Vector3(-5f, 15, 0));
+        recoilForce.applyForce(new Vector3(0, 0.15f, -0.5f), 5, new Vector3(-35f, 15, 0));
 
         yield return new WaitForSeconds(0.1f);
         tracer.enabled = false;

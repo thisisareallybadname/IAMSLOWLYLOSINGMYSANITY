@@ -65,6 +65,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (touchingGround && Input.GetAxis("Jump") > 0.25f) {
             yMovement.y = jumpHeight;
+            
         } else if (touchingGround) {
             yMovement.y = 0;
         }

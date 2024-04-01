@@ -63,9 +63,10 @@ public class PlayerMovement : MonoBehaviour
         touchingGround = Physics.CheckSphere(groundChecker.transform.position, 0.2f);
         movement = (transform.forward * Input.GetAxisRaw("Vertical")) + (transform.right * Input.GetAxisRaw("Horizontal"));
 
-        if (touchingGround && Input.GetAxis("Jump") > 0.25f)
-        {
+        if (touchingGround && Input.GetAxis("Jump") > 0.25f) {
             yMovement.y = jumpHeight;
+        } else if (touchingGround) {
+            yMovement.y = 0;
         }
 
         if (Input.GetKeyDown(KeyCode.LeftShift)) {

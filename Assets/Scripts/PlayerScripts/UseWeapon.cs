@@ -79,7 +79,7 @@ public class FireWeapon : MonoBehaviour
             }
         }
 
-        weapon.transform.localPosition = hand.transform.localPosition + new Vector3(0, 0, 1);
+        //weapon.transform.localPosition = hand.transform.localPosition + new Vector3(0, 0, 1);
     }
 
     IEnumerator MakeTracer(Vector3 start, Vector3 end) {
@@ -121,7 +121,7 @@ public class FireWeapon : MonoBehaviour
 
         tracer.SetPositions(positions);
         tracer.enabled = true;
-        recoilForce.applyForce(new Vector3(0, 0.15f, -0.15f), 1, new Vector3(-5f, 0, 0));
+        recoilForce.applyForce(new Vector3(0, 0.15f, -0.5f), 1, new Vector3(-5f, 15, 0));
 
         yield return new WaitForSeconds(0.1f);
         tracer.enabled = false;

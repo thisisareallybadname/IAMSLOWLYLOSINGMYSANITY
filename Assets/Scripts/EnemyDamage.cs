@@ -69,7 +69,8 @@ public class Enemy : MonoBehaviour {
     public void takeDamage(float damage) {
         health -= damage;
         if (!dead) { 
-            transform.position = -transform.forward + transform.position;
+            transform.position = -transform.forward + transform.position + new Vector3(0, 0, 0);
+            //rb.velocity = -transform.forward;
         }
     }
 

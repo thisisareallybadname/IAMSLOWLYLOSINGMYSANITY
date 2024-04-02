@@ -126,4 +126,5 @@ public class PlayerMovement : MonoBehaviour
     public float getMovespeed() {
         return movement.magnitude;
     }
+
 }

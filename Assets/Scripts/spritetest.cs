@@ -19,6 +19,6 @@ public class spritetest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        image.sprite = sprite;
+        //image.sprite = sprite;
     }
 }

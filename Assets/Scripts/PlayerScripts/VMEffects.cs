@@ -89,4 +89,8 @@ public class VMEffects : MonoBehaviour
         yield return null;
 
     }
+        
+    public Vector3 getBobVector() {
+        return bobVector;  
+    }
 }

@@ -8,7 +8,7 @@ using UnityEngine;
 public class VMEffects : MonoBehaviour
 {
     private float tick;
-    private Vector3 bobVector;
+    [HideInInspector] public Vector3 bobVector;
     private Vector3 target;
 
     private float bobX;
@@ -67,7 +67,6 @@ public class VMEffects : MonoBehaviour
         arm.transform.localRotation = Quaternion.Euler(currentRotation);
 
         tick += Time.deltaTime;
-
 
     }
 

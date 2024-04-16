@@ -10,9 +10,11 @@ public class PlayerHealth : MonoBehaviour {
     private bool canTakeDamage;
     public float hitCooldown;
 
+    public UIManager manager;
+
     // Start is called before the first frame update
     void Start() {
-        
+
     }
 
     // Update is called once per frame
@@ -32,13 +34,14 @@ public class PlayerHealth : MonoBehaviour {
         }
 
         if (health <= 0) {
-            Destroy(this.gameObject);
+            gameObject.SendMessage("GameOver", true, SendMessageOptions.DontRequireReceiver);
 
         }
+
+
     }
 
-    private void OnCollisionEnter(Collision collision) {
-
+    private void OnTriggerEnter(Collider collision) {
         collidingGameObject = collision.gameObject;
 
         if (canTakeDamage)

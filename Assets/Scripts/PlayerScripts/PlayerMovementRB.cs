@@ -5,10 +5,10 @@ using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovementRB : MonoBehaviour
 {
     // public fields
-    public CharacterController controller; // character controller
+    public Rigidbody rb; // character controller
     public GameObject groundChecker; // checks if there's something under player
     public Camera playerCam; // stores player's camera (Usually Main Camera)
     public float lookspeed; // aim sensitivity
@@ -17,25 +17,19 @@ public class PlayerMovement : MonoBehaviour
 
     // movement 
     private Vector3 movement;
-    private Vector3 yMovement;
     private Vector3 dashMovement;
     private float dashDuration;
-    private bool isDashing;
+    private bool dashing;
+    private bool jumping;
+
+    private float movementX;
+    private float movementY;
+    private float movementZ;
 
     private float movementSpeed;
     private float gravity;
 
     private bool touchingGround;
-
-    // camera fields
-    private float mouseX;
-    private float mouseY;
-
-    private Vector3 camVector;
-    private Vector3 offset;
-
-    private float rotationX;
-    private float rotationY;
 
     // fields for ViewModel effects
     private Vector3 cameraBob;
@@ -44,79 +38,99 @@ public class PlayerMovement : MonoBehaviour
     // dash vars
     private bool dashDebounce = false;
     private float dashCooldown = 0f;
-    public PlayerCamera cam;
 
     // Start is called before the first frame update
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        yMovement = Vector3.zero;
         gravity = -9.8f * 2;
 
     }
 
     // Update is called once per frame
-    void Update() {
+    void FixedUpdate()
+    {
 
         movementSpeed = walkspeed;
 
         touchingGround = Physics.CheckSphere(groundChecker.transform.position, 0.2f);
-        movement = (transform.forward * Input.GetAxisRaw("Vertical")) + (transform.right * Input.GetAxisRaw("Horizontal"));
+        //movement = (transform.forward * Input.GetAxisRaw("Vertical")) + (transform.right * Input.GetAxisRaw("Horizontal") + new Vector3(0, Input.GetAxisRaw("Jump"), 0));
 
-        if (touchingGround && Input.GetAxis("Jump") > 0.25f) {
-            yMovement.y = jumpHeight;
-            
-        } else if (touchingGround) {
-            yMovement.y = 0;
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            StartCoroutine(Dash(5));
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift)) {
-            StartCoroutine(Dash(controller, 5, movement));
+        if (touchingGround && Input.GetAxis("Jump") > 0.25f)
+        {
+            movementY = jumpHeight;
+
+        }
+        else if (touchingGround)
+        {
+            if (movementY < 0) {
+                movementY -= 9.8f;
+            }
         }
 
-        yMovement.y += gravity * Time.deltaTime;
-        controller.Move(movement * movementSpeed * Time.deltaTime);
-        controller.Move(yMovement * Time.deltaTime);
+        movementX = Input.GetAxis("Vertical");
+        movementZ = Input.GetAxis("Horizontal");
 
+        movement = (transform.forward * movementX) + (transform.right * movementZ);
+
+        if (rb.velocity.magnitude > walkspeed) {
+            rb.velocity = new Vector3(movement.x, rb.velocity.y, movement.z);
+
+        }
+
+        rb.AddForce(movement.normalized * walkspeed * 50, ForceMode.Force);
+        tick += Time.deltaTime;
     }
 
-    private void FixedUpdate() {
+    
 
+    private void Update()
+    {
 
-        if (dashDebounce && dashCooldown < 3) {
+        if (dashDebounce && dashCooldown < 3)
+        {
             dashCooldown += Time.deltaTime;
 
         }
 
-        if (dashCooldown > 1) {
+        if (dashCooldown > 1)
+        {
             dashDebounce = false;
             dashCooldown = 0;
         }
 
-        if (isDashing) {
+        if (dashing)
+        {
             dashDuration += Time.deltaTime;
 
-        } else {
+        }
+        else
+        {
             dashDuration = 0;
         }
-        tick += Time.deltaTime;
+
     }
 
-    IEnumerator Dash(CharacterController characterController, float dashSpeed, Vector3 movement)
+    IEnumerator Dash(float dashSpeed)
     {
         if (!dashDebounce)
         {
             dashDebounce = true;
-            isDashing = true;
-
-            while (dashDuration < 0.25f) {
-                characterController.Move(movement * 5 * dashSpeed * Time.deltaTime);
-                cam.applyCameraForce(Vector3.zero, new Vector3(0, 0.5f, -0.5f));
+            dashing = true;
+            while (dashDuration < 0.25f)
+            {
+                rb.AddForce(movement * 15 * dashSpeed, ForceMode.Impulse);
                 yield return new WaitForSeconds(0.025f * Time.deltaTime);
             }
 
-            isDashing = false;
+            dashing = false;
+
         }
     }
 
@@ -125,7 +139,8 @@ public class PlayerMovement : MonoBehaviour
         return walkspeed;
     }
 
-    public float getMovespeed() {
+    public float getMovespeed()
+    {
         return movement.magnitude;
     }
 }

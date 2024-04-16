@@ -17,8 +17,11 @@ public class enemyAI : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        transform.LookAt(player.transform);
-        transform.position += transform.forward * walkspeed * Time.deltaTime;
-        //rb.velocity = transform.forward * walkspeed;
+        //transform.position += transform.forward * walkspeed * Time.deltaTime;
+        transform.LookAt(player.transform.position);
+        rb.AddForce(transform.forward * walkspeed * Time.deltaTime, ForceMode.Impulse);
+        rb.velocity = Vector3.Normalize(rb.velocity) * walkspeed;
     }
+    
+
 }

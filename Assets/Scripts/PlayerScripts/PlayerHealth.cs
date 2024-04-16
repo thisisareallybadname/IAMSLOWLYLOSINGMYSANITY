@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour {
@@ -11,19 +10,11 @@ public class PlayerHealth : MonoBehaviour {
     private bool canTakeDamage;
     public float hitCooldown;
 
-    public GameObject player;
-    public Camera playerCam;
-    public GameObject deathCam;
-
-    public CharacterController controller;
-    private Rigidbody rb;
     public UIManager manager;
 
     // Start is called before the first frame update
     void Start() {
-        playerCam.enabled = true;
-        deathCam.GetComponent<Camera>().enabled = false;
-        controller.enabled = true;
+
     }
 
     // Update is called once per frame
@@ -43,24 +34,20 @@ public class PlayerHealth : MonoBehaviour {
         }
 
         if (health <= 0) {
-            deathCam.GetComponent<Camera>().enabled = true;
-            controller.enabled = false;
-            manager.die();
-            Destroy(this.gameObject);
+            gameObject.SendMessage("GameOver", true, SendMessageOptions.DontRequireReceiver);
 
         }
+
+
     }
 
-    private void OnCollisionEnter(Collision collision) {
-
+    private void OnTriggerEnter(Collider collision) {
         collidingGameObject = collision.gameObject;
 
         if (canTakeDamage)
         {
             if (collidingGameObject.tag.Equals("Enemy"))
             {
-                manager.PlrTakeDamage(1);
-
                 health -= 1;
                 canTakeDamage = false;
             }
@@ -70,9 +57,5 @@ public class PlayerHealth : MonoBehaviour {
 
     public void setHealth(float newHealth) {
         health = newHealth;
-    }
-
-    public float getHealth() {
-        return health;
     }
 }

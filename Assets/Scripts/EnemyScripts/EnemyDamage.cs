@@ -17,6 +17,7 @@ public class Enemy : MonoBehaviour {
     public Material LowHealthSprite;
 
     public GameObject enemySprite;
+    public Collider collider;
 
     public Rigidbody rb;
 
@@ -26,8 +27,11 @@ public class Enemy : MonoBehaviour {
     private float ragdollTimer;
     public float lieOnFloorMaxTime;
 
+    private bool appliedDeathForce;
+
     // Start is called before the first frame update
     void Start() {
+        appliedDeathForce = false;
         maxHealth = health;
         dead = false;
         spriteRenderer = enemySprite.GetComponent<MeshRenderer>();
@@ -38,7 +42,24 @@ public class Enemy : MonoBehaviour {
 
         if (health <= 0) {
             GetComponent<enemyAI>().enabled = false;
-            dead = true;
+            
+            collider.enabled = false;
+
+            if (!appliedDeathForce) {
+                rb.velocity = (new Vector3(Random.Range(-10, 10), Random.Range(-10, 10), Random.Range(-10, 10)));
+                appliedDeathForce = true;
+
+            }
+
+            if (ragdollTimer >= lieOnFloorMaxTime) {
+                Destroy(gameObject);
+
+            }
+            else {
+                ragdollTimer += Time.deltaTime;
+
+            }
+
         }
 
         if (health >= maxHealth * 0.75f) {
@@ -52,18 +73,6 @@ public class Enemy : MonoBehaviour {
 
         }
 
-        if (dead) {
-            if (ragdollTimer >= lieOnFloorMaxTime) {
-                Destroy(gameObject);
-
-            } else {
-                ragdollTimer += Time.deltaTime;
-
-            }
-
-        }
-        
-
     }
 
     public void takeDamage(float damage) {
@@ -72,6 +81,14 @@ public class Enemy : MonoBehaviour {
             transform.position = -transform.forward + transform.position + new Vector3(0, 0, 0);
             //rb.velocity = -transform.forward;
         }
+    }
+
+    public void GameOver(bool status) {
+        if (status) {
+            GetComponent<enemyAI>().enabled = false;
+
+        }
+
     }
 
 }

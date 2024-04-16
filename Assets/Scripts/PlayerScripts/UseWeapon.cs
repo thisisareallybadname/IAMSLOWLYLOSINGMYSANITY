@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+using NUnit;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,6 +26,7 @@ public class FireWeapon : MonoBehaviour
     private bool attacking;
 
     private VMEffects recoilForce;
+    public PlayerCamera playerCamera;
 
     public GameObject hand;
     private VMEffects handRecoil;
@@ -34,20 +37,15 @@ public class FireWeapon : MonoBehaviour
     public float damage;
     public GameObject weapon;
 
-    private Vector3[] positions = new Vector3[2];
+    //private Vector3[] positions = new Vector3[2];
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         recoilForce = GetComponent<VMEffects>();
-        
-        tracer.enabled = false;
-        tracer.positionCount = 2;
-        tracer.startWidth = 0.25f;
-        tracer.endWidth = 0.25f;
-
         handRecoil = hand.GetComponent<VMEffects>();
         isRightHand = handName.Equals("right arm");
+        attackCooldown = 0;
+        canAttack = false;
 
     }
 
@@ -82,23 +80,12 @@ public class FireWeapon : MonoBehaviour
         //weapon.transform.localPosition = hand.transform.localPosition + new Vector3(0, 0, 1);
     }
 
-    IEnumerator MakeTracer(Vector3 start, Vector3 end) {
-
-        
-            positions[0] = start;
-            tracer.positionCount = 2;
-            tracer.enabled = true;
-            tracer.SetPositions(positions);
-            yield return new WaitForSeconds(0.15f);
-            tracer.enabled = false;
-        
-    }
-
     public bool isFiring() {
         return attacking;
     }
 
     IEnumerator UseWeapon() {
+
         canAttack = false;
         Vector3 start = shootPos.transform.position;
         Vector3 end;
@@ -116,15 +103,38 @@ public class FireWeapon : MonoBehaviour
             end = shootPos.transform.position + shootPos.transform.forward * 100;
 
         }
+        
+        handRecoil.applyForce(new Vector3(0f, 0f, -0f), 5, new Vector3(-90f, 0, 0f));
+        playerCamera.applyCameraForce(new Vector3(0.05f, 0.05f, 1f), new Vector3(0, 0.5f, 0));
+
+        LineRenderer newTracer = Instantiate(tracer, shootPos.transform.position, shootPos.transform.rotation);
+
+        Vector3[] positions = new Vector3[2];
+
         positions[0] = start;
         positions[1] = end;
+        newTracer.positionCount = 2;
+        newTracer.SetPositions(positions);
 
-        tracer.SetPositions(positions);
-        tracer.enabled = true;
-        recoilForce.applyForce(new Vector3(0, 0.15f, -0.5f), 5, new Vector3(-35f, 15, 0));
+        yield return new WaitForSeconds(0.25f);
 
-        yield return new WaitForSeconds(0.1f);
-        tracer.enabled = false;
+        Destroy(GameObject.Find(shootPos.name + "(Clone)"));
+        yield return null;
+    }
+
+    IEnumerator CreateTracer(Vector3 start, Vector3 end) {
+        LineRenderer newTracer = Instantiate(tracer, shootPos.transform.position, shootPos.transform.rotation, shootPos.transform);
+
+        Vector3[] positions = new Vector3[2];
+
+        positions[0] = start;
+        positions[1] = end;
+        newTracer.positionCount = 2;
+        newTracer.SetPositions(positions);
+        yield return new WaitForSeconds(0.155f);
+        Destroy(newTracer);
+
+        yield return null;
     }
 
     

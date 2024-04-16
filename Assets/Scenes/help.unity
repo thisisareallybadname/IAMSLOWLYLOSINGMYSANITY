@@ -1325,6 +1325,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba309cc82ded9354194a2c3dd7edfe51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bobVector: {x: 0, y: 0, z: 0}
   arm: {fileID: 860605485}
   player: {fileID: 1459420583}
   bobSpeed: 5
@@ -2052,6 +2053,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba309cc82ded9354194a2c3dd7edfe51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bobVector: {x: 0, y: 0, z: 0}
   arm: {fileID: 1104949228}
   player: {fileID: 1459420583}
   bobSpeed: 5

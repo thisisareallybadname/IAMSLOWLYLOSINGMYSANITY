@@ -105,7 +105,7 @@ public class FireWeapon : MonoBehaviour
         }
         
         handRecoil.applyForce(new Vector3(0f, 0f, -0f), 5, new Vector3(-90f, 0, 0f));
-        playerCamera.applyCameraForce(new Vector3(0.05f, 0.05f, 1f), new Vector3(0, 0.5f, 0));
+        playerCamera.applyCameraForce(new Vector3(0.05f, 0.15f, 1f), new Vector3(0, 0.5f, 0));
 
         LineRenderer newTracer = Instantiate(tracer, shootPos.transform.position, shootPos.transform.rotation);
 

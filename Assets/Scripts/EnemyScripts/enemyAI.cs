@@ -15,12 +15,12 @@ public class enemyAI : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         //transform.position += transform.forward * walkspeed * Time.deltaTime;
         transform.LookAt(player.transform.position);
         rb.AddForce(transform.forward * walkspeed * Time.deltaTime, ForceMode.Impulse);
-        rb.velocity = Vector3.Normalize(rb.velocity) * walkspeed;
+        //rb.velocity = Vector3.Normalize(rb.velocity) * walkspeed;
     }
     
 

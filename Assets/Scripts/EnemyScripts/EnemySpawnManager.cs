@@ -29,6 +29,8 @@ public class Enemy : MonoBehaviour {
 
     private bool appliedDeathForce;
 
+    private bool takingKB;
+
     // Start is called before the first frame update
     void Start() {
         appliedDeathForce = false;

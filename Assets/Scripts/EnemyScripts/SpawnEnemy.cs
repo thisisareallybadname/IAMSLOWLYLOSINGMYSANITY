@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class SpawnEnemy : MonoBehaviour
+public class EnemySpawnManager : MonoBehaviour
 {
     public GameObject[] spawns = new GameObject[3];
     public GameObject enemy;
@@ -25,12 +25,20 @@ public class SpawnEnemy : MonoBehaviour
             timer += Time.deltaTime;
 
             if (timer >= limit) {
-                timer = 0;
-
-                random = Random.Range(0, 3);
-                Instantiate(enemy, spawns[random].transform.position, Quaternion.identity);
 
             }
         }
+    }
+
+    public void spawnEnemy(string EnemyName, float healthMulti, float damageMulti, float speedMulti) {
+        Instantiate(enemy, spawns[random].transform.position, Quaternion.identity);
+
+        if (canSpawn && timer >= limit) {
+            timer = 0;
+            random = Random.Range(0, 3);
+            
+
+        }
+
     }
 }

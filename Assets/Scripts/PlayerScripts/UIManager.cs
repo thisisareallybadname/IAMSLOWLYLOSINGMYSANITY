@@ -24,6 +24,9 @@ public class UIManager : MonoBehaviour
 
     private float tick;
 
+    private SpringModule recoilSpring;
+
+
     private float healthRatio; // ratio of current health / maximum health
     private float healthbarLost; // the amount of pixels the healthbar lost
     private float healthbarRemaining; // x width of healthbar
@@ -67,7 +70,7 @@ public class UIManager : MonoBehaviour
 
     IEnumerator updateBar(RectTransform barTransform) {
         barTransform.sizeDelta = Vector2.Lerp(healthTransform.sizeDelta, new Vector2(240 * healthRatio, 36), 3 * Time.deltaTime);
-        barTransform.anchoredPosition = Vector2.Lerp(healthTransform.anchoredPosition, new Vector2(-healthbarLost / 2, 1.8f), 12 * Time.deltaTime);
+        barTransform.anchoredPosition = Vector2.Lerp(healthTransform.anchoredPosition, new Vector2(-healthbarLost / 2, -125), 12 * Time.deltaTime);
 
         yield return null;
     }

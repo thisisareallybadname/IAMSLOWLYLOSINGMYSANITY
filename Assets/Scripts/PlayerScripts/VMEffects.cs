@@ -36,14 +36,16 @@ public class VMEffects : MonoBehaviour
 
     private bool isFiring = false;
 
-    public Camera playerCam;
+    private Vector3 VMSway;
 
+    public Camera playerCam;
     // Start is called before the first frame update
     void Start() {
         playerScript = player.GetComponent<PlayerMovement>();
         walkspeed = playerScript.getWalkspeed();
         currentPosition = positionOffset;
         currentRotation = angleOffset;
+
     }
 
     // Update is called once per frame
@@ -61,6 +63,8 @@ public class VMEffects : MonoBehaviour
         
         }
 
+        VMSway = new Vector3(Input.GetAxisRaw("Mouse X"), -Input.GetAxisRaw("Mouse Y"), 0);
+        
         if (forceSpeed == 1) {
             bobVector = new Vector3(bobX, bobY, 0) * 0.75f;
  
@@ -83,15 +87,16 @@ public class VMEffects : MonoBehaviour
     public void applyForce(Vector3 newForce, float speed, Vector3 newRotation) {
         currentPosition = newForce + positionOffset;
         currentRotation = newRotation + angleOffset;
-        forceSpeed = speed;
+        //forceSpeed = speed;
+
 
     }
 
     IEnumerator updateRecoilForces() {
-        currentPosition = Vector3.Lerp(currentPosition, positionOffset + bobVector, 5 * Time.deltaTime * forceSpeed);
+        currentPosition = Vector3.Lerp(currentPosition, positionOffset + bobVector + VMSway / 7.5f, 7.5f * Time.deltaTime);
         currentRotation = Vector3.Slerp(currentRotation, angleOffset, 5 * Time.deltaTime);
 
-        forceSpeed = Mathf.Lerp(forceSpeed, 1, 5 * Time.deltaTime);
+        //forceSpeed = Mathf.Lerp(forceSpeed, 1, 5 * Time.deltaTime);
         yield return null;
 
     }

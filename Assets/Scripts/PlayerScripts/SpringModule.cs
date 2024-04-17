@@ -14,7 +14,7 @@ public class SpringModule : MonoBehaviour {
     }
 
     public SpringModule() {
-
+        force = Vector3.zero;
 
     }
 
@@ -50,16 +50,16 @@ public class SpringModule : MonoBehaviour {
         yield return null;
     }
 
-    public void shove(Vector3 force, float forceSpeed, string springType) {
+    public void shove3D(Vector3 force, float forceSpeed, string springType) {
         StartCoroutine(updateSpring3D(force, forceSpeed, springType));
     }
 
-    public void shove(Vector2 force, float forceSpeed, string springType) {
+    public void shove2D(Vector2 force, float forceSpeed, string springType) {
         StartCoroutine(updateSpring2D(force, forceSpeed, springType));
 
     }
 
-    public Vector3 getForce() {
+    public Vector3 getForce3D() {
         return force;
 
     }

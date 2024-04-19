@@ -971,8 +971,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 5
   FullHealthSprite: {fileID: 2100000, guid: 423812ed6f822a4469cda665398f0be9, type: 2}
-  MidHealthSprite: {fileID: 2100000, guid: 6af12438fd0829c43aaf20ba6df80b9d, type: 2}
-  LowHealthSprite: {fileID: 2100000, guid: 5cd035efda6472b4ab99c4f8ed9282f2, type: 2}
+  MidHealthSprite: {fileID: 2100000, guid: 5cd035efda6472b4ab99c4f8ed9282f2, type: 2}
+  LowHealthSprite: {fileID: 2100000, guid: e0b52e8791679fc44a12d0ff9d7a99f1, type: 2}
   enemySprite: {fileID: 574886804}
   collider: {fileID: 578801951}
   rb: {fileID: 578801950}
@@ -1520,11 +1520,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shootPos: {fileID: 1209092213}
   tracer: {fileID: 1209092215}
-  attackSpeed: 0.25
+  attackSpeed: 0.1
   playerCamera: {fileID: 1459420592}
   hand: {fileID: 860605485}
   handName: left arm
-  damage: 2
+  damage: 5
   weapon: {fileID: 0}
 --- !u!114 &860605491
 MonoBehaviour:
@@ -1821,7 +1821,7 @@ Camera:
     m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 1
+  m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
@@ -2162,7 +2162,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.4008403, y: 1.0776618, z: 6.336057}
-  m_LocalScale: {x: 250, y: 1, z: 250}
+  m_LocalScale: {x: 500, y: 1, z: 500}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -2291,7 +2291,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1459420592}
   hand: {fileID: 1104949228}
   handName: right arm
-  damage: 1
+  damage: 5
   weapon: {fileID: 0}
 --- !u!1 &1209092213
 GameObject:
@@ -2568,9 +2568,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waveDelay: 1
-  spawnDelay: 0.5
-  enemiesPerWave: 25
+  spawnDelay: 0.01
+  enemiesPerWave: 250
   spawner: {fileID: 418151233}
+  enemy: {fileID: 578801947}
+  spawns:
+  - {fileID: 1334698490}
+  - {fileID: 897675265}
+  - {fileID: 1231197467}
 --- !u!4 &1289758841
 Transform:
   m_ObjectHideFlags: 0

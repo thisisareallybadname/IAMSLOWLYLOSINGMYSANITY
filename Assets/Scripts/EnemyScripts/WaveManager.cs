@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Timers;
@@ -13,8 +14,11 @@ public class WaveManager : MonoBehaviour {
     public float enemiesPerWave;
 
     public EnemySpawnManager spawner;
+    public GameObject enemy;
 
-    HashSet<Enemy> enemies = new HashSet<Enemy>();
+    HashSet<GameObject> enemies = new HashSet<GameObject>();
+    public GameObject[] spawns = new GameObject[3];
+    private float randomSpawn;
 
     // Start is called before the first frame update
     void Start() {
@@ -33,11 +37,17 @@ public class WaveManager : MonoBehaviour {
     }
 
     private IEnumerator spawnWave() {
+
+        randomSpawn = UnityEngine.Random.Range(0, 3);
         for (int i = 0; i < enemiesPerWave; i++) {
-            spawner.spawnEnemy("a", 1, 1, 1);
+            //spawner.spawnEnemy("a", 1, 1, 1);
+            Instantiate(enemy, spawns[((int)randomSpawn)].transform.position, Quaternion.identity);
             yield return new WaitForSeconds(spawnDelay);
 
         }
+        
+        //Instantiate(enemy, spawns[(int)randomSpawn].transform.position, Quaternion.identity);
+        enemies.Add(null);
 
         yield return null;
     }

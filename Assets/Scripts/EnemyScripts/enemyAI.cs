@@ -19,7 +19,8 @@ public class enemyAI : MonoBehaviour {
     {
         //transform.position += transform.forward * walkspeed * Time.deltaTime;
         transform.LookAt(player.transform.position);
-        rb.AddForce(transform.forward * walkspeed * Time.deltaTime, ForceMode.Impulse);
+        rb.AddForce(transform.forward * walkspeed * Time.deltaTime, ForceMode.Force);
+        rb.velocity += rb.transform.forward.normalized / 5;
         //rb.velocity = Vector3.Normalize(rb.velocity) * walkspeed;
     }
     

@@ -28,6 +28,12 @@ public class FireWeapon : MonoBehaviour
     private VMEffects recoilForce;
     public PlayerCamera playerCamera;
 
+    public Vector3 recoilValue;
+    public Vector3 rotationRecoilValue;
+
+    public Vector3 cameraRecoilValue;
+    public Vector3 cameraRotationalRecoilValue;
+
     public GameObject hand;
     private VMEffects handRecoil;
     public String handName;
@@ -104,10 +110,10 @@ public class FireWeapon : MonoBehaviour
 
         }
         
-        handRecoil.applyForce(new Vector3(0f, 0f, -0f), 5, new Vector3(-90f, 0, 0f));
-        playerCamera.applyCameraForce(new Vector3(0.05f, 0.15f, 1f), new Vector3(0, 0.5f, 0));
+        handRecoil.applyForce(cameraRecoilValue, 5, rotationRecoilValue);
+        playerCamera.applyCameraForce(cameraRecoilValue, cameraRotationalRecoilValue);
 
-        LineRenderer newTracer = Instantiate(tracer, shootPos.transform.position, shootPos.transform.rotation);
+        LineRenderer newTracer = Instantiate(tracer, shootPos.transform);
 
         Vector3[] positions = new Vector3[2];
 
@@ -116,14 +122,14 @@ public class FireWeapon : MonoBehaviour
         newTracer.positionCount = 2;
         newTracer.SetPositions(positions);
 
-        yield return new WaitForSeconds(0.25f);
-
-        Destroy(GameObject.Find(shootPos.name + "(Clone)"));
-        yield return null;
+        yield return new WaitForSeconds(0.15f);
+        Debug.Log("coroutine ended???");
+        Destroy(newTracer);
     }
 
     IEnumerator CreateTracer(Vector3 start, Vector3 end) {
-        LineRenderer newTracer = Instantiate(tracer, shootPos.transform.position, shootPos.transform.rotation, shootPos.transform);
+        GameObject newTracerPosition = Instantiate(shootPos, shootPos.transform.position, shootPos.transform.rotation, shootPos.transform);
+        LineRenderer newTracer = newTracerPosition.GetComponent<LineRenderer>();
 
         Vector3[] positions = new Vector3[2];
 
@@ -131,7 +137,7 @@ public class FireWeapon : MonoBehaviour
         positions[1] = end;
         newTracer.positionCount = 2;
         newTracer.SetPositions(positions);
-        yield return new WaitForSeconds(0.155f);
+        yield return new WaitForSeconds(0.15f);
         Destroy(newTracer);
 
         yield return null;

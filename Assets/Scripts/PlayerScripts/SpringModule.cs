@@ -4,18 +4,21 @@ using UnityEngine;
 
 public class SpringModule : MonoBehaviour {
 
+    // SpringModule simulates a spring's movement (without dampening and mass and stuff)
+    // manages smooth movement for 3D stuff (gameObjects) and 2D stuff (UI)
+
+    // the force you're applying on the "spring"
     private Vector3 force;
     private Vector2 force2D;
+
+    // the position the spring's trying to get to (generally an empty Vector3)
+    public Vector3 target;
+    public Vector2 target2D;
 
     // Start is called before the first frame update
     void Start()
     {
         
-    }
-
-    public SpringModule() {
-        force = Vector3.zero;
-
     }
 
     IEnumerator updateSpring3D(Vector3 v, float forceTime, string springType) {

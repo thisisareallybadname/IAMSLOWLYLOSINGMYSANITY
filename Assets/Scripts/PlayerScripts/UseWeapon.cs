@@ -113,35 +113,26 @@ public class FireWeapon : MonoBehaviour
         handRecoil.applyForce(cameraRecoilValue, 5, rotationRecoilValue);
         playerCamera.applyCameraForce(cameraRecoilValue, cameraRotationalRecoilValue);
 
+        StartCoroutine(CreateTracer(tracer, start, end));
+        yield return null;
+    }
+
+    IEnumerator CreateTracer(LineRenderer tracer, Vector3 start, Vector3 end) {
         LineRenderer newTracer = Instantiate(tracer, shootPos.transform);
 
         Vector3[] positions = new Vector3[2];
 
         positions[0] = start;
         positions[1] = end;
+
         newTracer.positionCount = 2;
         newTracer.SetPositions(positions);
 
         yield return new WaitForSeconds(0.15f);
-        Debug.Log("coroutine ended???");
-        Destroy(newTracer);
+
+        newTracer.enabled = false;
+        
+        GameObject.Destroy(shootPos.transform.GetChild(0).gameObject);
+
     }
-
-    IEnumerator CreateTracer(Vector3 start, Vector3 end) {
-        GameObject newTracerPosition = Instantiate(shootPos, shootPos.transform.position, shootPos.transform.rotation, shootPos.transform);
-        LineRenderer newTracer = newTracerPosition.GetComponent<LineRenderer>();
-
-        Vector3[] positions = new Vector3[2];
-
-        positions[0] = start;
-        positions[1] = end;
-        newTracer.positionCount = 2;
-        newTracer.SetPositions(positions);
-        yield return new WaitForSeconds(0.15f);
-        Destroy(newTracer);
-
-        yield return null;
-    }
-
-    
 }

@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Timers;
+using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WaveManager : MonoBehaviour {
 
@@ -20,6 +22,8 @@ public class WaveManager : MonoBehaviour {
     public GameObject[] spawns = new GameObject[3];
     private float randomSpawn;
 
+    public Text enemyCounter;
+
     // Start is called before the first frame update
     void Start() {
         
@@ -27,7 +31,7 @@ public class WaveManager : MonoBehaviour {
 
     // Update is called once per frame
     void FixedUpdate() {
-
+        enemyCounter.text = "Enemies Left: " + enemies.Count;
         if (timer > waveDelay) {
             StartCoroutine(spawnWave());
             timer = -123123;
@@ -40,14 +44,11 @@ public class WaveManager : MonoBehaviour {
 
         randomSpawn = UnityEngine.Random.Range(0, 3);
         for (int i = 0; i < enemiesPerWave; i++) {
-            //spawner.spawnEnemy("a", 1, 1, 1);
-            Instantiate(enemy, spawns[((int)randomSpawn)].transform.position, Quaternion.identity);
+            GameObject newEnemy = Instantiate(enemy, spawns[((int)randomSpawn)].transform.position, Quaternion.identity);
+            enemies.Add(newEnemy);
             yield return new WaitForSeconds(spawnDelay);
 
         }
-        
-        //Instantiate(enemy, spawns[(int)randomSpawn].transform.position, Quaternion.identity);
-        enemies.Add(null);
 
         yield return null;
     }

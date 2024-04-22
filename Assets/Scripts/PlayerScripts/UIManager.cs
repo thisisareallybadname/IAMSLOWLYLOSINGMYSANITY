@@ -9,7 +9,7 @@ public class UIManager : MonoBehaviour
 {
 
     public Image deathScreen;
-    public Image HUD;
+    public Image PlayerHUD;
     public Image healthbar;
 
     private float health;
@@ -26,6 +26,8 @@ public class UIManager : MonoBehaviour
 
     private SpringModule recoilSpring;
 
+    public Canvas deathUI;
+    public Canvas playerHUD;
 
     private float healthRatio; // ratio of current health / maximum health
     private float healthbarLost; // the amount of pixels the healthbar lost
@@ -42,6 +44,9 @@ public class UIManager : MonoBehaviour
 
         mainCam.GetComponent<AudioListener>().enabled = true;
         deathCam.GetComponent<AudioListener>().enabled = false;
+
+        playerHUD.enabled = true;
+        deathUI.enabled = false;
 
     }
 
@@ -64,6 +69,9 @@ public class UIManager : MonoBehaviour
             mainCam.GetComponent<AudioListener>().enabled = false;
             deathCam.GetComponent<AudioListener>().enabled = true;
             deathCam.transform.rotation = Quaternion.Euler(25, 1.5f * tick, 0);
+
+            playerHUD.enabled = false;
+            deathUI.enabled = true;
 
         }
     }

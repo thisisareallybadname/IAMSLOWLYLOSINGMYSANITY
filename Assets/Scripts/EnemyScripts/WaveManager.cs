@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Timers;
+using TMPro;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
@@ -22,7 +23,7 @@ public class WaveManager : MonoBehaviour {
     public GameObject[] spawns = new GameObject[3];
     private float randomSpawn;
 
-    public Text enemyCounter;
+    public TMP_Text enemyCounter;
 
     // Start is called before the first frame update
     void Start() {
@@ -51,5 +52,10 @@ public class WaveManager : MonoBehaviour {
         }
 
         yield return null;
+    }
+
+    public void enemyDeath(GameObject enemy) {
+        enemies.Remove(enemy);
+
     }
 }

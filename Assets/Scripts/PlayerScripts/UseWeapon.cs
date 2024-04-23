@@ -118,7 +118,7 @@ public class FireWeapon : MonoBehaviour
     }
 
     IEnumerator CreateTracer(LineRenderer tracer, Vector3 start, Vector3 end) {
-        LineRenderer newTracer = Instantiate(tracer, shootPos.transform);
+        LineRenderer newTracer = Instantiate(tracer, shootPos.transform.position, shootPos.transform.rotation);
 
         Vector3[] positions = new Vector3[2];
 
@@ -132,7 +132,7 @@ public class FireWeapon : MonoBehaviour
 
         newTracer.enabled = false;
         
-        GameObject.Destroy(shootPos.transform.GetChild(0).gameObject);
+        GameObject.Destroy(GameObject.Find(shootPos.name + "(Clone)"));
 
     }
 }

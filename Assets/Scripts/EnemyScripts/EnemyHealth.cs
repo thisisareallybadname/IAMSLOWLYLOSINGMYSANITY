@@ -31,6 +31,8 @@ public class Enemy : MonoBehaviour {
 
     private bool takingKB;
 
+    public WaveManager waveManager;
+
     // Start is called before the first frame update
     void Start() {
         appliedDeathForce = false;
@@ -50,7 +52,7 @@ public class Enemy : MonoBehaviour {
             if (!appliedDeathForce) {
                 rb.velocity = (new Vector3(Random.Range(-10, 10), Random.Range(-10, 10), Random.Range(-10, 10)));
                 appliedDeathForce = true;
-
+                waveManager.enemyDeath(this.gameObject);
             }
 
             if (ragdollTimer >= lieOnFloorMaxTime) {
@@ -81,16 +83,7 @@ public class Enemy : MonoBehaviour {
         health -= damage;
         if (!dead) { 
             transform.position = -transform.forward + transform.position + new Vector3(0, 0, 0);
-            //rb.velocity = -transform.forward;
         }
-    }
-
-    public void GameOver(bool status) {
-        if (status) {
-            GetComponent<enemyAI>().enabled = false;
-
-        }
-
     }
 
 }

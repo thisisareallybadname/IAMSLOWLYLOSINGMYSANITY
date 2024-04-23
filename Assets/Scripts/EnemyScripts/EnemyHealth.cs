@@ -83,4 +83,9 @@ public class Enemy : MonoBehaviour {
         }
     }
 
+    public void addStatAmplifier(float newHealth) {
+        health = newHealth;
+
+    }
+
 }

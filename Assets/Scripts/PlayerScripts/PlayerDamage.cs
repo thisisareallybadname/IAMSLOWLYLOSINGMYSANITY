@@ -29,6 +29,12 @@ public class PlayerDamage : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+
+        if (transform.position.y < -20) {
+            setHealth(0);
+
+        }
+
         if (!canTakeDamage) {
             immunityTimer += Time.deltaTime;
 
@@ -57,6 +63,10 @@ public class PlayerDamage : MonoBehaviour {
 
     public float getHealth() {
         return health;
+    }
+
+    public void setHealth(float newHealth) { 
+        health = newHealth; 
     }
 
 }

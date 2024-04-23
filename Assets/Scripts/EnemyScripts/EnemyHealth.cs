@@ -28,9 +28,6 @@ public class Enemy : MonoBehaviour {
     public float lieOnFloorMaxTime;
 
     private bool appliedDeathForce;
-
-    private bool takingKB;
-
     public WaveManager waveManager;
 
     // Start is called before the first frame update

@@ -8,20 +8,25 @@ public class enemyAI : MonoBehaviour {
     public int walkspeed;
     public Rigidbody rb;
 
+    public bool chasePlayer;
+
     // Start is called before the first frame update
-    void Start()
-    {
-        
+    void Start() {
+
+
     }
 
     // Update is called once per frame
-    void FixedUpdate()
-    {
-        //transform.position += transform.forward * walkspeed * Time.deltaTime;
-        transform.LookAt(player.transform.position);
-        rb.AddForce(transform.forward * walkspeed * Time.deltaTime, ForceMode.Force);
-        rb.velocity += rb.transform.forward.normalized / 5;
-        //rb.velocity = Vector3.Normalize(rb.velocity) * walkspeed;
+    void FixedUpdate() {
+        if (chasePlayer) {
+            transform.LookAt(player.transform.position);
+            rb.AddForce(transform.forward * walkspeed * Time.deltaTime, ForceMode.Force);
+            rb.velocity += rb.transform.forward.normalized / 5;
+        
+        } else {
+            rb.Sleep();
+            transform.position = new Vector3(0, -100, 0);
+        }
     }
     
 

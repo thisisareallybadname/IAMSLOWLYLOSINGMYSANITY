@@ -14,7 +14,10 @@ public class WaveManager : MonoBehaviour {
     public float waveDelay;
     public float spawnDelay;
 
+    private float countdown;
+
     public float enemiesPerWave;
+    private float enemiesSpawned;
 
     public EnemySpawnManager spawner;
     public GameObject enemy;
@@ -33,23 +36,31 @@ public class WaveManager : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate() {
         enemyCounter.text = "Enemies Left: " + enemies.Count;
-        if (timer > waveDelay) {
+        if (countdown < waveDelay || enemies.Count == 0) {
             StartCoroutine(spawnWave());
-            timer = -123123;
+            enemiesSpawned = 0;
+
         }
 
-        timer += Time.fixedDeltaTime;
+        if (timer >= spawnDelay && enemiesSpawned < enemiesPerWave) {
+            GameObject newEnemy = Instantiate(enemy, spawns[((int)randomSpawn)].transform.position, Quaternion.identity);
+            newEnemy.GetComponent<enemyAI>().chasePlayer = true;
+            enemies.Add(newEnemy);
+            enemiesSpawned++;
+        }
+
+        if (timer < spawnDelay) {
+            timer += Time.fixedDeltaTime;
+ 
+        }
+        if (countdown < waveDelay) {
+            countdown += Time.fixedDeltaTime;
+        }
     }
 
     private IEnumerator spawnWave() {
 
         randomSpawn = UnityEngine.Random.Range(0, 3);
-        for (int i = 0; i < enemiesPerWave; i++) {
-            GameObject newEnemy = Instantiate(enemy, spawns[((int)randomSpawn)].transform.position, Quaternion.identity);
-            enemies.Add(newEnemy);
-            yield return new WaitForSeconds(spawnDelay);
-
-        }
 
         yield return null;
     }

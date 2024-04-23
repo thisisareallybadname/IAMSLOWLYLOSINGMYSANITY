@@ -36,7 +36,7 @@ public class UIManager : MonoBehaviour
     // Start is called before the first frame update
     void Start() {
 
-        health = maxHealth;
+        health = damageManager.getHealth();
         healthTransform = healthbar.GetComponent<RectTransform>();
 
         mainCam.enabled = true;

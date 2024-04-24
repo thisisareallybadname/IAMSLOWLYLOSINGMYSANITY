@@ -28,23 +28,20 @@ public class WaveManager : MonoBehaviour {
     public GameObject enemy;
 
     public float wave;
-    public TMP_Text deathWaveReached;
-
-    public float health = 5;
+    public TMP_Text waveCounter;
 
     HashSet<GameObject> enemies = new HashSet<GameObject>();
     public GameObject[] spawns = new GameObject[3];
     private float randomSpawn;
 
-    public TMP_Text enemyCounter;
-    public TMP_Text waveCounter;
+    public PlayerDamage playerHealth;
 
-    private PlayerDamage playerHealth;
+    public TMP_Text enemyCounter;
+    public TMP_Text waveReached;
 
     // Start is called before the first frame update
     void Start() {
-        playerHealth = GameObject.Find("Player").GetComponent<PlayerDamage>();
-
+        
     }
 
     // Update is called once per frame
@@ -54,22 +51,21 @@ public class WaveManager : MonoBehaviour {
             enemyCounter.text = "Enemies Left: " + enemies.Count;
         
         } else {
-            if (Mathf.Ceil(waveDelay - waveCooldown) >= (waveDelay * 0.8) && wave > 0) {
-                enemyCounter.text = "Wave Completed";
+            if (Mathf.Ceil(waveDelay - waveCooldown) > waveDelay * 0.8f && wave > 0) {
+                enemyCounter.text = "Wave Complete";
 
             } else {
                 enemyCounter.text = "Next wave in " + Mathf.Ceil(waveDelay - waveCooldown);
-
             }
 
         }
 
         waveCounter.text = "Wave " + wave;
-        deathWaveReached.text = "Waves Survived: " + wave;
+        waveReached.text = "Reached Wave " + wave;
 
         if (timer >= spawnDelay && enemiesSpawned < enemiesPerWave && spawningEnemies) {
             timer = 0;
-            randomSpawn = UnityEngine.Random.Range(0, spawns.Length);
+            randomSpawn = UnityEngine.Random.Range(0, 3);
 
             GameObject newEnemy = Instantiate(enemy, spawns[((int)randomSpawn)].transform.position, Quaternion.identity);
             newEnemy.GetComponent<enemyAI>().chasePlayer = true;
@@ -77,12 +73,10 @@ public class WaveManager : MonoBehaviour {
             
             enemiesSpawned++;
 
-            // if wave over, add multipliers to enemies
             if (enemiesSpawned >= enemiesPerWave) {
                 spawningEnemies = false;
-                enemiesPerWave += wave;
-                enemy.GetComponent<EnemyHealth>().setHealth(health + wave);
-                
+                enemiesPerWave = Mathf.Ceil(enemiesPerWave * 1.125f);
+                enemy.GetComponent<Enemy>().addStatAmplifier(enemiesPerWave + Mathf.Ceil(wave * 0.125f));
             }
         }
 
@@ -96,13 +90,11 @@ public class WaveManager : MonoBehaviour {
         if (enemies.Count == 0) {
             if (waveCooldown < waveDelay && !spawningEnemies) {
                 waveCooldown += Time.fixedDeltaTime;
-
-                intermission = true;
                 playerHealth.setHealth(5);
+                intermission = true;
 
             } else {
                 if (!spawningEnemies) {
-
                     wave++;
                     intermission = false;
                     waveCooldown = 0;

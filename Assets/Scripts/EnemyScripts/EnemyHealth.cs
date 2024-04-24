@@ -1,16 +1,17 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyHealth : MonoBehaviour {
+public class Enemy : MonoBehaviour {
 
     public float health;
     private float maxHealth;
 
+    public float immunityDuration;
     private float hitCooldown;
+
     private bool canTakeDamage = true;
-    private bool tookDamage;
-    private bool startCooldown;
 
     public Material FullHealthSprite;
     public Material MidHealthSprite;
@@ -63,10 +64,10 @@ public class EnemyHealth : MonoBehaviour {
 
         }
 
-        if (health >= maxHealth * 0.67f) {
+        if (health >= maxHealth * 0.75f) {
             spriteRenderer.material = FullHealthSprite;
 
-        } else if (health >= maxHealth * 0.33) {
+        } else if (health >= maxHealth / 2) {
             spriteRenderer.material = MidHealthSprite;
 
         } else {
@@ -76,15 +77,25 @@ public class EnemyHealth : MonoBehaviour {
 
     }
 
-    public void takeDamage(float damage) {
-        health -= damage;
-        if (!dead) { 
-            transform.position = -transform.forward + transform.position + new Vector3(0, 0, 0);
+    private void FixedUpdate() {
+
+        if (hitCooldown < immunityDuration) {
+            hitCooldown += Time.fixedDeltaTime;
+        
         }
     }
 
-    public void setHealth(float newHealth) {
-        maxHealth = newHealth;
+    public void takeDamage(float damage) {
+        if (!dead) {
+            rb.velocity = new Vector3(Mathf.Abs(rb.velocity.x), Mathf.Abs(rb.velocity.y), Mathf.Abs(rb.velocity.z));
+            rb.velocity = -rb.velocity * 2.5f;
+        }
+
+        health -= damage;
+        
+    }
+
+    public void addStatAmplifier(float newHealth) {
         health = newHealth;
 
     }

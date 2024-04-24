@@ -20,8 +20,10 @@ public class enemyAI : MonoBehaviour {
     void FixedUpdate() {
         if (chasePlayer) {
             transform.LookAt(player.transform.position);
-            rb.AddForce(transform.forward * walkspeed * Time.deltaTime, ForceMode.Force);
-            rb.velocity += rb.transform.forward.normalized / 5;
+            rb.AddForce(transform.forward * walkspeed * 200 * Time.deltaTime, ForceMode.Force);
+            rb.drag = 2.5f;
+
+            rb.velocity += rb.transform.forward.normalized / 2.5f;
         
         } else {
             rb.Sleep();

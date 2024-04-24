@@ -28,14 +28,16 @@ public class WaveManager : MonoBehaviour {
     public GameObject enemy;
 
     public float wave;
-
-    public float health = 5;
+    public TMP_Text waveCounter;
 
     HashSet<GameObject> enemies = new HashSet<GameObject>();
     public GameObject[] spawns = new GameObject[3];
     private float randomSpawn;
 
+    public PlayerDamage playerHealth;
+
     public TMP_Text enemyCounter;
+    public TMP_Text waveReached;
 
     // Start is called before the first frame update
     void Start() {
@@ -49,9 +51,17 @@ public class WaveManager : MonoBehaviour {
             enemyCounter.text = "Enemies Left: " + enemies.Count;
         
         } else {
-            enemyCounter.text = "Next wave in " + Mathf.Ceil(waveDelay - waveCooldown);
+            if (Mathf.Ceil(waveDelay - waveCooldown) > waveDelay * 0.8f && wave > 0) {
+                enemyCounter.text = "Wave Complete";
+
+            } else {
+                enemyCounter.text = "Next wave in " + Mathf.Ceil(waveDelay - waveCooldown);
+            }
 
         }
+
+        waveCounter.text = "Wave " + wave;
+        waveReached.text = "Reached Wave " + wave;
 
         if (timer >= spawnDelay && enemiesSpawned < enemiesPerWave && spawningEnemies) {
             timer = 0;
@@ -65,9 +75,8 @@ public class WaveManager : MonoBehaviour {
 
             if (enemiesSpawned >= enemiesPerWave) {
                 spawningEnemies = false;
-                enemiesPerWave *= 1.5f;
-                enemy.GetComponent<Enemy>().addStatAmplifier(health * 1.5f);
-                wave++;
+                enemiesPerWave = Mathf.Ceil(enemiesPerWave * 1.125f);
+                enemy.GetComponent<Enemy>().addStatAmplifier(enemiesPerWave + Mathf.Ceil(wave * 0.125f));
             }
         }
 
@@ -81,12 +90,12 @@ public class WaveManager : MonoBehaviour {
         if (enemies.Count == 0) {
             if (waveCooldown < waveDelay && !spawningEnemies) {
                 waveCooldown += Time.fixedDeltaTime;
-
+                playerHealth.setHealth(5);
                 intermission = true;
 
             } else {
                 if (!spawningEnemies) {
-
+                    wave++;
                     intermission = false;
                     waveCooldown = 0;
                     enemiesSpawned = 0;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,6 +29,8 @@ public class UIManager : MonoBehaviour
 
     public Canvas deathUI;
     public Canvas playerHUD;
+
+    public Image crosshair;
 
     private float healthRatio; // ratio of current health / maximum health
     private float healthbarLost; // the amount of pixels the healthbar lost
@@ -78,8 +81,11 @@ public class UIManager : MonoBehaviour
 
     IEnumerator updateBar(RectTransform barTransform) {
         barTransform.sizeDelta = Vector2.Lerp(healthTransform.sizeDelta, new Vector2(240 * healthRatio, 36), 3 * Time.deltaTime);
-        barTransform.anchoredPosition = Vector2.Lerp(healthTransform.anchoredPosition, new Vector2(-healthbarLost / 2, -125), 12 * Time.deltaTime);
+        barTransform.anchoredPosition = Vector2.Lerp(healthTransform.anchoredPosition, new Vector2(-healthbarLost / 2 - 9, -125), 12 * Time.deltaTime);
 
         yield return null;
+    }
+
+    public void expandCrosshair(float size) {
     }
 }

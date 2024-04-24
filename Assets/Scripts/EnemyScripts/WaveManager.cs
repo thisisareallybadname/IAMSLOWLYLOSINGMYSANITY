@@ -28,6 +28,7 @@ public class WaveManager : MonoBehaviour {
     public GameObject enemy;
 
     public float wave;
+    public TMP_Text deathWaveReached;
 
     public float health = 5;
 
@@ -36,10 +37,14 @@ public class WaveManager : MonoBehaviour {
     private float randomSpawn;
 
     public TMP_Text enemyCounter;
+    public TMP_Text waveCounter;
+
+    private PlayerDamage playerHealth;
 
     // Start is called before the first frame update
     void Start() {
-        
+        playerHealth = GameObject.Find("Player").GetComponent<PlayerDamage>();
+
     }
 
     // Update is called once per frame
@@ -49,13 +54,22 @@ public class WaveManager : MonoBehaviour {
             enemyCounter.text = "Enemies Left: " + enemies.Count;
         
         } else {
-            enemyCounter.text = "Next wave in " + Mathf.Ceil(waveDelay - waveCooldown);
+            if (Mathf.Ceil(waveDelay - waveCooldown) >= (waveDelay * 0.8) && wave > 0) {
+                enemyCounter.text = "Wave Completed";
+
+            } else {
+                enemyCounter.text = "Next wave in " + Mathf.Ceil(waveDelay - waveCooldown);
+
+            }
 
         }
 
+        waveCounter.text = "Wave " + wave;
+        deathWaveReached.text = "Waves Survived: " + wave;
+
         if (timer >= spawnDelay && enemiesSpawned < enemiesPerWave && spawningEnemies) {
             timer = 0;
-            randomSpawn = UnityEngine.Random.Range(0, 3);
+            randomSpawn = UnityEngine.Random.Range(0, spawns.Length);
 
             GameObject newEnemy = Instantiate(enemy, spawns[((int)randomSpawn)].transform.position, Quaternion.identity);
             newEnemy.GetComponent<enemyAI>().chasePlayer = true;
@@ -63,11 +77,12 @@ public class WaveManager : MonoBehaviour {
             
             enemiesSpawned++;
 
+            // if wave over, add multipliers to enemies
             if (enemiesSpawned >= enemiesPerWave) {
                 spawningEnemies = false;
-                enemiesPerWave *= 1.5f;
-                enemy.GetComponent<Enemy>().addStatAmplifier(health * 1.5f);
-                wave++;
+                enemiesPerWave += wave;
+                enemy.GetComponent<EnemyHealth>().setHealth(health + wave);
+                
             }
         }
 
@@ -83,10 +98,12 @@ public class WaveManager : MonoBehaviour {
                 waveCooldown += Time.fixedDeltaTime;
 
                 intermission = true;
+                playerHealth.setHealth(5);
 
             } else {
                 if (!spawningEnemies) {
 
+                    wave++;
                     intermission = false;
                     waveCooldown = 0;
                     enemiesSpawned = 0;

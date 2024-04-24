@@ -28,6 +28,12 @@ public class enemyAI : MonoBehaviour {
             transform.position = new Vector3(0, -100, 0);
         }
     }
+
+    public void setMovementSpeed(float newWalkspeed) {
+
+        walkspeed = (int)newWalkspeed;
+    }
+
     
 
 }

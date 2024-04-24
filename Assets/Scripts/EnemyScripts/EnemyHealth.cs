@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour {
+public class EnemyHealth : MonoBehaviour {
 
     public float health;
     private float maxHealth;
@@ -63,10 +63,10 @@ public class Enemy : MonoBehaviour {
 
         }
 
-        if (health >= maxHealth * 0.75f) {
+        if (health >= maxHealth * 0.67f) {
             spriteRenderer.material = FullHealthSprite;
 
-        } else if (health >= maxHealth / 2) {
+        } else if (health >= maxHealth * 0.33) {
             spriteRenderer.material = MidHealthSprite;
 
         } else {
@@ -83,7 +83,8 @@ public class Enemy : MonoBehaviour {
         }
     }
 
-    public void addStatAmplifier(float newHealth) {
+    public void setHealth(float newHealth) {
+        maxHealth = newHealth;
         health = newHealth;
 
     }

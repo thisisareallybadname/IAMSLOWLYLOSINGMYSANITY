@@ -53,6 +53,12 @@ public class FireWeapon : MonoBehaviour
         attackCooldown = 0;
         canAttack = false;
 
+        if (isRightHand) {
+            recoilValue = new Vector3(-recoilValue.x, recoilValue.y, -recoilValue.z);
+            cameraRotationalRecoilValue = new Vector3(cameraRotationalRecoilValue.z, cameraRotationalRecoilValue.y, cameraRotationalRecoilValue.x);
+
+        }
+
     }
 
     private void Update() {
@@ -99,7 +105,7 @@ public class FireWeapon : MonoBehaviour
         if (Physics.Raycast(shootPos.transform.position + shootPos.transform.forward, shootPos.transform.forward, out hit, Mathf.Infinity)) {
             if (hit.collider.gameObject.tag.Equals("Enemy")) {
                 enemy = hit.collider.gameObject;
-                enemy.GetComponent<Enemy>().takeDamage(damage);
+                enemy.GetComponent<EnemyHealth>().takeDamage(damage);
 
             }
 

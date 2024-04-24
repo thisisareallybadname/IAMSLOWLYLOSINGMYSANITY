@@ -15,31 +15,21 @@ public class PlayerMovement : MonoBehaviour
     public float walkspeed; // name is pretty self explanatory
     public float jumpHeight; // same thing as above
 
-    // movement 
+    // movement vector3s
     private Vector3 movement;
     private Vector3 yMovement;
     private Vector3 dashMovement;
+
+    // dash variables
     private float dashDuration;
     private bool isDashing;
 
+    // gravity and stuff
     private float movementSpeed;
     private float gravity;
 
+    // stores true/false if player is touching ground or not
     private bool touchingGround;
-
-    // camera fields
-    private float mouseX;
-    private float mouseY;
-
-    private Vector3 camVector;
-    private Vector3 offset;
-
-    private float rotationX;
-    private float rotationY;
-
-    // fields for ViewModel effects
-    private Vector3 cameraBob;
-    private float tick = 0f;
 
     // dash vars
     private bool dashDebounce = false;
@@ -53,20 +43,28 @@ public class PlayerMovement : MonoBehaviour
         Cursor.visible = false;
         yMovement = Vector3.zero;
         gravity = -9.8f * 2;
+        movementSpeed = walkspeed;
 
     }
 
     // Update is called once per frame
     void Update() {
 
-        movementSpeed = walkspeed;
-
+        // check if player is touching a surface at the bottom
         touchingGround = Physics.CheckSphere(groundChecker.transform.position, 0.2f);
+
+        // assign movement direction
+        // Input.GetAxisRaw("Vertical") gives a value between -1 & 1 depending if you press W or S
+        // Input.GetAxisRaw("Horizontal") gives a value between -1 & 1 depending if you press A or D
+        // vector is defined by transform.forward by W/S movement, and add transform.right * A/D movement
+
         movement = (transform.forward * Input.GetAxisRaw("Vertical")) + (transform.right * Input.GetAxisRaw("Horizontal"));
 
+        // jump controls
         if (touchingGround && Input.GetAxis("Jump") > 0.25f) {
             yMovement.y = jumpHeight;
-            
+
+        // reset gravity when you touch ground            
         } else if (touchingGround) {
             yMovement.y = 0;
         }
@@ -74,22 +72,27 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift)) {
             StartCoroutine(Dash(controller, 5, movement));
         }
-
+        
+        // add gravity to player's character controller (move it down)
         yMovement.y += gravity * Time.deltaTime;
-        controller.Move(movement * movementSpeed * Time.deltaTime);
         controller.Move(yMovement * Time.deltaTime);
 
+        // move character controller with wasd
+        controller.Move(movement * movementSpeed * Time.deltaTime);
+
+        UpdateDash();
     }
 
-    private void FixedUpdate() {
 
-
-        if (dashDebounce && dashCooldown < 3) {
+    private void UpdateDash() {
+        if (dashDebounce && dashCooldown < 3)
+        {
             dashCooldown += Time.deltaTime;
 
         }
 
-        if (dashCooldown > 1) {
+        if (dashCooldown > 1)
+        {
             dashDebounce = false;
             dashCooldown = 0;
         }
@@ -97,22 +100,28 @@ public class PlayerMovement : MonoBehaviour
         if (isDashing) {
             dashDuration += Time.deltaTime;
 
-        } else {
-            dashDuration = 0;
         }
-        tick += Time.deltaTime;
+        else {
+            dashDuration = 0;
+
+        }
+
     }
 
-    IEnumerator Dash(CharacterController characterController, float dashSpeed, Vector3 movement)
-    {
+    // when LSHIFT pressed + cooldown gone, dash
+    IEnumerator Dash(CharacterController characterController, float dashSpeed, Vector3 movement) {
         if (!dashDebounce)
         {
             dashDebounce = true;
             isDashing = true;
 
             while (dashDuration < 0.25f) {
+
+                // move player forward 
                 characterController.Move(movement * 5 * dashSpeed * Time.deltaTime);
-                cam.applyCameraForce(Vector3.zero, new Vector3(0, 0.5f, -0.5f));
+                
+                // change FOV when dashing
+                cam.applyCameraForce(Vector3.zero, new Vector3(0, 0.25f, -0.5f));
                 yield return new WaitForSeconds(0.025f * Time.deltaTime);
             }
 

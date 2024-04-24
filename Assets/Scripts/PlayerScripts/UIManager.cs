@@ -5,11 +5,7 @@ using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
-{
-
-    public Image deathScreen;
-    public Image PlayerHUD;
+public class UIManager : MonoBehaviour {
     public Image healthbar;
 
     private float health;
@@ -20,14 +16,14 @@ public class UIManager : MonoBehaviour
     public Camera mainCam;
     public Camera deathCam;
 
-    public Canvas ui;
-
     private float tick;
 
     private SpringModule recoilSpring;
 
+    private bool toggleDeathUI;
+
+    public Canvas playerUI;
     public Canvas deathUI;
-    public Canvas playerHUD;
 
     private float healthRatio; // ratio of current health / maximum health
     private float healthbarLost; // the amount of pixels the healthbar lost
@@ -45,7 +41,7 @@ public class UIManager : MonoBehaviour
         mainCam.GetComponent<AudioListener>().enabled = true;
         deathCam.GetComponent<AudioListener>().enabled = false;
 
-        playerHUD.enabled = true;
+        playerUI.enabled = true;
         deathUI.enabled = false;
 
     }
@@ -66,19 +62,20 @@ public class UIManager : MonoBehaviour
 
             mainCam.enabled = false;
             deathCam.enabled = true;
+
             mainCam.GetComponent<AudioListener>().enabled = false;
             deathCam.GetComponent<AudioListener>().enabled = true;
+
             deathCam.transform.rotation = Quaternion.Euler(25, 1.5f * tick, 0);
 
-            playerHUD.enabled = false;
+            playerUI.enabled = false;
             deathUI.enabled = true;
-
         }
     }
 
     IEnumerator updateBar(RectTransform barTransform) {
         barTransform.sizeDelta = Vector2.Lerp(healthTransform.sizeDelta, new Vector2(240 * healthRatio, 36), 3 * Time.deltaTime);
-        barTransform.anchoredPosition = Vector2.Lerp(healthTransform.anchoredPosition, new Vector2(-healthbarLost / 2, -125), 12 * Time.deltaTime);
+        barTransform.anchoredPosition = Vector2.Lerp(healthTransform.anchoredPosition, new Vector2(-healthbarLost / 2 - 9, -125), 12 * Time.deltaTime);
 
         yield return null;
     }

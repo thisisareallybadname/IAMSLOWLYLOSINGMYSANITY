@@ -39,6 +39,8 @@ public class WaveManager : MonoBehaviour {
     public TMP_Text enemyCounter;
     public TMP_Text waveReached;
 
+    public bool startGame;
+
     // Start is called before the first frame update
     void Start() {
         
@@ -75,7 +77,7 @@ public class WaveManager : MonoBehaviour {
 
             if (enemiesSpawned >= enemiesPerWave) {
                 spawningEnemies = false;
-                enemiesPerWave = Mathf.Ceil(enemiesPerWave * 1.125f);
+                enemiesPerWave = Mathf.Ceil(wave * 1.5f);
                 enemy.GetComponent<Enemy>().addStatAmplifier(enemiesPerWave + Mathf.Ceil(wave * 0.125f));
             }
         }
@@ -109,5 +111,10 @@ public class WaveManager : MonoBehaviour {
     public void enemyDeath(GameObject enemy) {
         enemies.Remove(enemy);
         enemiesKilled++;
+    }
+
+    public void StartWave() {
+
+
     }
 }

@@ -31,6 +31,8 @@ public class Enemy : MonoBehaviour {
     private bool appliedDeathForce;
     public WaveManager waveManager;
 
+    public enemyAI enemyAI;
+
     // Start is called before the first frame update
     void Start() {
         appliedDeathForce = false;
@@ -87,8 +89,10 @@ public class Enemy : MonoBehaviour {
 
     public void takeDamage(float damage) {
         if (!dead) {
-            rb.velocity = new Vector3(Mathf.Abs(rb.velocity.x), Mathf.Abs(rb.velocity.y), Mathf.Abs(rb.velocity.z));
-            rb.velocity = -rb.velocity * 2.5f;
+            if (enemyAI.chasePlayer) {
+                rb.velocity = new Vector3(Mathf.Abs(rb.velocity.x), Mathf.Abs(rb.velocity.y), Mathf.Abs(rb.velocity.z));
+                rb.velocity = -rb.velocity * 2.5f;
+            }
         }
 
         health -= damage;

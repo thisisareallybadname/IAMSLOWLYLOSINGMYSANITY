@@ -12,7 +12,10 @@ public class enemyAI : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
+        if (!chasePlayer) {
+            Destroy(gameObject.GetComponent<Rigidbody>());
 
+        }
 
     }
 
@@ -25,9 +28,6 @@ public class enemyAI : MonoBehaviour {
 
             rb.velocity += rb.transform.forward.normalized / 2.5f;
         
-        } else {
-            rb.Sleep();
-            transform.position = new Vector3(0, -100, 0);
         }
     }
     

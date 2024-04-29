@@ -12,11 +12,6 @@ public class enemyAI : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        if (!chasePlayer) {
-            Destroy(gameObject.GetComponent<Rigidbody>());
-
-        }
-
     }
 
     // Update is called once per frame

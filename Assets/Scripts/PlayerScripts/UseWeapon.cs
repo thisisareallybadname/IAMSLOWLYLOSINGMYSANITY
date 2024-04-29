@@ -100,7 +100,7 @@ public class FireWeapon : MonoBehaviour
         if (Physics.Raycast(shootPos.transform.position + shootPos.transform.forward, shootPos.transform.forward, out hit, Mathf.Infinity)) {
             if (hit.collider.gameObject.tag.Equals("Enemy")) {
                 enemy = hit.collider.gameObject;
-                enemy.GetComponent<Enemy>().takeDamage(damage);
+                enemy.GetComponent<EnemyHealth>().takeDamage(damage);
 
             }
 
@@ -111,7 +111,7 @@ public class FireWeapon : MonoBehaviour
 
         }
         
-        handRecoil.applyForce(cameraRecoilValue, 5, rotationRecoilValue);
+        handRecoil.applyForce(recoilValue, 5, rotationRecoilValue);
         playerCamera.applyCameraForce(cameraRecoilValue, cameraRotationalRecoilValue);
 
         StartCoroutine(CreateTracer(tracer, start, end));

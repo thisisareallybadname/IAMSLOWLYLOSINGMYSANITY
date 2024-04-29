@@ -81,7 +81,7 @@ public class UIManager : MonoBehaviour
 
     IEnumerator updateBar(RectTransform barTransform) {
         barTransform.sizeDelta = Vector2.Lerp(healthTransform.sizeDelta, new Vector2(240 * healthRatio, 36), 3 * Time.deltaTime);
-        barTransform.anchoredPosition = Vector2.Lerp(healthTransform.anchoredPosition, new Vector2(-healthbarLost / 2 - 9, -125), 12 * Time.deltaTime);
+        barTransform.anchoredPosition = Vector2.Lerp(healthTransform.anchoredPosition, new Vector2(-healthbarLost / 2 - 9, -205), 12 * Time.deltaTime);
 
         yield return null;
     }

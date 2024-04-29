@@ -72,13 +72,12 @@ public class WaveManager : MonoBehaviour {
             GameObject newEnemy = Instantiate(enemy, spawns[((int)randomSpawn)].transform.position, Quaternion.identity);
             newEnemy.GetComponent<enemyAI>().chasePlayer = true;
             enemies.Add(newEnemy);
-            
+            enemy.GetComponent<EnemyHealth>().addStatAmplifier(enemiesPerWave * Mathf.Ceil(wave * 0.125f));
+
             enemiesSpawned++;
 
             if (enemiesSpawned >= enemiesPerWave) {
                 spawningEnemies = false;
-                enemiesPerWave = Mathf.Ceil(wave * 1.5f);
-                enemy.GetComponent<Enemy>().addStatAmplifier(enemiesPerWave + Mathf.Ceil(wave * 0.125f));
             }
         }
 
@@ -101,6 +100,9 @@ public class WaveManager : MonoBehaviour {
                     intermission = false;
                     waveCooldown = 0;
                     enemiesSpawned = 0;
+
+                    enemiesPerWave = Mathf.Ceil(10 + (wave));
+
                     spawningEnemies = true;
                 }
 

@@ -39,7 +39,7 @@ public class TutorialScript : MonoBehaviour
         JUMPenemy = spawnTutorialEnemy(enemy, textures[1], tutorialSpawnPoints[1]);
         proceedEnemy = spawnTutorialEnemy(enemy, textures[2], tutorialSpawnPoints[2]);
 
-        if (proceedEnemy.GetComponent<Enemy>().health <= 0) {
+        if (proceedEnemy.GetComponent<EnemyHealth>().health <= 0) {
             Destroy(WASDenemy);
             Destroy(JUMPenemy);
 
@@ -54,7 +54,7 @@ public class TutorialScript : MonoBehaviour
         exampleEnemyText = spawnTutorialEnemy(enemy, textures[4], tutorialSpawnPoints[4]);
         proceedEnemy2 = spawnTutorialEnemy(enemy, textures[5], tutorialSpawnPoints[5]);
 
-        if (proceedEnemy2.GetComponent<Enemy>().health <= 0) {
+        if (proceedEnemy2.GetComponent<EnemyHealth>().health <= 0) {
             skipTutorial = true;
 
         }

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour {
+public class EnemyHealth : MonoBehaviour {
 
     public float health;
     private float maxHealth;
@@ -91,7 +91,7 @@ public class Enemy : MonoBehaviour {
         if (!dead) {
             if (enemyAI.chasePlayer) {
                 rb.velocity = new Vector3(Mathf.Abs(rb.velocity.x), Mathf.Abs(rb.velocity.y), Mathf.Abs(rb.velocity.z));
-                rb.velocity = -rb.velocity * 2.5f;
+                rb.velocity = -rb.transform.forward * 2.5f;
             }
         }
 

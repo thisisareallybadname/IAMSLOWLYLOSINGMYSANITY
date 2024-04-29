@@ -5,7 +5,7 @@ using UnityEngine;
 public class TutorialScript : MonoBehaviour
 {
 
-    public Vector3[] tutorialSpawnPoints;
+    public Transform[] tutorialSpawnPoints;
     public Texture[] textures;
 
     public GameObject enemy;
@@ -28,8 +28,8 @@ public class TutorialScript : MonoBehaviour
 
     }
 
-    private GameObject spawnTutorialEnemy(GameObject clone, Texture instructions, Vector3 spawnPosition) {
-        GameObject enemy = Instantiate(clone, spawnPosition, Quaternion.identity);
+    private GameObject spawnTutorialEnemy(GameObject clone, Texture instructions, Transform spawnPosition) {
+        GameObject enemy = Instantiate(clone, spawnPosition.position, Quaternion.identity);
         enemy.GetComponent<enemyAI>().chasePlayer = false;
         return enemy;
     }
@@ -50,9 +50,9 @@ public class TutorialScript : MonoBehaviour
     }
 
     private void TutorialSection2() {
-        exampleEnemy = spawnTutorialEnemy(enemy, textures[3], tutorialSpawnPoints[3]);
-        exampleEnemyText = spawnTutorialEnemy(enemy, textures[4], tutorialSpawnPoints[4]);
-        proceedEnemy2 = spawnTutorialEnemy(enemy, textures[5], tutorialSpawnPoints[5]);
+        exampleEnemy = spawnTutorialEnemy(enemy, textures[3], tutorialSpawnPoints[1]);
+        exampleEnemyText = spawnTutorialEnemy(enemy, textures[4], tutorialSpawnPoints[2]);
+        proceedEnemy2 = spawnTutorialEnemy(enemy, textures[5], tutorialSpawnPoints[3]);
 
         if (proceedEnemy2.GetComponent<EnemyHealth>().health <= 0) {
             skipTutorial = true;

@@ -12,7 +12,7 @@ public class DeathZone : MonoBehaviour
     // Update is called once per frame
     private void OnCollisionEnter(Collision collision) {
         if (collision.gameObject.tag.Equals("Enemy") && collision.gameObject.GetComponent<enemyAI>().chasePlayer) {
-            collision.gameObject.GetComponent<Enemy>().takeDamage(100);
+            collision.gameObject.GetComponent<EnemyHealth>().takeDamage(100);
             Destroy(collision.collider);
 
         } else if (collision.gameObject.tag.Equals("Player")) {

@@ -10,13 +10,10 @@ public class enemyAI : MonoBehaviour {
 
     public bool chasePlayer;
 
+
+
     // Start is called before the first frame update
     void Start() {
-        if (!chasePlayer) {
-            Destroy(gameObject.GetComponent<Rigidbody>());
-
-        }
-
     }
 
     // Update is called once per frame
@@ -26,7 +23,7 @@ public class enemyAI : MonoBehaviour {
             rb.AddForce(transform.forward * walkspeed * 200 * Time.deltaTime, ForceMode.Force);
             rb.drag = 2.5f;
 
-            rb.velocity += rb.transform.forward.normalized / 2.5f;
+            rb.velocity += walkspeed * (rb.transform.forward.normalized / 7.5f);
         
         }
     }

@@ -291,7 +291,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 11.099976, y: -163.88998}
+  m_AnchoredPosition: {x: 11.099976, y: -233}
   m_SizeDelta: {x: 328.5455, y: 197.1273}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &99615832
@@ -857,7 +857,7 @@ Transform:
   m_GameObject: {fileID: 578801947}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.9691161, z: -0, w: 0.24660505}
-  m_LocalPosition: {x: -9.503987, y: -102, z: 1.9072391}
+  m_LocalPosition: {x: -9.503987, y: 100000000, z: 1.9072391}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -934,7 +934,7 @@ MonoBehaviour:
   rb: {fileID: 578801950}
   lieOnFloorMaxTime: 3
   waveManager: {fileID: 1289758840}
-  enemyAI: {fileID: 0}
+  enemyAI: {fileID: 578801948}
 --- !u!1 &586414287
 GameObject:
   m_ObjectHideFlags: 0
@@ -1598,15 +1598,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shootPos: {fileID: 1209092213}
   tracer: {fileID: 1209092215}
-  attackSpeed: 0.01
+  attackSpeed: 0.5
   playerCamera: {fileID: 1459420592}
-  recoilValue: {x: 0.15, y: 0.2, z: 0}
-  rotationRecoilValue: {x: 0.3, y: 15, z: 0}
-  cameraRecoilValue: {x: 0.05, y: 0.1, z: 0}
+  recoilValue: {x: 0, y: 0.025, z: -0.1}
+  rotationRecoilValue: {x: -15, y: -15, z: 0}
+  cameraRecoilValue: {x: 0.1, y: 0.35, z: 0}
   cameraRotationalRecoilValue: {x: 0, y: 0, z: -0.5}
   hand: {fileID: 860605485}
   handName: left arm
-  damage: 0.1
+  damage: 2
   weapon: {fileID: 0}
 --- !u!114 &860605491
 MonoBehaviour:
@@ -2389,11 +2389,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shootPos: {fileID: 31766081}
   tracer: {fileID: 31766083}
-  attackSpeed: 0.5
+  attackSpeed: 0.25
   playerCamera: {fileID: 1459420592}
-  recoilValue: {x: -0.15, y: 0.2, z: 0}
-  rotationRecoilValue: {x: -0.3, y: -15, z: 0}
-  cameraRecoilValue: {x: -0.05, y: 0.1, z: 0}
+  recoilValue: {x: 0, y: 0.05, z: -0.2}
+  rotationRecoilValue: {x: -15, y: 15, z: 0}
+  cameraRecoilValue: {x: 0.05, y: 0.35, z: 0}
   cameraRotationalRecoilValue: {x: 0, y: 0, z: -0.5}
   hand: {fileID: 1104949228}
   handName: right arm
@@ -2882,7 +2882,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -8.900024, y: -125}
+  m_AnchoredPosition: {x: -8.900024, y: -205}
   m_SizeDelta: {x: 240, y: 36}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1291619079
@@ -3816,7 +3816,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1910409582}
-  - component: {fileID: 1910409581}
   m_Layer: 0
   m_Name: TutorialManager
   m_TagString: Untagged
@@ -3824,25 +3823,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1910409581
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1910409580}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5ea7ccdf090da948a7a8ff4e6ac7b5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tutorialSpawnPoints:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  textures: []
-  enemy: {fileID: 578801947}
-  waveManager: {fileID: 1289758840}
 --- !u!4 &1910409582
 Transform:
   m_ObjectHideFlags: 0

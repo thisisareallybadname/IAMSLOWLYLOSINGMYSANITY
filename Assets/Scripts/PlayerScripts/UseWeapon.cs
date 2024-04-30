@@ -117,7 +117,7 @@ public class FireWeapon : MonoBehaviour
 
         }
         
-        handRecoil.applyForce(cameraRecoilValue, 5, rotationRecoilValue);
+        handRecoil.applyForce(recoilValue, 5, rotationRecoilValue);
         playerCamera.applyCameraForce(cameraRecoilValue, cameraRotationalRecoilValue);
 
         StartCoroutine(CreateTracer(tracer, start, end));

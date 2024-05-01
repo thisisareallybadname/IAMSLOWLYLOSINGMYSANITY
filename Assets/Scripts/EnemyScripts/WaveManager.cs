@@ -131,7 +131,7 @@ public class WaveManager : MonoBehaviour {
                     waveCooldown = 0;
                     enemiesSpawned = 0;
 
-                    enemiesPerWave = Mathf.Pow(2, wave);
+                    enemiesPerWave = 5 + wave;
 
                     spawningEnemies = true;
                 }

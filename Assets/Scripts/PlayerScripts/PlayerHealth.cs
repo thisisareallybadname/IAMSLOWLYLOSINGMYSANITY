@@ -33,11 +33,6 @@ public class PlayerHealth : MonoBehaviour {
 
         }
 
-        if (health <= 0) {
-            gameObject.SendMessage("GameOver", true, SendMessageOptions.DontRequireReceiver);
-
-        }
-
         if (transform.position.y < 0) {
             setHealth(0);
 

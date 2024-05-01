@@ -112,18 +112,18 @@ public class PlayerMovement : MonoBehaviour
             dashDebounce = true;
             isDashing = true;
 
-            takeDashDamage = Physics.OverlapBox(transform.position, new Vector3(250f, 250f, 250f), transform.rotation);
+            takeDashDamage = Physics.OverlapSphere(transform.position, 3f);
 
             foreach (Collider c in takeDashDamage) {
                 if (c.tag.Equals("Enemy")) {
-                    c.gameObject.GetComponent<EnemyHealth>().takeDamage(9999999);
+                    c.gameObject.GetComponent<EnemyHealth>().takeDamage(0, 25f);
                 }
 
             }
 
             while (dashDuration < 0.25f) {
                 characterController.Move(movement * 5 * dashSpeed * Time.deltaTime);
-                cam.applyCameraForce(Vector3.zero, new Vector3(0, 0.5f, -0.5f));
+                //cam.applyCameraForce(Vector3.zero, new Vector3(0, 0.5f, -0.5f));
                 yield return new WaitForSeconds(0.025f * Time.deltaTime);
             }
 

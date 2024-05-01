@@ -34,7 +34,6 @@ public class EnemyHealth : MonoBehaviour {
     public enemyAI enemyAI;
 
     public float enemyControl;
-    public float knockback;
     public float knockbackControl;
 
     // Start is called before the first frame update
@@ -88,19 +87,22 @@ public class EnemyHealth : MonoBehaviour {
         if (hitCooldown < immunityDuration) {
             hitCooldown += Time.fixedDeltaTime;
             rb.drag = knockbackControl;
+            enemyAI.enabled = false;
 
         } else if (hitCooldown >= immunityDuration) {
             rb.drag = enemyControl;
+            enemyAI.enabled = true;
 
         }
     }
 
-    public void takeDamage(float damage) {
+    public void takeDamage(float damage, float knockback) {
         if (!dead) {
             if (enemyAI.chasePlayer) {
                 hitCooldown = 0;
                 rb.velocity = new Vector3(Mathf.Abs(rb.velocity.x), Mathf.Abs(rb.velocity.y), Mathf.Abs(rb.velocity.z));
                 rb.velocity = -rb.transform.forward * knockback;
+                enemyAI.enabled = false;
             }
         }
 

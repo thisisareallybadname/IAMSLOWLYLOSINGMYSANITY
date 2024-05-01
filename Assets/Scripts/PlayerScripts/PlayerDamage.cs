@@ -48,7 +48,7 @@ public class PlayerDamage : MonoBehaviour {
     }
 
 
-    private void OnTriggerEnter(Collider collision) {
+    private void OnTriggerStay(Collider collision) {
         if (collision.gameObject.tag.Equals("Enemy")) {
             if (canTakeDamage) {
                 health -= 1;

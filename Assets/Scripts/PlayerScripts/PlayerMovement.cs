@@ -36,6 +36,8 @@ public class PlayerMovement : MonoBehaviour
     private float dashCooldown = 0f;
     public PlayerCamera cam;
 
+    public Collider[] takeDashDamage;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -114,6 +116,15 @@ public class PlayerMovement : MonoBehaviour
         {
             dashDebounce = true;
             isDashing = true;
+
+            takeDashDamage = Physics.OverlapBox(transform.position, new Vector3(250f, 250f, 250f), transform.rotation);
+
+            foreach (Collider c in takeDashDamage) {
+                if (c.tag.Equals("Enemy")) {
+                    c.gameObject.GetComponent<EnemyHealth>().takeDamage(9999999);
+                }
+
+            }
 
             while (dashDuration < 0.25f) {
 

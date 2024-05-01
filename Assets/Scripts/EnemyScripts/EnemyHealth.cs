@@ -9,7 +9,7 @@ public class EnemyHealth : MonoBehaviour {
     private float maxHealth;
 
     public float immunityDuration;
-    private float hitCooldown;
+    private float hitCooldown = 999;
 
     private bool canTakeDamage = true;
 
@@ -32,6 +32,10 @@ public class EnemyHealth : MonoBehaviour {
     public WaveManager waveManager;
 
     public enemyAI enemyAI;
+
+    public float enemyControl;
+    public float knockback;
+    public float knockbackControl;
 
     // Start is called before the first frame update
     void Start() {
@@ -83,15 +87,20 @@ public class EnemyHealth : MonoBehaviour {
 
         if (hitCooldown < immunityDuration) {
             hitCooldown += Time.fixedDeltaTime;
-        
+            rb.drag = knockbackControl;
+
+        } else if (hitCooldown >= immunityDuration) {
+            rb.drag = enemyControl;
+
         }
     }
 
     public void takeDamage(float damage) {
         if (!dead) {
             if (enemyAI.chasePlayer) {
+                hitCooldown = 0;
                 rb.velocity = new Vector3(Mathf.Abs(rb.velocity.x), Mathf.Abs(rb.velocity.y), Mathf.Abs(rb.velocity.z));
-                rb.velocity = -rb.transform.forward * 2.5f;
+                rb.velocity = -rb.transform.forward * knockback;
             }
         }
 

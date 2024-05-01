@@ -17,7 +17,7 @@ public class DeathZone : MonoBehaviour
 
         } else if (collision.gameObject.tag.Equals("Player")) {
             Debug.Log("HELP");
-            collision.gameObject.GetComponent<PlayerHealth>().setHealth(100);
+            collision.gameObject.GetComponent<PlayerDamage>().setHealth(100);
 
         }
     }

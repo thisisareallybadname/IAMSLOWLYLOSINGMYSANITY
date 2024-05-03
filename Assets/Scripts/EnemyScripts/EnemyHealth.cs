@@ -8,6 +8,8 @@ public class EnemyHealth : MonoBehaviour {
     public float health;
     private float maxHealth;
 
+    public float kbResistance;
+
     public float immunityDuration;
     private float hitCooldown = 999;
 
@@ -101,7 +103,7 @@ public class EnemyHealth : MonoBehaviour {
             if (enemyAI.chasePlayer) {
                 hitCooldown = 0;
                 rb.velocity = new Vector3(Mathf.Abs(rb.velocity.x), Mathf.Abs(rb.velocity.y), Mathf.Abs(rb.velocity.z));
-                rb.velocity = -rb.transform.forward * knockback;
+                rb.velocity = -rb.transform.forward * (knockback / kbResistance);
                 enemyAI.enabled = false;
             }
         }

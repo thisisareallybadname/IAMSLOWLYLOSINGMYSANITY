@@ -108,12 +108,15 @@ public class FireWeapon : MonoBehaviour
                 enemy = hit.collider.gameObject;
                 enemy.GetComponent<EnemyHealth>().takeDamage(damage, damage * 2f);
 
+            } else if (hit.collider.gameObject.tag.Equals("bomb")) {
+                hit.collider.gameObject.GetComponent<ProjectileBehavior>().explode();
+
             }
 
             end = hit.point;
 
         } else {
-            end = shootPos.transform.position + shootPos.transform.forward * 100;
+            end = shootPos.transform.position + shootPos.transform.forward * 150;
 
         }
         

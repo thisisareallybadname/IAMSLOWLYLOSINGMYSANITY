@@ -22,7 +22,7 @@ public class WaveManager : MonoBehaviour {
     private float enemiesKilled = 0;
 
     public bool spawningEnemies = false;
-    private bool intermission;
+    public bool intermission;
 
     public EnemySpawnManager spawner;
     public GameObject enemy;
@@ -40,6 +40,7 @@ public class WaveManager : MonoBehaviour {
     public TMP_Text waveReached;
 
     public bool startGame;
+    public bool waveEnded;
 
     // Start is called before the first frame update
     void Start() {
@@ -59,8 +60,8 @@ public class WaveManager : MonoBehaviour {
         enemiesKilled++;
     }
 
-    public void StartWave() {
-
+    public float EnemiesLeft() {
+        return enemies.Count;
 
     }
 
@@ -120,12 +121,14 @@ public class WaveManager : MonoBehaviour {
                 waveCooldown += Time.fixedDeltaTime;
                 playerHealth.setHealth(5);
                 intermission = true;
+                waveEnded = true;
 
             }
             else
             {
                 if (!spawningEnemies)
                 {
+                    waveEnded = false;
                     wave++;
                     intermission = false;
                     waveCooldown = 0;

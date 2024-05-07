@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.DeviceSimulation;
 using UnityEngine;
 
 public class ProjectileBehavior : MonoBehaviour {
@@ -18,6 +19,7 @@ public class ProjectileBehavior : MonoBehaviour {
     private float countdown = 0;
 
     public bool dangerous;
+    public float damage;
 
     // Start is called before the first frame update
     void Start() {
@@ -40,6 +42,10 @@ public class ProjectileBehavior : MonoBehaviour {
 
             } else {
                 explosionEffect.transform.localScale = Vector3.Lerp(explosionEffect.transform.localScale, new Vector3(15, 15, 15), countdown);
+                
+                Color explosionColor = explosionEffect.GetComponent<Renderer>().material.color;
+                explosionColor.a = Mathf.Lerp(1, 0, countdown);
+
                 countdown += Time.fixedDeltaTime;
 
             }
@@ -50,26 +56,32 @@ public class ProjectileBehavior : MonoBehaviour {
 
     private void OnTriggerEnter(Collider collision) {
         if (!collision.gameObject.tag.Equals("floor") && !collision.gameObject.tag.Equals("bomb") && dangerous) {
-            hits = Physics.OverlapSphere(transform.position, 15);
+            explode();
+        }
+    }
 
-            foreach (Collider collider in hits)
+    public void explode() {
+        hits = Physics.OverlapSphere(transform.position, explosionEffect.transform.localScale.x * 15);
+
+        Destroy(this.GetComponent<Rigidbody>());
+
+        foreach (Collider collider in hits)
+        {
+            if (collider.gameObject.tag.Equals("Player"))
             {
-                if (collider.gameObject.tag.Equals("Player"))
-                {
-                    player.GetComponent<PlayerDamage>().takeDamage(4);
-                    touchingSomething = true;
-
-                }
-                else if (collider.gameObject.tag.Equals("Enemy"))
-                {
-                    collider.gameObject.GetComponent<EnemyHealth>().takeDamage(99999999999, 1);
-                    touchingSomething = true;
-
-                }
-
-                explosionExpanding = true;
+                player.GetComponent<PlayerDamage>().takeDamage(damage);
+                touchingSomething = true;
 
             }
+            else if (collider.gameObject.tag.Equals("Enemy"))
+            {
+                collider.gameObject.GetComponent<EnemyHealth>().takeDamage(99999999999, 1);
+                touchingSomething = true;
+
+            }
+
+            explosionExpanding = true;
+
         }
     }
 }

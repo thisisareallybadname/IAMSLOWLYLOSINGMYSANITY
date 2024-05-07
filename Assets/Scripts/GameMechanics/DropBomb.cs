@@ -27,13 +27,13 @@ public class LandmineSetter : MonoBehaviour {
     // Update is called once per frame
     void Update() {
 
-        canDropBombs = manager.spawningEnemies;
+        canDropBombs = manager.intermission;
 
-        bombLimit = Random.Range(0, manager.wave * 5);
+        bombLimit = manager.wave * 5;
 
         if (canDropBombs) {
             if (bombCounter < bombLimit) {
-                transform.position = new Vector3(Random.Range(-floorX / 2, floorX / 2), 110, Random.Range(-floorZ / 2, floorZ / 2));
+                transform.position = new Vector3(Random.Range(-floorX / 2, floorX / 2), 3, Random.Range(-floorZ / 2, floorZ / 2));
                 GameObject newLandmine = Instantiate(landmine, transform.position, Quaternion.identity);
                 newLandmine.GetComponent<ProjectileBehavior>().dangerous = true;
 
@@ -45,6 +45,13 @@ public class LandmineSetter : MonoBehaviour {
 
         } else {
             bombCounter = 0;
+
+                foreach (GameObject landmine in landmines) {
+                    Destroy(landmine);
+
+                }
+
+            
             
         }
     }

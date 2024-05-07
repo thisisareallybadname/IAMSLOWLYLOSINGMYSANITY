@@ -21,7 +21,7 @@ public class WaveManager : MonoBehaviour {
 
     private float enemiesKilled = 0;
 
-    private bool spawningEnemies = false;
+    public bool spawningEnemies = false;
     private bool intermission;
 
     public EnemySpawnManager spawner;

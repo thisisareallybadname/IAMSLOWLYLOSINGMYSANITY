@@ -14,41 +14,49 @@ public class ProjectileBehavior : MonoBehaviour {
 
     private bool touchingSomething;
 
+    private bool explosionExpanding;
+    private float countdown = 0;
+
+    public bool dangerous;
+
     // Start is called before the first frame update
     void Start() {
         player = GameObject.Find("Player");
+        explosionEffect = Instantiate(GameObject.Find("explosion"), transform.position, Quaternion.identity);
+        explosionEffect.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+        explosionEffect.transform.parent = transform;
+        explosionEffect.transform.localPosition = Vector3.zero;
+
         transform.LookAt(player.transform.position);
 
     }
 
     // Update is called once per frame
     void FixedUpdate() {
+        if (explosionExpanding) {
+            if (countdown > 1) {
+                Destroy(explosionEffect);
+                Destroy(transform.gameObject);
 
+            } else {
+                explosionEffect.transform.localScale = Vector3.Lerp(explosionEffect.transform.localScale, new Vector3(15, 15, 15), countdown);
+                countdown += Time.fixedDeltaTime;
 
-    }
-
-    IEnumerator fadeOut() {
-        //explosionEffect.transform.localScale = Vector3.Lerp(explosionEffect.transform.localScale, Vector3.zero, 5);
-        yield return new WaitForSeconds(1);
-
-        Destroy(explosionEffect);
-        Destroy(transform.gameObject);
-
+            }
+            
+        }
 
     }
 
     private void OnTriggerEnter(Collider collision) {
-        if (!collision.gameObject.tag.Equals("floor")) {
+        if (!collision.gameObject.tag.Equals("floor") && dangerous) {
             hits = Physics.OverlapSphere(transform.position, 15);
-
-            explosionEffect = Instantiate(GameObject.Find("explosion"), transform.position, Quaternion.identity);
-            explosionEffect.transform.localScale = new Vector3(15, 15, 15);
 
             foreach (Collider collider in hits)
             {
                 if (collider.gameObject.tag.Equals("Player"))
                 {
-                    player.GetComponent<PlayerDamage>().setHealth(player.GetComponent<PlayerDamage>().health - 3);
+                    player.GetComponent<PlayerDamage>().takeDamage(4);
                     touchingSomething = true;
 
                 }
@@ -59,7 +67,7 @@ public class ProjectileBehavior : MonoBehaviour {
 
                 }
 
-                StartCoroutine(fadeOut());
+                explosionExpanding = true;
 
             }
         }

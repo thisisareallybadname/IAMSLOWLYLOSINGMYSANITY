@@ -13,6 +13,8 @@ public class Tutorial : MonoBehaviour {
     private GameObject MovementTutorial;
     private GameObject waveTutorial;
 
+    public bool skipTutorial;
+
     // Start is called before the first frame update
     void Start() {
         tutorialEnemy = Instantiate(enemy, spawnpoints[1].position, Quaternion.identity);
@@ -35,6 +37,11 @@ public class Tutorial : MonoBehaviour {
         waveTutorial.GetComponent<EnemyHealth>().health = 1000000;
         waveTutorial.GetComponent<EnemyHealth>().kbResistance = 1000000;
         waveTutorial.GetComponent<EnemyHealth>().FullHealthSprite = enemySprites[2];
+
+        if (skipTutorial) {
+            Destroy(tutorialEnemy);
+
+        }
     }
 
     // Update is called once per frame

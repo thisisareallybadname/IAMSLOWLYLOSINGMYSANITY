@@ -10,8 +10,6 @@ public class enemyAI : MonoBehaviour {
 
     public bool chasePlayer;
 
-
-
     // Start is called before the first frame update
     void Start() {
     }

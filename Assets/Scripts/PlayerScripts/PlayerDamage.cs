@@ -12,7 +12,6 @@ public class PlayerDamage : MonoBehaviour {
     private float knockbackDuration;
 
     public float health;
-    private bool takeDamage;
 
     private float immunityTimer;
     public float immunityLength;
@@ -50,12 +49,7 @@ public class PlayerDamage : MonoBehaviour {
 
     private void OnTriggerStay(Collider collision) {
         if (collision.gameObject.tag.Equals("Enemy")) {
-            if (canTakeDamage) {
-                health -= 1;
-                canTakeDamage = false;
-                hurtEffect.applyCameraForce(new Vector3(0, 0, -22.5f), new Vector3(0, 0.75f, -0.5f));
-
-            }
+            takeDamage(collision.gameObject.GetComponent<Enemy>().getDamage());
 
         }
 
@@ -69,4 +63,13 @@ public class PlayerDamage : MonoBehaviour {
         health = newHealth; 
     }
 
+    public void takeDamage(float damage) {
+        if (canTakeDamage) {
+            canTakeDamage = false;
+            hurtEffect.applyCameraForce(new Vector3(0, 0, -22.5f), new Vector3(0, 0.75f, -0.5f));
+            health -= damage;
+
+        }
+
+    }
 }

@@ -49,7 +49,7 @@ public class ProjectileBehavior : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider collision) {
-        if (!collision.gameObject.tag.Equals("floor") && dangerous) {
+        if (!collision.gameObject.tag.Equals("floor") && !collision.gameObject.tag.Equals("bomb") && dangerous) {
             hits = Physics.OverlapSphere(transform.position, 15);
 
             foreach (Collider collider in hits)

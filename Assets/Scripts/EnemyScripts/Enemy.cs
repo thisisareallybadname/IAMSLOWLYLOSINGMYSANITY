@@ -5,12 +5,17 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 public class Enemy : MonoBehaviour {
-    private float health;
-    private float speed;
+    public float health;
+    public float speed;
     public float damage;
 
+    public Material enemySprite;
+    public GameObject enemyPNG;
+    
     private enemyAI enemyMovement;
     private EnemyHealth enemyHealth;
+
+    
 
     void Start() {
         enemyHealth = GetComponent<EnemyHealth>();
@@ -33,4 +38,24 @@ public class Enemy : MonoBehaviour {
         return damage;
 
     }
+
+    public void setEnemySprite(Material newMaterial) {
+        enemyPNG.transform.GetComponent<MeshRenderer>().material = newMaterial;
+
+    }
+
+    public void setHealth(float health) {
+        enemyHealth.health = health;
+
+    }
+    public void setDamage(float newDamage) {
+        damage = newDamage;
+
+    }
+
+    public void setSpeed(float newSpeed) {
+        enemyMovement.walkspeed = (int)newSpeed;
+
+    }
+
 }

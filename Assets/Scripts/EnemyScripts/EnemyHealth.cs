@@ -38,6 +38,9 @@ public class EnemyHealth : MonoBehaviour {
     public float enemyControl;
     public float knockbackControl;
 
+    public bool isPerkOption;
+    public PerkManager perks;
+
     // Start is called before the first frame update
     void Start() {
         appliedDeathForce = false;
@@ -99,6 +102,12 @@ public class EnemyHealth : MonoBehaviour {
     }
 
     public void takeDamage(float damage, float knockback) {
+        if (isPerkOption) {
+            health = 0;
+            perks.PerkSelected(this.gameObject);
+
+        }
+
         if (!dead) {
             if (enemyAI.chasePlayer) {
                 hitCooldown = 0;

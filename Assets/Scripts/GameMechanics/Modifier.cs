@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,12 @@ public class Modifier {
 
     public string modifierDesc;
     public string modifierName;
-    public Sprite modifierImage;
+    public Material modifierImage;
 
+    public Modifier(float newDamage, float newSpeed, float newHealth, Material newModifierImage) {
+        damageModifier = newDamage;
+        speedModifier = newSpeed;
+        healthModifier = newHealth;
+        modifierImage = newModifierImage;
+    }
 }

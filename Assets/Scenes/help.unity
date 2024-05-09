@@ -3224,7 +3224,7 @@ MonoBehaviour:
   intermission: 0
   spawner: {fileID: 418151233}
   enemy: {fileID: 578801947}
-  wave: 0
+  wave: 100
   waveCounter: {fileID: 1195810479}
   spawns:
   - {fileID: 1334698490}
@@ -3355,7 +3355,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   manager: {fileID: 1289758840}
-  bombLimit: 0
+  bombLimit: 5
   floorX: 250
   floorZ: 250
   landmine: {fileID: 1331584945}
@@ -3696,7 +3696,7 @@ MonoBehaviour:
   walkspeed: 0
   timer: 0
   dangerous: 0
-  damage: 0
+  damage: 3
 --- !u!54 &1331584953
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3951,7 +3951,7 @@ Transform:
   m_GameObject: {fileID: 1459420583}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.8163414, y: 13.46, z: -62}
+  m_LocalPosition: {x: -4.8163414, y: 69.2, z: -62}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5082,7 +5082,7 @@ Transform:
   m_GameObject: {fileID: 1991938949}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -5, z: 39.6}
+  m_LocalPosition: {x: 0, y: -30, z: 39.6}
   m_LocalScale: {x: 2500, y: 1, z: 2500}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5353,7 +5353,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 423812ed6f822a4469cda665398f0be9, type: 2}
   - {fileID: 2100000, guid: 95f01b4573d989d48afd9f0c63e7a691, type: 2}
   - {fileID: 2100000, guid: 1c106bb64e14f4543a8568ff0b123b78, type: 2}
-  skipTutorial: 1
+  skipTutorial: 0
 --- !u!4 &2055736958
 Transform:
   m_ObjectHideFlags: 0

@@ -20,6 +20,7 @@ public class ProjectileBehavior : MonoBehaviour {
 
     public bool dangerous;
     public float damage;
+    private bool exploded = false;
 
     // Start is called before the first frame update
     void Start() {
@@ -61,27 +62,32 @@ public class ProjectileBehavior : MonoBehaviour {
     }
 
     public void explode() {
-        hits = Physics.OverlapSphere(transform.position, explosionEffect.transform.localScale.x * 15);
+        if (!exploded) {
+            exploded = true;
+            hits = Physics.OverlapSphere(transform.position, explosionEffect.transform.localScale.normalized.magnitude * 15);
 
-        Destroy(this.GetComponent<Rigidbody>());
+            Destroy(this.GetComponent<Rigidbody>());
 
-        foreach (Collider collider in hits)
-        {
-            if (collider.gameObject.tag.Equals("Player"))
+            foreach (Collider collider in hits)
             {
-                player.GetComponent<PlayerDamage>().takeDamage(damage);
-                touchingSomething = true;
+                if (collider.gameObject.tag.Equals("Player")) {
+                    player.GetComponent<PlayerDamage>().takeDamage(damage);
+                    touchingSomething = true;
+
+                }
+                else if (collider.gameObject.tag.Equals("Enemy")) {
+                    collider.gameObject.GetComponent<EnemyHealth>().takeDamage(damage, 25);
+                    touchingSomething = true;
+
+                } else if (collider.gameObject.tag.Equals("bomb")) {
+                    exploded = true;
+                    collider.gameObject.GetComponent<ProjectileBehavior>().explode();
+
+                }
+
+                explosionExpanding = true;
 
             }
-            else if (collider.gameObject.tag.Equals("Enemy"))
-            {
-                collider.gameObject.GetComponent<EnemyHealth>().takeDamage(99999999999, 1);
-                touchingSomething = true;
-
-            }
-
-            explosionExpanding = true;
-
         }
     }
 }

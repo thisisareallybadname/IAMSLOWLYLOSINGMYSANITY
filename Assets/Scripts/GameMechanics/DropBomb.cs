@@ -1,5 +1,7 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -11,7 +13,7 @@ public class LandmineSetter : MonoBehaviour
     public float bombLimit;
 
     private bool canDropBombs;
-    private bool spawningLandmineIndicators;
+    private bool spawnIndicators;
 
     public float floorX;
     public float floorZ;
@@ -19,8 +21,35 @@ public class LandmineSetter : MonoBehaviour
     public GameObject landmine;
     public GameObject landmineIndicator;
 
-    private HashSet<GameObject> landmineIndicators = new HashSet<GameObject>();
-    private HashSet<GameObject> landmines = new HashSet<GameObject>();
+    private bool debounce = true;
+
+    private List<Vector3> landmineSpawns = new List<Vector3>();
+    private List<GameObject> landmines = new List<GameObject>();
+    private List<GameObject> landmineSpawnIndicators = new List<GameObject>();
+
+    private bool clearLandmines = false;
+
+    private bool bombSpawnDebounce = true;
+
+    private void createLandmineSpawns() {
+        if (landmineSpawns.Count < bombLimit) {
+            transform.position = new Vector3(Random.Range(-floorX / 2, floorX / 2), 2, Random.Range(-floorZ / 2, floorZ / 2));
+            landmineSpawns.Add(transform.position);
+            
+            GameObject newIndicator = Instantiate(landmineIndicator, transform.position, Quaternion.identity);
+            landmineSpawnIndicators.Add(newIndicator);
+
+        }
+    }
+
+    private void spawnBombs() {
+        foreach (Vector3 landminePosition in landmineSpawns) {
+            GameObject newLandmine = Instantiate(landmine, landminePosition, Quaternion.identity);
+            newLandmine.GetComponent<ProjectileBehavior>().dangerous = true;
+
+            landmines.Add(newLandmine);
+        }
+    }
 
     // Start is called before the first frame update
 
@@ -30,48 +59,30 @@ public class LandmineSetter : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
+        bombLimit = manager.wave + 5;
 
-        spawningLandmineIndicators = manager.intermission;
-        canDropBombs = manager.spawningEnemies;
-
-        bombLimit = manager.wave * 5;
-
-        if (spawningLandmineIndicators)
-        {
-            if (bombCounter < bombLimit)
-            {
-                transform.position = new Vector3(Random.Range(-floorX / 2, floorX / 2), 3, Random.Range(-floorZ / 2, floorZ / 2));
-                GameObject newLandmineIndicator = Instantiate(landmineIndicator, transform.position, Quaternion.identity);
-                landmineIndicators.Add(newLandmineIndicator);
-
-                bombCounter++;
-
+        if (!manager.spawningEnemies && manager.EnemiesLeft() == 0) {
+            createLandmineSpawns();
+            for (int i = 0; i < landmines.Count; i++) {
+                Destroy(landmines[i]);
+                
             }
 
         } else {
+            if (landmineSpawnIndicators.Count > 0) {
+                landmineSpawns.Clear();
+                GameObject newLandmine = Instantiate(landmine, landmineSpawnIndicators[0].transform.position, Quaternion.identity);
+                newLandmine.GetComponent<ProjectileBehavior>().dangerous = true;
+                landmines.Add(newLandmine);
 
-            if (canDropBombs) {
-                foreach (GameObject indicator in landmineIndicators) {
-                    GameObject newLandmine = Instantiate(landmine, indicator.transform.position, Quaternion.identity);
-                    newLandmine.GetComponent<ProjectileBehavior>().dangerous = true;
-                    landmines.Add(newLandmine);
-                    //Destroy(indicator);
-                    //Debug.Log(landmineIndicators.Count - landmines.Count);
-                }
+                Destroy(landmineSpawnIndicators[0]);
+                landmineSpawnIndicators.Remove(landmineSpawnIndicators[0]);
 
-            } else {
-                bombCounter = 0;
-
-                if (manager.EnemiesLeft() == 0) {
-                    foreach (GameObject landmine in landmines) {
-                        Destroy(landmine);
-
-                    }
-                }
             }
+
         }
+        
     }
 
 }

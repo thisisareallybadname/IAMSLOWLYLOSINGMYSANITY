@@ -72,6 +72,13 @@ public class PlayerCamera : MonoBehaviour
         playerCam.transform.rotation = Quaternion.Euler(rotationX, rotationY, force.z);
         transform.localRotation = Quaternion.Euler(0f, rotationY, 0);
 
+        if (Input.GetKeyDown(KeyCode.F)) {
+            GameObject landmine = Instantiate(GameObject.Find("boomboomdevice"), playerCam.transform.position + (playerCam.transform.forward * 5), transform.rotation);
+            landmine.name = "PlayerLandmine";
+            landmine.GetComponent<ProjectileBehavior>().dangerous = true;
+
+        }
+
         tick += Time.deltaTime;
     }
 

@@ -103,10 +103,11 @@ public class EnemyHealth : MonoBehaviour {
             if (enemyAI.chasePlayer) {
                 hitCooldown = 0;
                 rb.velocity = new Vector3(Mathf.Abs(rb.velocity.x), Mathf.Abs(rb.velocity.y), Mathf.Abs(rb.velocity.z));
-                rb.velocity = -rb.transform.forward * (knockback / kbResistance);
                 enemyAI.enabled = false;
             }
         }
+
+        rb.AddForce(new Vector3(0, 1, 0) * knockback * 50 + new Vector3(Random.Range(-knockback * 0.5f, knockback * 0.5f), 0, Random.Range(-knockback * 0.5f, knockback * 0.5f)), ForceMode.Force);
 
         health -= damage;
         

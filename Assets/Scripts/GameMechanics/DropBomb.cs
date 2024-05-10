@@ -21,6 +21,8 @@ public class LandmineSetter : MonoBehaviour
     public GameObject landmine;
     public GameObject landmineIndicator;
 
+    private float deleteTimer;
+
     private bool debounce = true;
 
     private List<Vector3> landmineSpawns = new List<Vector3>();
@@ -60,28 +62,40 @@ public class LandmineSetter : MonoBehaviour
 
     // Update is called once per frame
     void Update() {
-        bombLimit = manager.wave + 5;
+        bombLimit = manager.wave * 5;
 
-        if (!manager.spawningEnemies && manager.EnemiesLeft() == 0) {
-            createLandmineSpawns();
-            for (int i = 0; i < landmines.Count; i++) {
-                Destroy(landmines[i]);
-                
+            if (!manager.spawningEnemies && manager.EnemiesLeft() == 0) {
+                createLandmineSpawns();
+
+                if (deleteTimer < 1) {
+                deleteTimer += Time.deltaTime;
+            
+                } else {
+                    deleteTimer = 0;
+                    for (int i = 0; i < landmines.Count; i++)
+                    {
+                        Destroy(landmines[i]);
+
+                    }
+                }
+            }
+            else
+            {
+                if (landmineSpawnIndicators.Count > 0)
+                {
+                    landmineSpawns.Clear();
+                    GameObject newLandmine = Instantiate(landmine, landmineSpawnIndicators[0].transform.position, Quaternion.identity);
+                    newLandmine.GetComponent<ProjectileBehavior>().dangerous = true;
+                    landmines.Add(newLandmine);
+
+                    Destroy(landmineSpawnIndicators[0]);
+                    landmineSpawnIndicators.Remove(landmineSpawnIndicators[0]);
+
+                }
+
             }
 
-        } else {
-            if (landmineSpawnIndicators.Count > 0) {
-                landmineSpawns.Clear();
-                GameObject newLandmine = Instantiate(landmine, landmineSpawnIndicators[0].transform.position, Quaternion.identity);
-                newLandmine.GetComponent<ProjectileBehavior>().dangerous = true;
-                landmines.Add(newLandmine);
-
-                Destroy(landmineSpawnIndicators[0]);
-                landmineSpawnIndicators.Remove(landmineSpawnIndicators[0]);
-
-            }
-
-        }
+        
         
     }
 

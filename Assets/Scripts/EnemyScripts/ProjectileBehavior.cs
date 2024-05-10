@@ -22,6 +22,7 @@ public class ProjectileBehavior : MonoBehaviour {
     public float damage;
     private bool exploded = false;
 
+    public float explosionRadius;
     // Start is called before the first frame update
     void Start() {
         player = GameObject.Find("Player");
@@ -42,7 +43,7 @@ public class ProjectileBehavior : MonoBehaviour {
                 Destroy(transform.gameObject);
 
             } else {
-                explosionEffect.transform.localScale = Vector3.Lerp(explosionEffect.transform.localScale, new Vector3(15, 15, 15), countdown);
+                explosionEffect.transform.localScale = Vector3.Lerp(explosionEffect.transform.localScale, new Vector3(explosionRadius, explosionRadius, explosionRadius), countdown);
                 
                 Color explosionColor = explosionEffect.GetComponent<Renderer>().material.color;
                 explosionColor.a = Mathf.Lerp(1, 0, countdown);
@@ -64,12 +65,18 @@ public class ProjectileBehavior : MonoBehaviour {
     public void explode() {
         if (!exploded) {
             exploded = true;
-            hits = Physics.OverlapSphere(transform.position, explosionEffect.transform.localScale.normalized.magnitude * 15);
+            hits = Physics.OverlapSphere(transform.position, explosionRadius);
 
             Destroy(this.GetComponent<Rigidbody>());
 
             foreach (Collider collider in hits)
             {
+
+                if (collider.gameObject.GetComponent<Rigidbody>() != null) {
+                    collider.gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(0, 100, 0), ForceMode.Force);
+
+                }
+
                 if (collider.gameObject.tag.Equals("Player")) {
                     player.GetComponent<PlayerDamage>().takeDamage(damage);
                     touchingSomething = true;

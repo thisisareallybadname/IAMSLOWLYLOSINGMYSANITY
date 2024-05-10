@@ -15,14 +15,18 @@ public class Enemy : MonoBehaviour {
     private enemyAI enemyMovement;
     private EnemyHealth enemyHealth;
 
-    
+    public bool active;
 
     void Start() {
+        
         enemyHealth = GetComponent<EnemyHealth>();
         enemyMovement = GetComponent<enemyAI>();
 
         speed = enemyMovement.walkspeed;
         health = enemyHealth.health;
+
+        enemyMovement.MakeHostile(active);
+        enemyMovement.setMovementSpeed(speed);
 
     }
 

@@ -18,21 +18,21 @@ public class Tutorial : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         tutorialEnemy = Instantiate(enemy, spawnpoints[1].position, Quaternion.identity);
-        tutorialEnemy.GetComponent<enemyAI>().chasePlayer = true;
-        tutorialEnemy.GetComponent<enemyAI>().walkspeed = 0;
+        tutorialEnemy.GetComponent<Enemy>().active = false;
+        tutorialEnemy.GetComponent<Enemy>().speed = 0;
 
 
         MovementTutorial = Instantiate(enemy, spawnpoints[0].position, Quaternion.identity);
-        MovementTutorial.GetComponent<enemyAI>().chasePlayer = true;
-        MovementTutorial.GetComponent<enemyAI>().walkspeed = 0;
+        MovementTutorial.GetComponent<Enemy>().active = false;
+        MovementTutorial.GetComponent<Enemy>().speed = 0;
 
         MovementTutorial.GetComponent<EnemyHealth>().health = 1000000;
         MovementTutorial.GetComponent<EnemyHealth>().kbResistance = 1000000;
         MovementTutorial.GetComponent<EnemyHealth>().FullHealthSprite = enemySprites[1];
 
         waveTutorial = Instantiate(enemy, spawnpoints[2].position, Quaternion.identity);
-        waveTutorial.GetComponent<enemyAI>().chasePlayer = true;
-        waveTutorial.GetComponent<enemyAI>().walkspeed = 0;
+        waveTutorial.GetComponent<Enemy>().active = false;
+        waveTutorial.GetComponent<Enemy>().speed = 0;
 
         waveTutorial.GetComponent<EnemyHealth>().health = 1000000;
         waveTutorial.GetComponent<EnemyHealth>().kbResistance = 1000000;
@@ -52,8 +52,8 @@ public class Tutorial : MonoBehaviour {
                 MovementTutorial.GetComponent<EnemyHealth>().kbResistance = 1;
                 waveTutorial.GetComponent<EnemyHealth>().kbResistance = 1;
 
-                MovementTutorial.GetComponent<EnemyHealth>().takeDamage(1000000, 1);
-                waveTutorial.GetComponent<EnemyHealth>().takeDamage(1000000, 1);
+                MovementTutorial.GetComponent<EnemyHealth>().takeDamage(1000000, 0);
+                waveTutorial.GetComponent<EnemyHealth>().takeDamage(1000000, 0);
             }
         }
 

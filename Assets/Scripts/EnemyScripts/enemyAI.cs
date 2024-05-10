@@ -8,7 +8,7 @@ public class enemyAI : MonoBehaviour {
     public int walkspeed;
     public Rigidbody rb;
 
-    public bool chasePlayer;
+    private bool chasePlayer;
 
     // Start is called before the first frame update
     void Start() {
@@ -16,8 +16,9 @@ public class enemyAI : MonoBehaviour {
 
     // Update is called once per frame
     void FixedUpdate() {
+        transform.LookAt(player.transform.position);
+
         if (chasePlayer) {
-            transform.LookAt(player.transform.position);
             rb.AddForce(transform.forward * walkspeed * 200 * Time.deltaTime, ForceMode.Force);
             rb.drag = 2.5f;
 
@@ -29,6 +30,10 @@ public class enemyAI : MonoBehaviour {
     public void setMovementSpeed(float newWalkspeed) {
 
         walkspeed = (int)newWalkspeed;
+    }
+
+    public void MakeHostile(bool chase) {
+        chasePlayer = chase;
     }
 
     

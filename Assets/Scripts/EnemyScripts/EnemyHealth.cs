@@ -34,6 +34,7 @@ public class EnemyHealth : MonoBehaviour {
     public WaveManager waveManager;
 
     public enemyAI enemyAI;
+    public Enemy enemyStats;
 
     public float enemyControl;
     public float knockbackControl;
@@ -102,14 +103,17 @@ public class EnemyHealth : MonoBehaviour {
     }
 
     public void takeDamage(float damage, float knockback) {
-        if (isPerkOption) {
-            health = 0;
-            perks.PerkSelected(this.gameObject);
-
-        }
 
         if (!dead) {
-            if (enemyAI.chasePlayer) {
+
+            if (isPerkOption)
+            {
+                health = 0;
+                perks.PerkSelected(GetComponent<Enemy>());
+
+            }
+
+            if (enemyStats.active) {
                 hitCooldown = 0;
                 rb.velocity = new Vector3(Mathf.Abs(rb.velocity.x), Mathf.Abs(rb.velocity.y), Mathf.Abs(rb.velocity.z));
                 enemyAI.enabled = false;

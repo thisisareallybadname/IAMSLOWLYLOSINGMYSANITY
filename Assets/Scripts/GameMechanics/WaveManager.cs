@@ -94,7 +94,7 @@ public class WaveManager : MonoBehaviour {
             randomSpawn = UnityEngine.Random.Range(0, 3);
 
             GameObject newEnemy = Instantiate(enemy, spawns[((int)randomSpawn)].transform.position, Quaternion.identity);
-            newEnemy.GetComponent<enemyAI>().chasePlayer = true;
+            newEnemy.GetComponent<Enemy>().active = true;
             enemies.Add(newEnemy);
             enemy.GetComponent<EnemyHealth>().addStatAmplifier(wave);
 

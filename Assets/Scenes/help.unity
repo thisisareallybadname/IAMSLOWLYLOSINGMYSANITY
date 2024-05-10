@@ -1266,7 +1266,6 @@ MonoBehaviour:
   player: {fileID: 1459420583}
   walkspeed: 6
   rb: {fileID: 578801950}
-  chasePlayer: 0
 --- !u!4 &578801949
 Transform:
   m_ObjectHideFlags: 0
@@ -1355,6 +1354,7 @@ MonoBehaviour:
   lieOnFloorMaxTime: 3
   waveManager: {fileID: 1289758840}
   enemyAI: {fileID: 578801948}
+  enemyStats: {fileID: 578801953}
   enemyControl: 2.5
   knockbackControl: 0
   isPerkOption: 0
@@ -1376,6 +1376,7 @@ MonoBehaviour:
   damage: 1
   enemySprite: {fileID: 2100000, guid: e0b52e8791679fc44a12d0ff9d7a99f1, type: 2}
   enemyPNG: {fileID: 574886804}
+  active: 0
 --- !u!1 &586414287
 GameObject:
   m_ObjectHideFlags: 0
@@ -2864,7 +2865,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.4008403, y: 1.0776618, z: 6.336057}
-  m_LocalScale: {x: 250, y: 1, z: 250}
+  m_LocalScale: {x: 275, y: 1, z: 275}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -5697,6 +5698,7 @@ MonoBehaviour:
   damage: 1
   enemySprite: {fileID: 0}
   enemyPNG: {fileID: 0}
+  active: 0
 --- !u!114 &2143634951
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5721,6 +5723,7 @@ MonoBehaviour:
   lieOnFloorMaxTime: 3
   waveManager: {fileID: 1289758840}
   enemyAI: {fileID: 2143634954}
+  enemyStats: {fileID: 2143634950}
   enemyControl: 2.5
   knockbackControl: 0
   isPerkOption: 1
@@ -5788,7 +5791,6 @@ MonoBehaviour:
   player: {fileID: 1459420583}
   walkspeed: 6
   rb: {fileID: 2143634953}
-  chasePlayer: 0
 --- !u!4 &2143634955
 Transform:
   m_ObjectHideFlags: 0

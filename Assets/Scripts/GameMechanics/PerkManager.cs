@@ -42,8 +42,8 @@ public class PerkManager : MonoBehaviour {
 
     }
 
-    public void PerkSelected(GameObject option) {
-        Enemy enemyPerks = option.GetComponent<Enemy>();
+    public void PerkSelected(Enemy stats) {
+        
         Debug.Log("perk selected");
 
     }

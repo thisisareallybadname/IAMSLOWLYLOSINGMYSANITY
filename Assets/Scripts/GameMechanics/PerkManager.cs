@@ -35,8 +35,6 @@ public class PerkManager : MonoBehaviour {
         Modifier randomModifier = modifierList.getModifier(randomIndex);
         Enemy enemyStuff = perkOption.GetComponent<Enemy>();
 
-        enemyStuff.setSpeed(0);
-        enemyStuff.setDamage(0);
         enemyStuff.setEnemySprite(randomModifier.modifierImage);
 
 

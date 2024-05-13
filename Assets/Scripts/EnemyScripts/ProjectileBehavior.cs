@@ -73,7 +73,7 @@ public class ProjectileBehavior : MonoBehaviour {
             {
 
                 if (collider.gameObject.GetComponent<Rigidbody>() != null) {
-                    collider.gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(0, 100, 0), ForceMode.Force);
+                    collider.gameObject.GetComponent<Rigidbody>().AddForce((collider.gameObject.transform.position - transform.position) * 5, ForceMode.Impulse);
 
                 }
 

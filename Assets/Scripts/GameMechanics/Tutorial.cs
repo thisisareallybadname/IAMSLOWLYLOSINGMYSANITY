@@ -7,13 +7,17 @@ public class Tutorial : MonoBehaviour {
     public GameObject enemy;
     public Transform[] spawnpoints;
     public WaveManager waveManager;
-    public Material[] enemySprites; 
+    public Material[] enemySprites;
+    public TimeManager time;
 
     private GameObject tutorialEnemy;
     private GameObject MovementTutorial;
     private GameObject waveTutorial;
 
     public bool skipTutorial;
+    public bool tutorialFinished;
+
+    private bool startedGame = false;
 
     // Start is called before the first frame update
     void Start() {
@@ -46,16 +50,20 @@ public class Tutorial : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (tutorialEnemy == null) {
-            waveManager.startGame = true;
-            if (MovementTutorial != null && waveTutorial != null) {
-                MovementTutorial.GetComponent<EnemyHealth>().kbResistance = 1;
-                waveTutorial.GetComponent<EnemyHealth>().kbResistance = 1;
+        if (!startedGame) {
+            if (tutorialEnemy == null) {
+                tutorialFinished = true;
+                time.StartGame();
+                startedGame = true;
+                if (MovementTutorial != null && waveTutorial != null)
+                {
+                    MovementTutorial.GetComponent<EnemyHealth>().kbResistance = 1;
+                    waveTutorial.GetComponent<EnemyHealth>().kbResistance = 1;
 
-                MovementTutorial.GetComponent<EnemyHealth>().takeDamage(1000000, 0);
-                waveTutorial.GetComponent<EnemyHealth>().takeDamage(1000000, 0);
+                    MovementTutorial.GetComponent<EnemyHealth>().takeDamage(1000000, 0);
+                    waveTutorial.GetComponent<EnemyHealth>().takeDamage(1000000, 0);
+                }
             }
         }
-
     }
 }

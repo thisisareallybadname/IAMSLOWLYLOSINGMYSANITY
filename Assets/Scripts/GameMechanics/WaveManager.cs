@@ -55,6 +55,11 @@ public class WaveManager : MonoBehaviour {
         }
     }
 
+    public void resetGame() {
+        wave = 0;
+
+    }
+
     public void enemyDeath(GameObject enemy) {
         enemies.Remove(enemy);
         enemiesKilled++;

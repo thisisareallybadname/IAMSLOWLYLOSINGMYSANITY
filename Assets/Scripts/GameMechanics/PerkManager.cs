@@ -7,10 +7,11 @@ public class PerkManager : MonoBehaviour {
     public ModifierList modifierList;
     GameObject selectedEnemy;
 
+    TimeManager timeManager;
     public List<Modifier> modifiers = new List<Modifier>();
     List<GameObject> options = new List<GameObject>();
 
-    private bool selectedOption;
+    public bool selectedOption;
 
     // Start is called before the first frame update
     void Start()
@@ -41,7 +42,8 @@ public class PerkManager : MonoBehaviour {
     }
 
     public void PerkSelected(Enemy stats) {
-        
+
+        selectedOption = true;
         Debug.Log("perk selected");
 
     }

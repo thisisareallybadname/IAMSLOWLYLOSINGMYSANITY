@@ -39,8 +39,9 @@ public class WaveManager : MonoBehaviour {
     public TMP_Text enemyCounter;
     public TMP_Text waveReached;
 
-    public bool startGame;
+    public bool running;
     public bool waveEnded;
+    public bool frog = false;
 
     // Start is called before the first frame update
     void Start() {
@@ -49,7 +50,8 @@ public class WaveManager : MonoBehaviour {
 
     // Update is called once per frame
     void FixedUpdate() {
-        if (startGame) {
+        Debug.Log(frog);
+        if (running && frog) {
             Playing();
 
         }
@@ -70,6 +72,12 @@ public class WaveManager : MonoBehaviour {
 
     }
 
+    public bool isIntermission() {
+        return intermission;
+
+    }
+
+
     private void Playing() {
         if (!intermission)
         {
@@ -78,13 +86,11 @@ public class WaveManager : MonoBehaviour {
         }
         else
         {
-            if (Mathf.Ceil(waveDelay - waveCooldown) > waveDelay * 0.8f && wave > 0)
-            {
+            if (Mathf.Ceil(waveDelay - waveCooldown) > waveDelay * 0.8f && wave > 0) {
                 enemyCounter.text = "Wave Complete";
 
             }
-            else
-            {
+            else {
                 enemyCounter.text = "Next wave in " + Mathf.Ceil(waveDelay - waveCooldown);
             }
 
@@ -105,8 +111,7 @@ public class WaveManager : MonoBehaviour {
 
             enemiesSpawned++;
 
-            if (enemiesSpawned >= enemiesPerWave)
-            {
+            if (enemiesSpawned >= enemiesPerWave) {
                 spawningEnemies = false;
             }
         }
@@ -139,7 +144,7 @@ public class WaveManager : MonoBehaviour {
                     waveCooldown = 0;
                     enemiesSpawned = 0;
 
-                    enemiesPerWave = 5 + wave;
+                    enemiesPerWave = wave * 2;
 
                     spawningEnemies = true;
                 }

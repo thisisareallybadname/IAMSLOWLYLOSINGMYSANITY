@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -23,6 +24,7 @@ public class ProjectileBehavior : MonoBehaviour {
     private bool exploded = false;
 
     public float explosionRadius;
+    private bool deleteAfterExplosion;
     // Start is called before the first frame update
     void Start() {
         player = GameObject.Find("Player");
@@ -31,6 +33,8 @@ public class ProjectileBehavior : MonoBehaviour {
         explosionEffect.transform.parent = transform;
         explosionEffect.transform.localPosition = Vector3.zero;
 
+        deleteAfterExplosion = false;
+
         transform.LookAt(player.transform.position);
 
     }
@@ -38,7 +42,7 @@ public class ProjectileBehavior : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate() {
         if (explosionExpanding) {
-            if (countdown > 1) {
+            if (countdown >= 1) {
                 Destroy(explosionEffect);
                 Destroy(transform.gameObject);
 
@@ -60,6 +64,14 @@ public class ProjectileBehavior : MonoBehaviour {
         if (!collision.gameObject.tag.Equals("floor") && !collision.gameObject.tag.Equals("bomb") && dangerous) {
             explode();
         }
+    }
+
+    public void diffuse() {
+        if (!explosionExpanding) {
+            Destroy(this.gameObject);
+
+        }
+
     }
 
     public void explode() {

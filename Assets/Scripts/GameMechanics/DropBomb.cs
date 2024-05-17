@@ -24,6 +24,7 @@ public class LandmineSetter : MonoBehaviour
     private float deleteTimer;
 
     private bool debounce = true;
+    public bool canSpawnBombs;
 
     private List<Vector3> landmineSpawns = new List<Vector3>();
     private List<GameObject> landmines = new List<GameObject>();
@@ -32,6 +33,7 @@ public class LandmineSetter : MonoBehaviour
     private bool clearLandmines = false;
 
     private bool bombSpawnDebounce = true;
+    public WaveManager waveManager;
 
     private void createLandmineSpawns() {
         if (landmineSpawns.Count < bombLimit) {
@@ -63,21 +65,14 @@ public class LandmineSetter : MonoBehaviour
     // Update is called once per frame
     void Update() {
         bombLimit = manager.wave * 5;
-
-            if (!manager.spawningEnemies && manager.EnemiesLeft() == 0) {
+            if (canSpawnBombs) {
                 createLandmineSpawns();
-
-                if (deleteTimer < 1) {
-                deleteTimer += Time.deltaTime;
-            
-                } else {
-                    deleteTimer = 0;
-                    for (int i = 0; i < landmines.Count; i++)
-                    {
-                        Destroy(landmines[i]);
-
+                for (int i = 0; i < landmines.Count; i++) {
+                    if (landmines[i] != null) {
+                    landmines[i].GetComponent<ProjectileBehavior>().diffuse();
                     }
                 }
+                
             }
             else
             {

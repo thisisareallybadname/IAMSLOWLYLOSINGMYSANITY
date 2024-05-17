@@ -18,9 +18,13 @@ public class PlayerDamage : MonoBehaviour {
     private bool canTakeDamage;
 
     public PlayerCamera hurtEffect;
+    public TimeManager timeManager;
+
+    public float maxHealth;
 
     // Start is called before the first frame update
     void Start() {
+        health = maxHealth;
         canTakeDamage = false;
         controller = GetComponent<CharacterController>();
         
@@ -43,7 +47,13 @@ public class PlayerDamage : MonoBehaviour {
         {
             canTakeDamage = true;
             immunityTimer = 0;
-        }        
+        }
+        
+        if (health <= 0) {
+            timeManager.StopGame();
+
+        }
+
     }
 
 

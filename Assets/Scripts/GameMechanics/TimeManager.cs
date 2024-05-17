@@ -6,22 +6,43 @@ public class TimeManager : MonoBehaviour {
 
     public WaveManager waves;
     public Tutorial tutorial;
+    public PerkManager perkManager;
+    public LandmineSetter landmines;
+    
+    private bool gameOver;
+    public bool spawnBombs;
 
     // Start is called before the first frame update
     public void PauseGame() {
-        waves.startGame = false;
+        waves.stopGame();
 
     }
 
     public void StartGame() {
-        waves.resetGame();
-        waves.startGame = true;
+        waves.startGame();
+
+    }
+
+    public void StopGame() {
+        waves.stopGame();
 
     }
 
     // Update is called once per frame
-    void EndGame() {
-        waves.startGame = false;
+    private void Update() {
+        landmines.canSpawnBombs = spawnBombs;
+
+        if (waves.GamePaused()) {
+            waves.stopGame();
+
+            if (!perkManager.selectedPerk) {
+                perkManager.SpawnPerkOption();
+
+            }
+
+
+        } else {
+        }
 
     }
 }

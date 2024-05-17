@@ -53,7 +53,7 @@ public class UIManager : MonoBehaviour {
     void Update() {
         health = damageManager.getHealth();
 
-        healthRatio = health / maxHealth;
+        healthRatio = health / damageManager.maxHealth;
 
         healthbarRemaining = healthTransform.sizeDelta.x;
         healthbarLost = 240 - healthbarRemaining;

@@ -39,9 +39,13 @@ public class WaveManager : MonoBehaviour {
     public TMP_Text enemyCounter;
     public TMP_Text waveReached;
 
-    public bool running;
-    public bool waveEnded;
-    public bool frog = false;
+    private bool running;
+    private bool pauseGame;
+    private bool pauseDebounce = true;
+
+    public TimeManager timeManager;
+
+    private bool perkDebounce;
 
     // Start is called before the first frame update
     void Start() {
@@ -50,8 +54,12 @@ public class WaveManager : MonoBehaviour {
 
     // Update is called once per frame
     void FixedUpdate() {
-        Debug.Log(frog);
-        if (running && frog) {
+        if (running) {
+            Debug.Log(running);
+        
+        }
+
+        if (running) {
             Playing();
 
         }
@@ -60,6 +68,17 @@ public class WaveManager : MonoBehaviour {
     public void resetGame() {
         wave = 0;
 
+    }
+
+    public void startGame() {
+        pauseGame = false;
+        running = true;
+
+    }
+
+    public void stopGame() {
+        running = false;
+    
     }
 
     public void enemyDeath(GameObject enemy) {
@@ -72,11 +91,10 @@ public class WaveManager : MonoBehaviour {
 
     }
 
-    public bool isIntermission() {
-        return intermission;
+    public bool GamePaused() {
+        return pauseGame;
 
     }
-
 
     private void Playing() {
         if (!intermission)
@@ -84,23 +102,23 @@ public class WaveManager : MonoBehaviour {
             enemyCounter.text = "Enemies Left: " + enemies.Count;
 
         }
-        else
-        {
+        else {
             if (Mathf.Ceil(waveDelay - waveCooldown) > waveDelay * 0.8f && wave > 0) {
                 enemyCounter.text = "Wave Complete";
+                if (wave > 0 && perkDebounce) {
+                    running = false;
+
+                }
 
             }
-            else {
+            else
+            {
                 enemyCounter.text = "Next wave in " + Mathf.Ceil(waveDelay - waveCooldown);
             }
 
         }
 
-        waveCounter.text = "Wave " + wave;
-        waveReached.text = "Reached Wave " + wave;
-
-        if (timer >= spawnDelay && enemiesSpawned < enemiesPerWave && spawningEnemies)
-        {
+        if (timer >= spawnDelay && enemiesSpawned < enemiesPerWave && spawningEnemies) {
             timer = 0;
             randomSpawn = UnityEngine.Random.Range(0, 3);
 
@@ -111,7 +129,8 @@ public class WaveManager : MonoBehaviour {
 
             enemiesSpawned++;
 
-            if (enemiesSpawned >= enemiesPerWave) {
+            if (enemiesSpawned >= enemiesPerWave)
+            {
                 spawningEnemies = false;
             }
         }
@@ -122,34 +141,43 @@ public class WaveManager : MonoBehaviour {
 
         }
 
-        //intermission period
+        // intermission period
+        if (enemies.Count == 0 && !spawningEnemies) {
+            if (pauseDebounce) {
+                pauseGame = true;
+                pauseDebounce = false;
 
-        if (enemies.Count == 0)
-        {
-            if (waveCooldown < waveDelay && !spawningEnemies)
-            {
+            }
+
+            timeManager.spawnBombs = true;
+            if (waveCooldown < waveDelay && !spawningEnemies) {
+
                 waveCooldown += Time.fixedDeltaTime;
-                playerHealth.setHealth(5);
+                playerHealth.setHealth(playerHealth.maxHealth);
                 intermission = true;
-                waveEnded = true;
 
             }
-            else
-            {
-                if (!spawningEnemies)
-                {
-                    waveEnded = false;
-                    wave++;
-                    intermission = false;
-                    waveCooldown = 0;
-                    enemiesSpawned = 0;
+            else {
+                wave++;
 
-                    enemiesPerWave = wave * 2;
+                pauseDebounce = true;
 
-                    spawningEnemies = true;
-                }
+                waveCounter.text = "Wave " + wave;
+                waveReached.text = "Reached Wave " + wave;
 
+                intermission = false;
+                waveCooldown = 0;
+                
+                enemiesSpawned = 0;
+                enemiesPerWave = 2 * wave;
+
+                spawningEnemies = true;
             }
+
+        } else {
+
+            timeManager.spawnBombs = false;
+
         }
 
     }

@@ -6,12 +6,17 @@ using UnityEngine;
 public class PerkManager : MonoBehaviour { 
     public ModifierList modifierList;
     GameObject selectedEnemy;
+    public GameObject enemy;
+    public GameObject perkSpawn;
+    GameObject newEnemy;
 
-    TimeManager timeManager;
     public List<Modifier> modifiers = new List<Modifier>();
     List<GameObject> options = new List<GameObject>();
+    public WaveManager waves;
 
-    public bool selectedOption;
+    public bool selectedPerk;
+    public bool perkSelecting;
+
 
     // Start is called before the first frame update
     void Start()
@@ -42,9 +47,17 @@ public class PerkManager : MonoBehaviour {
     }
 
     public void PerkSelected(Enemy stats) {
-
-        selectedOption = true;
         Debug.Log("perk selected");
+        perkSelecting = false;
+        selectedPerk = true;
+        waves.startGame();
 
+    }
+
+    public void SpawnPerkOption() {
+        if (!perkSelecting) {
+            perkSelecting = true;
+            newEnemy = Instantiate(enemy, perkSpawn.transform.position, Quaternion.identity);
+        }
     }
 }

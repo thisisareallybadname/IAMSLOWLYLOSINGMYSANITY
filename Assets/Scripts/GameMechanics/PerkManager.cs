@@ -26,6 +26,11 @@ public class PerkManager : MonoBehaviour {
     public PlayerMovement movement;
     public FireWeapon leftDamage;
     public FireWeapon rightDamage;
+    
+    public GameObject floor;
+    public GameObject originalEnemy;
+
+    public LandmineSetter minefield;
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +49,24 @@ public class PerkManager : MonoBehaviour {
             Debug.Log("perk selected");
             selectedPerk = true;
 
+            float variant = selectedOption.getIndex();
+            if (variant == 0) { // damage
+                leftDamage.damage += 2;
+                rightDamage.damage += 2;
+
+                floor.transform.localScale *= 0.9f;
+
+            } else if (variant == 1) { // health
+                health.maxHealth += 2;
+                originalEnemy.GetComponent<Enemy>().setSpeed(originalEnemy.GetComponent<Enemy>().speed *= 1.5f);
+
+            } else if (variant == 2) { // speed
+                movement.walkspeed += 2f;
+                movement.dashCoodown *= 0.95f;
+                minefield.bombLimit *= 5;
+
+            }
+
             foreach (GameObject option in perkOptions) {
                 if (option.GetComponent<Enemy>().getIndex() != selectedOption.GetComponent<Enemy>().getIndex()) {
                     option.GetComponent<EnemyHealth>().isPerkOption = false;
@@ -52,7 +75,6 @@ public class PerkManager : MonoBehaviour {
             }
 
             perkOptions.Clear();
-
             timeManager.UnpauseGame();
         }
     }

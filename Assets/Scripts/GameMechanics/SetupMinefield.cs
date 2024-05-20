@@ -64,9 +64,14 @@ public class LandmineSetter : MonoBehaviour
 
     }
 
+    public void toggleSpawningBombs(bool status) {
+        canSpawnBombs = status;
+
+    }
+
     // Update is called once per frame
     void Update() {
-        bombLimit = manager.wave * 5 + additionalLandmines;
+        bombLimit += 5 + additionalLandmines;
             if (canSpawnBombs) {
                 createLandmineSpawns();
                 for (int i = 0; i < landmines.Count; i++) {

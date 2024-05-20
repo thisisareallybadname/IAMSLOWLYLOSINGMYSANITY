@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using Unity.VisualScripting;
 using UnityEditor.DeviceSimulation;
 using UnityEngine;
@@ -41,6 +42,13 @@ public class ProjectileBehavior : MonoBehaviour {
 
     // Update is called once per frame
     void FixedUpdate() {
+
+        if (dangerous && walkspeed > 0 && GetComponent<Rigidbody>() != null) {
+            transform.LookAt(player.transform);
+            GetComponent<Rigidbody>().AddForce((transform.forward) * walkspeed, ForceMode.Impulse);
+
+        }
+
         if (explosionExpanding) {
             if (countdown >= 1) {
                 Destroy(explosionEffect);

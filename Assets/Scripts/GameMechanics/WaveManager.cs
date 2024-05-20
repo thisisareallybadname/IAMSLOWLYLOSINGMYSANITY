@@ -125,8 +125,9 @@ public class WaveManager : MonoBehaviour {
     }
 
     private void Playing() {
-        enemyCounter.text = "Enemies Left: " + enemies.Count;
-
+        if (enemies.Count > 0) {
+            enemyCounter.text = "Enemies Left: " + enemies.Count;
+        }
         if (timer >= spawnDelay && enemiesSpawned < enemiesPerWave && spawningEnemies) {
             timer = 0;
             randomSpawn = UnityEngine.Random.Range(0, 3);

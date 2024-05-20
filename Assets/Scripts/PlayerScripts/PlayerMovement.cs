@@ -22,6 +22,8 @@ public class PlayerMovement : MonoBehaviour
     private float dashDuration;
     private bool isDashing;
 
+    public float dashCoodown;
+
     private float movementSpeed;
     private float gravity;
 
@@ -43,7 +45,7 @@ public class PlayerMovement : MonoBehaviour
 
     // dash vars
     private bool dashDebounce = false;
-    private float dashCooldown = 0f;
+    private float dashTimer;
     public PlayerCamera cam;
 
     public Collider[] takeDashDamage;
@@ -92,16 +94,16 @@ public class PlayerMovement : MonoBehaviour
     {
 
 
-        if (dashDebounce && dashCooldown < 3)
+        if (dashDebounce && dashTimer < 3)
         {
-            dashCooldown += Time.deltaTime;
+            dashTimer += Time.deltaTime;
 
         }
 
-        if (dashCooldown > 1)
+        if (dashTimer >= dashCoodown)
         {
             dashDebounce = false;
-            dashCooldown = 0;
+            dashTimer = 0;
         }
 
         if (isDashing)

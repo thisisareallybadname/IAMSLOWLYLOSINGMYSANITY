@@ -124,7 +124,8 @@ public class TimeManager : MonoBehaviour {
                 }
 
             } else {
-                if (waveCooldown < waveDelay && !waves.isSpawningEnemies()) { 
+                if (waveCooldown < waveDelay && !waves.isSpawningEnemies()) {
+                    landmines.toggleSpawningBombs(true);
                     enemiesLeft.text = "Wave starting in " + Mathf.CeilToInt(waveDelay - waveCooldown);
                     waveCooldown += Time.deltaTime;
                     playerHealth.setHealth(playerHealth.maxHealth);
@@ -133,6 +134,7 @@ public class TimeManager : MonoBehaviour {
                     waveCompleteTimer = 0;
 
                 } else if (waveCooldown >= waveDelay) {
+                    landmines.toggleSpawningBombs(false);
                     intermission = false;
                     waveCooldown = 0;
                     waves.StartWave();

@@ -15,6 +15,8 @@ public class Enemy : MonoBehaviour {
     private enemyAI enemyMovement;
     private EnemyHealth enemyHealth;
 
+    private float variantIndex;
+
     public bool active;
 
     void Start() {
@@ -42,9 +44,14 @@ public class Enemy : MonoBehaviour {
         return damage;
 
     }
+    
+    public float getIndex() {
+        return variantIndex;
+
+    }
 
     public void setEnemySprite(Material newMaterial) {
-        enemyPNG.transform.GetComponent<MeshRenderer>().material = newMaterial;
+        enemyPNG.GetComponent<EnemyHealth>().changeSprite(newMaterial);
 
     }
 
@@ -59,6 +66,17 @@ public class Enemy : MonoBehaviour {
 
     public void setSpeed(float newSpeed) {
         enemyMovement.walkspeed = (int)newSpeed;
+
+    }
+
+    public void setIndex(float newIndex) {
+        variantIndex = newIndex;
+
+    }
+
+    public void setKBResistance(float newKbResistance) {
+        enemyHealth.kbResistance = newKbResistance;
+
 
     }
 

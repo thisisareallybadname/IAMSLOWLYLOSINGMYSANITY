@@ -1,6 +1,7 @@
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour {
@@ -8,7 +9,7 @@ public class EnemyHealth : MonoBehaviour {
     public float health;
     private float maxHealth;
 
-    public float kbResistance;
+    public float kbResistance = 1;
 
     public float immunityDuration;
     private float hitCooldown = 999;
@@ -102,6 +103,13 @@ public class EnemyHealth : MonoBehaviour {
         }
     }
 
+    public void changeSprite(Material newSprite) {
+        FullHealthSprite = newSprite;
+        MidHealthSprite = newSprite;
+        LowHealthSprite = newSprite;
+
+    }
+
     public void takeDamage(float damage, float knockback) {
 
         if (!dead) {
@@ -120,7 +128,7 @@ public class EnemyHealth : MonoBehaviour {
             }
         }
 
-        rb.AddForce(new Vector3(0, 1, 0) * knockback * 50 + new Vector3(Random.Range(-knockback * 0.5f, knockback * 0.5f), 0, Random.Range(-knockback * 0.5f, knockback * 0.5f)), ForceMode.Force);
+        rb.AddForce(new Vector3(0, 1, 0) * knockback * 50 + new Vector3(Random.Range(-knockback * 0.5f, knockback * 0.5f), 0, Random.Range(-knockback * 0.5f, knockback * 0.5f)) * (1 / kbResistance), ForceMode.Force);
 
         health -= damage;
         

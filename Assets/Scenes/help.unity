@@ -878,7 +878,7 @@ GameObject:
   - component: {fileID: 444314895}
   - component: {fileID: 444314894}
   m_Layer: 0
-  m_Name: pp
+  m_Name: PerkOptionSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1747,7 +1747,12 @@ MonoBehaviour:
   tutorial: {fileID: 2055736957}
   perkManager: {fileID: 2032090575}
   landmines: {fileID: 1297711823}
+  playerHealth: {fileID: 1459420600}
   spawnBombs: 0
+  pauseGame: 0
+  timer: 0
+  intermission: 0
+  enemiesLeft: {fileID: 755471607}
 --- !u!4 &753203119
 Transform:
   m_ObjectHideFlags: 0
@@ -2008,8 +2013,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 801342149}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.2949255, y: -0.63, z: -6.797182}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -3.2949255, y: -0.6300001, z: -6.79718}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3485,6 +3490,7 @@ MonoBehaviour:
   enemyCounter: {fileID: 755471607}
   waveReached: {fileID: 1945705244}
   timeManager: {fileID: 753203118}
+  perkTimerLength: 100
 --- !u!4 &1289758841
 Transform:
   m_ObjectHideFlags: 0
@@ -3612,6 +3618,7 @@ MonoBehaviour:
   landmineIndicator: {fileID: 801342149}
   canSpawnBombs: 0
   waveManager: {fileID: 0}
+  additionalLandmines: 0
 --- !u!4 &1297711824
 Transform:
   m_ObjectHideFlags: 0
@@ -5508,7 +5515,7 @@ GameObject:
   - component: {fileID: 2032090577}
   - component: {fileID: 2032090575}
   m_Layer: 0
-  m_Name: PerkModifier
+  m_Name: PerkManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5528,10 +5535,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   modifierList: {fileID: 0}
   enemy: {fileID: 2143634949}
-  perkSpawn: {fileID: 2143264422}
+  perkSpawns:
+  - {fileID: 797216729}
+  - {fileID: 2143264422}
+  - {fileID: 316073437}
+  timeManager: {fileID: 753203118}
   waves: {fileID: 1289758840}
   selectedPerk: 0
   perkSelecting: 0
+  optionSprites:
+  - {fileID: 2100000, guid: 6eba3e07bdd05444d848073b97dbf559, type: 2}
+  - {fileID: 2100000, guid: 25fc10ce93ac11a498b92072adc00795, type: 2}
+  - {fileID: 2100000, guid: 2aecf25cdd9b1d14a80977f300b48f9e, type: 2}
+  health: {fileID: 1459420600}
+  movement: {fileID: 1459420598}
+  leftDamage: {fileID: 860605490}
+  rightDamage: {fileID: 1104949233}
 --- !u!4 &2032090577
 Transform:
   m_ObjectHideFlags: 0
@@ -5757,8 +5776,8 @@ GameObject:
   - component: {fileID: 2143634951}
   - component: {fileID: 2143634950}
   m_Layer: 0
-  m_Name: PerkOption
-  m_TagString: Enemy
+  m_Name: PerkEnemy
+  m_TagString: PerkEnemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5779,7 +5798,7 @@ MonoBehaviour:
   speed: 10
   damage: 10
   enemySprite: {fileID: 0}
-  enemyPNG: {fileID: 0}
+  enemyPNG: {fileID: 444314893}
   active: 0
 --- !u!114 &2143634951
 MonoBehaviour:
@@ -5915,7 +5934,7 @@ SceneRoots:
   - {fileID: 37281976}
   - {fileID: 562227354}
   - {fileID: 1297711824}
-  - {fileID: 801342152}
   - {fileID: 2032090577}
   - {fileID: 2143634955}
   - {fileID: 753203119}
+  - {fileID: 801342152}

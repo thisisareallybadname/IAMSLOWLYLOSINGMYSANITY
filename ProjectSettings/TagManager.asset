@@ -8,6 +8,7 @@ TagManager:
   - CameraIgnore
   - floor
   - bomb
+  - PerkEnemy
   layers:
   - Default
   - TransparentFX

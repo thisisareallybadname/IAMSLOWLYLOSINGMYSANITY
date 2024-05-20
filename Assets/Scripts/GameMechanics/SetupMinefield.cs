@@ -35,6 +35,8 @@ public class LandmineSetter : MonoBehaviour
     private bool bombSpawnDebounce = true;
     public WaveManager waveManager;
 
+    public float additionalLandmines;
+
     private void createLandmineSpawns() {
         if (landmineSpawns.Count < bombLimit) {
             transform.position = new Vector3(Random.Range(-floorX / 2, floorX / 2), 2, Random.Range(-floorZ / 2, floorZ / 2));
@@ -64,7 +66,7 @@ public class LandmineSetter : MonoBehaviour
 
     // Update is called once per frame
     void Update() {
-        bombLimit = manager.wave * 5;
+        bombLimit = manager.wave * 5 + additionalLandmines;
             if (canSpawnBombs) {
                 createLandmineSpawns();
                 for (int i = 0; i < landmines.Count; i++) {

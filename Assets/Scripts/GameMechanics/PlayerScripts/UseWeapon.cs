@@ -104,7 +104,7 @@ public class FireWeapon : MonoBehaviour
         Vector3 end;
 
         if (Physics.Raycast(shootPos.transform.position + shootPos.transform.forward, shootPos.transform.forward, out hit, Mathf.Infinity)) {
-            if (hit.collider.gameObject.tag.Equals("Enemy")) {
+            if (hit.collider.gameObject.tag.Equals("Enemy") || hit.collider.gameObject.tag.Equals("PerkEnemy")) {
                 enemy = hit.collider.gameObject;
                 enemy.GetComponent<EnemyHealth>().takeDamage(damage, damage * 2f);
 

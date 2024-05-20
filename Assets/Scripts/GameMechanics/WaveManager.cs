@@ -47,17 +47,16 @@ public class WaveManager : MonoBehaviour {
 
     private bool perkDebounce;
 
+    private float perkTimer;
+    public float perkTimerLength;
+
     // Start is called before the first frame update
     void Start() {
-        
+        running = false;
     }
 
     // Update is called once per frame
     void FixedUpdate() {
-        if (running) {
-            Debug.Log(running);
-        
-        }
 
         if (running) {
             Playing();
@@ -91,32 +90,42 @@ public class WaveManager : MonoBehaviour {
 
     }
 
-    public bool GamePaused() {
+    public bool WaveOver() {
         return pauseGame;
 
     }
 
+    public bool isSpawningEnemies() {
+        return spawningEnemies;
+
+    }
+
+    public void toggleSpawning(bool option) {
+        spawningEnemies = option;
+
+    }
+    
+    public void StartWave() {
+        wave++;
+
+        running = true;
+        pauseDebounce = true;
+
+        waveCounter.text = "Wave " + wave;
+        waveReached.text = "Reached Wave " + wave;
+
+        intermission = false;
+        waveCooldown = 0;
+
+        enemiesSpawned = 0;
+        enemiesPerWave = 2 * wave;
+
+        spawningEnemies = true;
+
+    }
+
     private void Playing() {
-        if (!intermission)
-        {
-            enemyCounter.text = "Enemies Left: " + enemies.Count;
-
-        }
-        else {
-            if (Mathf.Ceil(waveDelay - waveCooldown) > waveDelay * 0.8f && wave > 0) {
-                enemyCounter.text = "Wave Complete";
-                if (wave > 0 && perkDebounce) {
-                    running = false;
-
-                }
-
-            }
-            else
-            {
-                enemyCounter.text = "Next wave in " + Mathf.Ceil(waveDelay - waveCooldown);
-            }
-
-        }
+        enemyCounter.text = "Enemies Left: " + enemies.Count;
 
         if (timer >= spawnDelay && enemiesSpawned < enemiesPerWave && spawningEnemies) {
             timer = 0;
@@ -142,6 +151,7 @@ public class WaveManager : MonoBehaviour {
         }
 
         // intermission period
+        /*
         if (enemies.Count == 0 && !spawningEnemies) {
             if (pauseDebounce) {
                 pauseGame = true;
@@ -175,10 +185,11 @@ public class WaveManager : MonoBehaviour {
             }
 
         } else {
-
             timeManager.spawnBombs = false;
 
         }
+
+        */
 
     }
 }

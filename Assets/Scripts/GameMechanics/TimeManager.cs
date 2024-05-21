@@ -114,6 +114,7 @@ public class TimeManager : MonoBehaviour {
 
                 } else if (waveCompleteTimer >= 1) {
                     if (showPerks) {
+                        landmines.clearBombfield();
                         showPerks = false;
                         enemiesLeft.text = "Pick a new perk!";
                         perkManager.SpawnPerkOption(0);
@@ -130,7 +131,6 @@ public class TimeManager : MonoBehaviour {
                     waveCooldown += Time.deltaTime;
                     playerHealth.setHealth(playerHealth.maxHealth);
                     intermission = true;
-                    waveCompleteTimer = 0;
                     waveCompleteTimer = 0;
 
                 } else if (waveCooldown >= waveDelay) {

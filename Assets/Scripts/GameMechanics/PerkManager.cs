@@ -51,19 +51,22 @@ public class PerkManager : MonoBehaviour {
 
             float variant = selectedOption.getIndex();
             if (variant == 0) { // damage
-                leftDamage.damage += 2;
-                rightDamage.damage += 2;
+                leftDamage.damage += 2.5f;
+                rightDamage.damage += 2.5f;
 
-                floor.transform.localScale *= 0.9f;
+                leftDamage.attackSpeed *= 0.9f;
+                rightDamage.attackSpeed *= 0.9f;
+
+                floor.transform.rotation *= Quaternion.Euler(Random.Range(-15, 15), 0, Random.Range(-15, 15));
 
             } else if (variant == 1) { // health
                 health.maxHealth += 2;
-                originalEnemy.GetComponent<Enemy>().setSpeed(originalEnemy.GetComponent<Enemy>().speed *= 1.5f);
+                originalEnemy.GetComponent<Enemy>().setSpeed(originalEnemy.GetComponent<Enemy>().speed + 2);
 
             } else if (variant == 2) { // speed
                 movement.walkspeed += 2f;
                 movement.dashCoodown *= 0.95f;
-                minefield.bombLimit *= 5;
+                minefield.additionalLandmines += 5;
 
             }
 

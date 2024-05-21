@@ -69,9 +69,19 @@ public class LandmineSetter : MonoBehaviour
 
     }
 
+    public void clearBombs() {
+        for (int i = 0; i < landmines.Count; i++)
+        {
+            if (landmines[i] != null) {
+                landmines[i].GetComponent<ProjectileBehavior>().diffuse();
+            }
+        }
+
+    }
+
     // Update is called once per frame
     void Update() {
-        bombLimit += 5 + additionalLandmines;
+        bombLimit = (waveManager.wave + additionalLandmines) * 5;
             if (canSpawnBombs) {
                 createLandmineSpawns();
                 for (int i = 0; i < landmines.Count; i++) {

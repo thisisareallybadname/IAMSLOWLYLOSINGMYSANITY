@@ -51,10 +51,7 @@ public class PlayerMovement : MonoBehaviour
     public Collider[] takeDashDamage;
 
     // Start is called before the first frame update
-    void Start()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+    void Start() {
         yMovement = Vector3.zero;
         gravity = -9.8f * 2;
 

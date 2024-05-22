@@ -5,14 +5,12 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 public class PerkManager : MonoBehaviour { 
-    public ModifierList modifierList;
     GameObject selectedEnemy;
     public GameObject enemy;
     public List<GameObject> perkSpawns = new List<GameObject>();
     GameObject newEnemy;
 
     public TimeManager timeManager;
-    public List<Modifier> modifiers = new List<Modifier>();
     List<GameObject> options = new List<GameObject>();
     public WaveManager waves;
 

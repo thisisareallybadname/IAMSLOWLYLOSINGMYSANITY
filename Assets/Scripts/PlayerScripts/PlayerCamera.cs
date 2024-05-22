@@ -36,8 +36,6 @@ public class PlayerCamera : MonoBehaviour
     void Start()
     {
         viewModelEffects = GetComponent<VMEffects>();
-        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
-        //Cursor.visible = false;
     }
 
     private void cameraBob() {

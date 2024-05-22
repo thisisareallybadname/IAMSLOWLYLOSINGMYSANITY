@@ -35,7 +35,7 @@ public class LandmineSetter : MonoBehaviour
     private bool bombSpawnDebounce = true;
     public WaveManager waveManager;
 
-    public float additionalLandmines = 0;
+    public float additionalLandmines;
 
     private void createLandmineSpawns() {
         if (landmineSpawns.Count < bombLimit) {
@@ -56,6 +56,7 @@ public class LandmineSetter : MonoBehaviour
             landmines.Add(newLandmine);
         }
     }
+
     // Start is called before the first frame update
 
     void Start()
@@ -68,8 +69,9 @@ public class LandmineSetter : MonoBehaviour
 
     }
 
-    public void clearBombfield() {
-        for (int i = 0; i < landmines.Count; i++) {
+    public void clearBombs() {
+        for (int i = 0; i < landmines.Count; i++)
+        {
             if (landmines[i] != null) {
                 landmines[i].GetComponent<ProjectileBehavior>().diffuse();
             }
@@ -79,7 +81,7 @@ public class LandmineSetter : MonoBehaviour
 
     // Update is called once per frame
     void Update() {
-        bombLimit = waveManager.wave * 5 + additionalLandmines;
+        bombLimit = (waveManager.wave + additionalLandmines) * 5;
             if (canSpawnBombs) {
                 createLandmineSpawns();
                 for (int i = 0; i < landmines.Count; i++) {

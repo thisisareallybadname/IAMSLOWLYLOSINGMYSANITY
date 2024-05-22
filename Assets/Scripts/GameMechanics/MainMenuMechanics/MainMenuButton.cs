@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Networking.PlayerConnection;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,27 +9,98 @@ public class MainMenuButton : MonoBehaviour {
     public Image title;
     public Button button;
 
-    public Canvas playerUI;
+    public GameObject player;
+    private PlayerMovement movement;
+    private PlayerCamera playerCamera;
+    
+    public Canvas playerHUD;
+    public Canvas deathUI;
+    public Canvas mainMenuUI;
+    public MainMenuEnemyEffect enemySpawn;
+
+    public Camera deathCam;
+    public Camera playerCam;
+    public Camera mainMenuCam;
+
+    public GameObject VM;
+    public GameObject leftArm;
+    public GameObject rightArm;
+
+    public bool viewingMenu;
 
     // Start is called before the first frame update
     void Start() {
-        playerUI.gameObject.SetActive(false);
+        movement = player.GetComponent<PlayerMovement>();
+        playerCamera = player.GetComponent<PlayerCamera>();
+        showMenu();
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
+    void Update() {
+        if (Input.GetKey(KeyCode.P)) {
+            showMenu();
+
+        }
+
     }
 
     public void help() {
-        Debug.Log("i will eat your balls");
+        deathCam.enabled = false;
+        playerCam.enabled = true;
+        mainMenuCam.enabled = false;
+
+        player.GetComponent<PlayerDamage>().setHealth(5);
+        leftArm.GetComponent<FireWeapon>().damage = 1;
+        rightArm.GetComponent<FireWeapon>().damage = 1;
+        movement.walkspeed = 12;
+
         title.enabled = false;
         button.gameObject.SetActive(false);
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        playerUI.gameObject.SetActive(true);
+        movement.enabled = true;
+        playerCamera.enabled = true;
+        playerHUD.enabled = true;
+        deathUI.enabled = false;
+
+        enemySpawn.turnOffEnemySpawning();
+
+        leftArm.GetComponent<Renderer>().enabled = true;
+        rightArm.GetComponent<Renderer>().enabled = true;
+    }
+
+    public void showMenu() {
+        deathCam.enabled = false;
+        playerCam.enabled = false;
+        mainMenuCam.enabled = true;
+
+        player.transform.position = mainMenuCam.transform.position;
+
+        title.enabled = true;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        button.gameObject.SetActive(true);
+
+        movement.enabled = false;
+        playerCamera.enabled = false;
+        playerHUD.enabled = false;
+        deathUI.enabled = false;
+
+        enemySpawn.turnOnEnemySpawning();
+
+        leftArm.GetComponent<Renderer>().enabled = false;
+        rightArm.GetComponent<Renderer>().enabled = false;
+        Debug.Log("it works");
+
+    }
+
+    public void respawn() {
+        Debug.Log("help");
+        showMenu();
+
     }
 }

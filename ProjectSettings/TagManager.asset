@@ -9,6 +9,7 @@ TagManager:
   - floor
   - bomb
   - PerkEnemy
+  - DEATH
   layers:
   - Default
   - TransparentFX

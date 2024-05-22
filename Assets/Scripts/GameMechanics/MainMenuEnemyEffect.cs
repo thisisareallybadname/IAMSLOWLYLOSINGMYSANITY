@@ -39,5 +39,10 @@ public class MainMenuEnemyEffect : MonoBehaviour {
         spawnEnemies = false;
         
     }
+
+    public void turnOnEnemySpawning() {
+        spawnEnemies = true;
+
+    }
         
 }

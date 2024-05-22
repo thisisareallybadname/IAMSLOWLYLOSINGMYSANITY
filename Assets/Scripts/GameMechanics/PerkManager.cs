@@ -55,7 +55,7 @@ public class PerkManager : MonoBehaviour {
                 leftDamage.attackSpeed *= 0.9f;
                 rightDamage.attackSpeed *= 0.9f;
 
-                floor.transform.rotation *= Quaternion.Euler(Random.Range(-15, 15), 0, Random.Range(-15, 15));
+                floor.transform.rotation = Quaternion.Euler(Random.Range(-10, 10), 0, Random.Range(-10, 10));
 
             } else if (variant == 1) { // health
                 health.maxHealth += 2;

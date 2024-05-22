@@ -26,6 +26,8 @@ public class UIManager : MonoBehaviour {
     public Canvas playerUI;
     public Canvas deathUI;
 
+    private bool deathDebounce;
+
     public Image crosshair;
 
     private float healthRatio; // ratio of current health / maximum health
@@ -59,21 +61,6 @@ public class UIManager : MonoBehaviour {
         healthbarLost = 240 - healthbarRemaining;
 
         StartCoroutine(updateBar(healthTransform));
-
-        if (health <= 0) {
-            tick += Time.deltaTime;
-
-            mainCam.enabled = false;
-            deathCam.enabled = true;
-
-            mainCam.GetComponent<AudioListener>().enabled = false;
-            deathCam.GetComponent<AudioListener>().enabled = true;
-
-            deathCam.transform.rotation = Quaternion.Euler(25, 1.5f * tick, 0);
-
-            playerUI.enabled = false;
-            deathUI.enabled = true;
-        }
     }
 
     IEnumerator updateBar(RectTransform barTransform) {
@@ -83,6 +70,22 @@ public class UIManager : MonoBehaviour {
         yield return null;
     }
 
-    public void expandCrosshair(float size) {
+    public void TurnOnDeathScreen() {
+        tick += Time.deltaTime;
+
+        mainCam.enabled = false;
+        deathCam.enabled = true;
+
+        mainCam.GetComponent<AudioListener>().enabled = false;
+        deathCam.GetComponent<AudioListener>().enabled = true;
+
+        deathCam.transform.rotation = Quaternion.Euler(25, 1.5f * tick, 0);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        playerUI.enabled = false;
+        deathUI.enabled = true;
+
     }
 }

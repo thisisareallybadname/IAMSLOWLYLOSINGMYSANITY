@@ -19,6 +19,9 @@ public class PlayerDamage : MonoBehaviour {
 
     public PlayerCamera hurtEffect;
     public TimeManager timeManager;
+    public UIManager uiManager;
+
+    private bool deathDebounce;
 
     public float maxHealth;
 
@@ -32,12 +35,7 @@ public class PlayerDamage : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-
-        if (transform.position.y < -20) {
-            setHealth(0);
-
-        }
-
+        Debug.Log(health);
         if (!canTakeDamage) {
             immunityTimer += Time.deltaTime;
 
@@ -51,6 +49,13 @@ public class PlayerDamage : MonoBehaviour {
         
         if (health <= 0) {
             timeManager.StopGame();
+            if (deathDebounce) {
+                deathDebounce = false;
+                uiManager.TurnOnDeathScreen();
+
+            }
+        } else {
+            deathDebounce = true;
 
         }
 
@@ -71,6 +76,7 @@ public class PlayerDamage : MonoBehaviour {
 
     public void setHealth(float newHealth) { 
         health = newHealth; 
+
     }
 
     public void takeDamage(float damage) {
@@ -82,4 +88,14 @@ public class PlayerDamage : MonoBehaviour {
         }
 
     }
+
+    private void OnCollisionEnter(Collision collision) {
+        Debug.Log("touching smth");
+        if (collision.gameObject.tag.Equals("DEATH")) {
+            takeDamage(999999999999999999);
+
+        }
+        
+    }
+
 }

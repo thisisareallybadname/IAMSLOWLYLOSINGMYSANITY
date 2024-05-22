@@ -69,7 +69,7 @@ public class LandmineSetter : MonoBehaviour
 
     }
 
-    public void clearBombs() {
+    public void clearBombfield() {
         for (int i = 0; i < landmines.Count; i++)
         {
             if (landmines[i] != null) {

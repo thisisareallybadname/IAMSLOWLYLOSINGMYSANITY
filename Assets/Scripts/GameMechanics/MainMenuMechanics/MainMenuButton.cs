@@ -12,7 +12,7 @@ public class MainMenuButton : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        //playerUI.gameObject.SetActive(false);
+        playerUI.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -25,6 +25,9 @@ public class MainMenuButton : MonoBehaviour {
         Debug.Log("i will eat your balls");
         title.enabled = false;
         button.gameObject.SetActive(false);
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
         playerUI.gameObject.SetActive(true);
     }

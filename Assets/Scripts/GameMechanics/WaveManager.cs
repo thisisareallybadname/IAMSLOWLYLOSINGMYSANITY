@@ -27,7 +27,7 @@ public class WaveManager : MonoBehaviour {
     public EnemySpawnManager spawner;
     public GameObject enemy;
 
-    public float wave;
+    public float wave = 0;
     public TMP_Text waveCounter;
 
     HashSet<GameObject> enemies = new HashSet<GameObject>();

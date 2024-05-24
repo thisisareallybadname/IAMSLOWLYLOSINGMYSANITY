@@ -22,9 +22,9 @@ TagManager:
   - 
   - 
   - ViewModel
-  - 
-  - 
-  - 
+  - Enemy
+  - Player
+  - EnemyProjectile
   - 
   - 
   - 

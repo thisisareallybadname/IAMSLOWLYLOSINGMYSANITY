@@ -8,7 +8,12 @@ public class enemyAI : MonoBehaviour {
     public int walkspeed;
     public Rigidbody rb;
 
+    public bool canFireProjectiles;
     private bool chasePlayer;
+
+    public GameObject projectile;
+    public float projectileFirerate;
+    private float fireCooldown = 0;
 
     // Start is called before the first frame update
     void Start() {
@@ -23,8 +28,24 @@ public class enemyAI : MonoBehaviour {
             rb.drag = 2.5f;
 
             rb.velocity += walkspeed * (rb.transform.forward.normalized / 7.5f);
-        
+            
+            if (fireCooldown >= projectileFirerate && canFireProjectiles) {
+                FireProjectile();
+                fireCooldown = 0;
+            } else {
+                fireCooldown += Time.fixedDeltaTime;
+
+            }
+
         }
+    }
+
+    private void FireProjectile() {
+        GameObject newFireball = Instantiate(projectile, transform.position + transform.forward, transform.rotation);
+        ProjectileBehavior fireballProperties = newFireball.GetComponent<ProjectileBehavior>();
+        fireballProperties.canExplode = false;
+        fireballProperties.walkspeed = 10;
+        fireballProperties.dangerous = true;
     }
 
     public void setMovementSpeed(float newWalkspeed) {

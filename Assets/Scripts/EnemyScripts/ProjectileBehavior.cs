@@ -22,21 +22,30 @@ public class ProjectileBehavior : MonoBehaviour {
 
     public bool dangerous;
     public float damage;
+    public bool canExplode;
     private bool exploded = false;
 
     public float explosionRadius;
     private bool deleteAfterExplosion;
     // Start is called before the first frame update
-    void Start() {
+    void Awake() {
         player = GameObject.Find("Player");
-        explosionEffect = Instantiate(GameObject.Find("explosion"), transform.position, Quaternion.identity);
-        explosionEffect.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
-        explosionEffect.transform.parent = transform;
-        explosionEffect.transform.localPosition = Vector3.zero;
 
+        if (canExplode)
+        {
+            explosionEffect = Instantiate(GameObject.Find("explosion"), transform.position, Quaternion.identity);
+            explosionEffect.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+            explosionEffect.transform.parent = transform;
+            explosionEffect.transform.localPosition = Vector3.zero;
+
+        } else {
+            explosionRadius = 1.5f;
+
+        }
         deleteAfterExplosion = false;
+        PlayerMovement movement = player.GetComponent<PlayerMovement>();
 
-        transform.LookAt(player.transform.position);
+        transform.LookAt(player.transform.position + new Vector3(0, 1, 0) + movement.getMovementVector());
 
     }
 
@@ -44,7 +53,6 @@ public class ProjectileBehavior : MonoBehaviour {
     void FixedUpdate() {
 
         if (dangerous && walkspeed > 0 && GetComponent<Rigidbody>() != null) {
-            transform.LookAt(player.transform);
             GetComponent<Rigidbody>().AddForce((transform.forward) * walkspeed, ForceMode.Impulse);
 
         }
@@ -55,11 +63,12 @@ public class ProjectileBehavior : MonoBehaviour {
                 Destroy(transform.gameObject);
 
             } else {
-                explosionEffect.transform.localScale = Vector3.Lerp(explosionEffect.transform.localScale, new Vector3(explosionRadius, explosionRadius, explosionRadius), countdown);
-                
-                Color explosionColor = explosionEffect.GetComponent<Renderer>().material.color;
-                explosionColor.a = Mathf.Lerp(1, 0, countdown);
+                if (canExplode) {
+                    explosionEffect.transform.localScale = Vector3.Lerp(explosionEffect.transform.localScale, new Vector3(explosionRadius, explosionRadius, explosionRadius), countdown);
 
+                    Color explosionColor = explosionEffect.GetComponent<Renderer>().material.color;
+                    explosionColor.a = Mathf.Lerp(1, 0, countdown);
+                }
                 countdown += Time.fixedDeltaTime;
 
             }

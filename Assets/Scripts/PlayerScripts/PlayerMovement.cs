@@ -154,4 +154,9 @@ public class PlayerMovement : MonoBehaviour
         return movement.magnitude;
     }
 
+    public Vector3 getMovementVector() {
+        return movement;
+
+    }
+
 }

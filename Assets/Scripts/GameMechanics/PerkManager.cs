@@ -92,7 +92,6 @@ public class PerkManager : MonoBehaviour {
             newEnemy.GetComponent<Enemy>().setIndex(variant);
             perkOptions.Add(newEnemy);
 
-            Debug.Log(perkOptions.Count);
         }
     }
 }

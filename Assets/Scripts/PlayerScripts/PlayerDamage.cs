@@ -35,7 +35,6 @@ public class PlayerDamage : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        Debug.Log(health);
         if (!canTakeDamage) {
             immunityTimer += Time.deltaTime;
 

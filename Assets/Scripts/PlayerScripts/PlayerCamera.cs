@@ -71,9 +71,10 @@ public class PlayerCamera : MonoBehaviour
         transform.localRotation = Quaternion.Euler(0f, rotationY, 0);
 
         if (Input.GetKeyDown(KeyCode.F)) {
-            GameObject landmine = Instantiate(GameObject.Find("le bomb"), playerCam.transform.position + (playerCam.transform.forward * 5), transform.rotation);
+            GameObject landmine = Instantiate(GameObject.Find("bomb"), playerCam.transform.position + (playerCam.transform.forward * 5), transform.rotation);
             landmine.name = "PlayerLandmine";
             landmine.GetComponent<ProjectileBehavior>().dangerous = true;
+            Debug.Log("bomb has been set");
 
         }
 

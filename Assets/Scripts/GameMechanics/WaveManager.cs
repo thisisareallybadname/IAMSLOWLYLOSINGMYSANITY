@@ -108,6 +108,8 @@ public class WaveManager : MonoBehaviour {
     public void StartWave() {
         wave++;
 
+        enemy.GetComponent<EnemyHealth>().addStatAmplifier(wave);
+
         running = true;
         pauseDebounce = true;
 
@@ -133,14 +135,21 @@ public class WaveManager : MonoBehaviour {
             randomSpawn = UnityEngine.Random.Range(0, 3);
 
             GameObject newEnemy = Instantiate(enemy, spawns[((int)randomSpawn)].transform.position, Quaternion.identity);
-            newEnemy.GetComponent<Enemy>().active = true;
+            Enemy enemyProperties = newEnemy.GetComponent<Enemy>();
+            enemyProperties.active = true;
+            enemyAI enemyMovementProperties = newEnemy.GetComponent<enemyAI>();
+
             enemies.Add(newEnemy);
-            enemy.GetComponent<EnemyHealth>().addStatAmplifier(wave);
+
+            if (UnityEngine.Random.Range(0, 5) == 4) {
+                enemyMovementProperties.walkspeed /= 2;
+                enemyMovementProperties.canFireProjectiles = true;
+
+            }
 
             enemiesSpawned++;
 
-            if (enemiesSpawned >= enemiesPerWave)
-            {
+            if (enemiesSpawned >= enemiesPerWave) {
                 spawningEnemies = false;
             }
         }

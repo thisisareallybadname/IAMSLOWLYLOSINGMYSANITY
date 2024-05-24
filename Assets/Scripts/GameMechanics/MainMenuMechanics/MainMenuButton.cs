@@ -27,6 +27,7 @@ public class MainMenuButton : MonoBehaviour {
     public GameObject rightArm;
 
     public bool viewingMenu;
+    public WaveManager waves;
 
     // Start is called before the first frame update
     void Start() {
@@ -44,15 +45,19 @@ public class MainMenuButton : MonoBehaviour {
 
     }
 
+    // start game
     public void help() {
         deathCam.enabled = false;
         playerCam.enabled = true;
         mainMenuCam.enabled = false;
 
         player.GetComponent<PlayerDamage>().setHealth(5);
+        player.GetComponent<PlayerDamage>().maxHealth = 5;
         leftArm.GetComponent<FireWeapon>().damage = 1;
         rightArm.GetComponent<FireWeapon>().damage = 1;
         movement.walkspeed = 12;
+        waves.wave = 0;
+        
 
         title.enabled = false;
         button.gameObject.SetActive(false);

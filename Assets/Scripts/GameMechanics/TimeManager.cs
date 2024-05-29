@@ -20,7 +20,7 @@ public class TimeManager : MonoBehaviour {
     public bool spawnBombs;
     private bool pauseDebounce;
     public bool pauseGame;
-    private bool playerInMainMenu;
+    private bool playerInMenu;
 
     public float timer;
     private float waveCooldown;
@@ -64,12 +64,21 @@ public class TimeManager : MonoBehaviour {
 
     }
 
+    public void spawnPerkOptions() {
+        landmines.clearBombfield();
+        showPerks = false;
+        enemiesLeft.text = "Pick a new perk!";
+        perkManager.SpawnPerkOption(0);
+        perkManager.SpawnPerkOption(1);
+        perkManager.SpawnPerkOption(2);
+
+    }
 
 
     private void Update() {
-        playerInMainMenu = mainMenu.viewingMainMenu();
+        playerInMenu = mainMenu.viewingMainMenu() || gameOver;
 
-        if (!playerInMainMenu) {
+        if (!playerInMenu) {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
@@ -105,12 +114,7 @@ public class TimeManager : MonoBehaviour {
 
                 } else if (waveCompleteTimer >= 1) {
                     if (showPerks) {
-                        landmines.clearBombfield();
-                        showPerks = false;
-                        enemiesLeft.text = "Pick a new perk!";
-                        perkManager.SpawnPerkOption(0);
-                        perkManager.SpawnPerkOption(1);
-                        perkManager.SpawnPerkOption(2);
+                        spawnPerkOptions();
 
                     }
                 }

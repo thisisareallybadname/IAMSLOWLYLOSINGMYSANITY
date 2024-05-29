@@ -32,6 +32,7 @@ public class enemyAI : MonoBehaviour {
             if (fireCooldown >= projectileFirerate && canFireProjectiles) {
                 FireProjectile();
                 fireCooldown = 0;
+
             } else {
                 fireCooldown += Time.fixedDeltaTime;
 

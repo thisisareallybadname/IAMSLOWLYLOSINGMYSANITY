@@ -143,6 +143,7 @@ public class WaveManager : MonoBehaviour {
 
             if (UnityEngine.Random.Range(0, 5) == 4) {
                 enemyMovementProperties.walkspeed /= 2;
+                enemyMovementProperties.projectileFirerate += (UnityEngine.Random.Range(-100, 100) * 0.1f);
                 enemyMovementProperties.canFireProjectiles = true;
 
             }

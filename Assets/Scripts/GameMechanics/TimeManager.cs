@@ -12,12 +12,15 @@ public class TimeManager : MonoBehaviour {
     public PerkManager perkManager;
     public LandmineSetter landmines;
     public PlayerDamage playerHealth;
+    public MainMenuButton mainMenu;
+    public UIManager UIManager;
 
     private bool startGame;
     private bool gameOver;
     public bool spawnBombs;
     private bool pauseDebounce;
     public bool pauseGame;
+    private bool playerInMainMenu;
 
     public float timer;
     private float waveCooldown;
@@ -39,6 +42,7 @@ public class TimeManager : MonoBehaviour {
         Debug.Log("tutorial finished");
         pauseDebounce = true;
         startGame = true;
+        
 
     }
 
@@ -53,44 +57,31 @@ public class TimeManager : MonoBehaviour {
 
     }
 
-    // Update is called once per frame
-
-    /*
-    private void Update() {
-        landmines.canSpawnBombs = spawnBombs;
-
-        if (waves.EnemiesLeft() == 0 && !waves.isSpawningEnemies()) {
-            if (pauseDebounce) {
-                pauseGame = true;
-                pauseDebounce = false;
-
-            }
-            
-            if (pauseGame) {
-
-                if (!perkManager.PlayerSelectedPerk())
-                {
-                    waves.stopGame();
-
-                }
-
-                if (!perkManager.perkSelecting)
-                {
-                    perkManager.SpawnPerkOption();
-
-                }
-            }
-
-        } else if (!waves.intermission) {
-            pauseDebounce = true;
-            
-        }
+    public void endGame() {
+        gameOver = true;
+        pauseGame = true;
+        UIManager.ShowDeathUI();
 
     }
 
-    */
+
 
     private void Update() {
+        playerInMainMenu = mainMenu.viewingMainMenu();
+
+        if (!playerInMainMenu) {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
+        } else {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+
+
+        }
+        
+
+
         if (waves.EnemiesLeft() == 0 && !waves.isSpawningEnemies() && startGame) {
             if (pauseDebounce) {
                 pauseDebounce = false;

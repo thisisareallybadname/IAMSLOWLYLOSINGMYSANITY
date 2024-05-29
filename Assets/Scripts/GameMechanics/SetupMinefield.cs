@@ -43,6 +43,7 @@ public class LandmineSetter : MonoBehaviour
             landmineSpawns.Add(transform.position);
             
             GameObject newIndicator = Instantiate(landmineIndicator, transform.position, Quaternion.identity);
+            newIndicator.transform.rotation = Quaternion.Euler(-90 + Random.Range(-15, 15), Random.Range(-180, 180), Random.Range(-180, 180));
             landmineSpawnIndicators.Add(newIndicator);
 
         }
@@ -59,8 +60,7 @@ public class LandmineSetter : MonoBehaviour
 
     // Start is called before the first frame update
 
-    void Start()
-    {
+    void Start() {
 
     }
 
@@ -81,7 +81,7 @@ public class LandmineSetter : MonoBehaviour
 
     // Update is called once per frame
     void Update() {
-        bombLimit = (waveManager.wave + additionalLandmines) * 5;
+        bombLimit = waveManager.wave * 5 + additionalLandmines;
             if (canSpawnBombs) {
                 createLandmineSpawns();
                 for (int i = 0; i < landmines.Count; i++) {

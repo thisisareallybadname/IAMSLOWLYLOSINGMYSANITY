@@ -43,7 +43,7 @@ public class enemyAI : MonoBehaviour {
     private void FireProjectile() {
         GameObject newFireball = Instantiate(projectile, transform.position + transform.forward, transform.rotation);
         ProjectileBehavior fireballProperties = newFireball.GetComponent<ProjectileBehavior>();
-        fireballProperties.canExplode = false;
+        fireballProperties.canExplode = true;
         fireballProperties.walkspeed = 10;
         fireballProperties.dangerous = true;
     }

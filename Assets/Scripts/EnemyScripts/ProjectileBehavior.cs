@@ -14,11 +14,13 @@ public class ProjectileBehavior : MonoBehaviour {
     private Collider[] hits = new Collider[0];
     private GameObject player;
     private GameObject explosionEffect;
+    private float playerWalkspeed;
 
     private bool touchingSomething;
+    private float countdown;
 
     private bool explosionExpanding;
-    private float countdown = 0;
+    private float aimingTimer = 0;
 
     public bool dangerous;
     public float damage;
@@ -27,12 +29,18 @@ public class ProjectileBehavior : MonoBehaviour {
 
     public float explosionRadius;
     private bool deleteAfterExplosion;
+
+    public float lifespan;
+    private float existenceTimer;
+
+    public float aimTime;
+
     // Start is called before the first frame update
     void Awake() {
         player = GameObject.Find("Player");
+        playerWalkspeed = player.GetComponent<PlayerMovement>().walkspeed;
 
-        if (canExplode)
-        {
+        if (canExplode) {
             explosionEffect = Instantiate(GameObject.Find("explosion"), transform.position, Quaternion.identity);
             explosionEffect.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
             explosionEffect.transform.parent = transform;
@@ -45,16 +53,28 @@ public class ProjectileBehavior : MonoBehaviour {
         deleteAfterExplosion = false;
         PlayerMovement movement = player.GetComponent<PlayerMovement>();
 
-        transform.LookAt(player.transform.position + new Vector3(0, 1, 0) + movement.getMovementVector());
-
     }
 
     // Update is called once per frame
-    void FixedUpdate() {
+    void FixedUpdate() { 
+        if (aimingTimer < aimTime && walkspeed > 0) {
+            aimingTimer += Time.fixedDeltaTime;
+            GetComponent<Rigidbody>().drag = 15;
+            transform.LookAt(player.transform);
+
+        }
 
         if (dangerous && walkspeed > 0 && GetComponent<Rigidbody>() != null) {
             GetComponent<Rigidbody>().AddForce((transform.forward) * walkspeed, ForceMode.Impulse);
 
+            if (existenceTimer < lifespan)
+            {
+                existenceTimer += Time.fixedDeltaTime;
+
+            } else {
+                Destroy(gameObject);
+
+            }
         }
 
         if (explosionExpanding) {
@@ -64,10 +84,8 @@ public class ProjectileBehavior : MonoBehaviour {
 
             } else {
                 if (canExplode) {
-                    explosionEffect.transform.localScale = Vector3.Lerp(explosionEffect.transform.localScale, new Vector3(explosionRadius, explosionRadius, explosionRadius), countdown);
-
-                    Color explosionColor = explosionEffect.GetComponent<Renderer>().material.color;
-                    explosionColor.a = Mathf.Lerp(1, 0, countdown);
+                    Vector3 landmineLocalScale = transform.localScale;
+                    explosionEffect.transform.localScale = Vector3.Lerp(new Vector3(0.25f, 0.25f, 0.25f), new Vector3(explosionRadius * 2, explosionRadius * 4, explosionRadius * 2), countdown * 2.5f);
                 }
                 countdown += Time.fixedDeltaTime;
 
@@ -77,7 +95,7 @@ public class ProjectileBehavior : MonoBehaviour {
 
     }
 
-    private void OnTriggerEnter(Collider collision) {
+    private void OnTriggerStay(Collider collision) {
         if (!collision.gameObject.tag.Equals("floor") && !collision.gameObject.tag.Equals("bomb") && dangerous) {
             explode();
         }
@@ -96,7 +114,7 @@ public class ProjectileBehavior : MonoBehaviour {
             exploded = true;
             hits = Physics.OverlapSphere(transform.position, explosionRadius);
 
-            Destroy(this.GetComponent<Rigidbody>());
+            GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
 
             foreach (Collider collider in hits)
             {

@@ -55,20 +55,6 @@ public class Enemy : MonoBehaviour {
 
     }
 
-    public void setHealth(float health) {
-        enemyHealth.health = health;
-
-    }
-    public void setDamage(float newDamage) {
-        damage = newDamage;
-
-    }
-
-    public void setSpeed(float newSpeed) {
-        enemyMovement.walkspeed = (int)newSpeed;
-
-    }
-
     public void setIndex(float newIndex) {
         variantIndex = newIndex;
 
@@ -77,6 +63,11 @@ public class Enemy : MonoBehaviour {
     public void setKBResistance(float newKbResistance) {
         enemyHealth.kbResistance = newKbResistance;
 
+
+    }
+
+    public void setSpeed(float newSpeed) {
+        speed = newSpeed;
 
     }
 

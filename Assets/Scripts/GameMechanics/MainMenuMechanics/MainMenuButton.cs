@@ -12,6 +12,7 @@ public class MainMenuButton : MonoBehaviour {
     public GameObject player;
     private PlayerMovement movement;
     private PlayerCamera playerCamera;
+    public UIManager UImanager;
     
     public Canvas playerHUD;
     public Canvas deathUI;
@@ -26,7 +27,7 @@ public class MainMenuButton : MonoBehaviour {
     public GameObject leftArm;
     public GameObject rightArm;
 
-    public bool viewingMenu;
+    private bool viewingMenu;
     public WaveManager waves;
 
     // Start is called before the first frame update
@@ -45,8 +46,17 @@ public class MainMenuButton : MonoBehaviour {
 
     }
 
+    public bool viewingMainMenu() {
+        return viewingMenu;
+
+    }
+
+
+
     // start game
     public void help() {
+        viewingMenu = false;
+
         deathCam.enabled = false;
         playerCam.enabled = true;
         mainMenuCam.enabled = false;
@@ -74,9 +84,13 @@ public class MainMenuButton : MonoBehaviour {
 
         leftArm.GetComponent<Renderer>().enabled = true;
         rightArm.GetComponent<Renderer>().enabled = true;
+
+        UImanager.ShowPlayerHUD();
     }
 
     public void showMenu() {
+        viewingMenu = true;
+
         deathCam.enabled = false;
         playerCam.enabled = false;
         mainMenuCam.enabled = true;

@@ -63,7 +63,7 @@ public class PerkManager : MonoBehaviour {
 
             } else if (variant == 2) { // speed
                 movement.walkspeed += 2f;
-                movement.dashCoodown *= 0.95f;
+                movement.staminaLimit += 1.5f;
                 minefield.additionalLandmines += 5;
 
             }

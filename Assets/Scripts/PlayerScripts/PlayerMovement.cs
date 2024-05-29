@@ -19,10 +19,6 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 movement;
     private Vector3 yMovement;
     private Vector3 dashMovement;
-    private float dashDuration;
-    private bool isDashing;
-
-    public float dashCoodown;
 
     private float movementSpeed;
     private float gravity;
@@ -45,10 +41,13 @@ public class PlayerMovement : MonoBehaviour
 
     // dash vars
     private bool dashDebounce = false;
-    private float dashTimer;
+    public float staminaValue;
     public PlayerCamera cam;
+    private bool canDash;
+    private bool dashing;
+    public float staminaLimit = 5;
 
-    public Collider[] takeDashDamage;
+    public Collider[] dashAOE;
 
     // Start is called before the first frame update
     void Start() {
@@ -58,27 +57,33 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
+        canDash = staminaValue > 0;
+
+        if (staminaValue < staminaLimit && !dashing) {
+            staminaValue += Time.deltaTime * 1.5f;
+
+        }
 
         movementSpeed = walkspeed;
 
         touchingGround = Physics.CheckSphere(groundChecker.transform.position, 0.2f);
         movement = (transform.forward * Input.GetAxisRaw("Vertical")) + (transform.right * Input.GetAxisRaw("Horizontal"));
 
-        if (touchingGround && Input.GetAxis("Jump") > 0.25f)
-        {
+        if (touchingGround && Input.GetAxis("Jump") > 0.25f) {
             yMovement.y = jumpHeight;
 
         }
-        else if (touchingGround)
-        {
+        else if (touchingGround) {
             yMovement.y = 0;
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            StartCoroutine(Dash(controller, 5, movement));
+        if (Input.GetKey(KeyCode.LeftShift) && canDash) {
+            StartCoroutine(Dash(7.5f));
+        
+        } else {
+            dashing = false;
+
         }
 
         yMovement.y += gravity * Time.deltaTime;
@@ -90,58 +95,27 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
 
-
-        if (dashDebounce && dashTimer < 3)
-        {
-            dashTimer += Time.deltaTime;
-
-        }
-
-        if (dashTimer >= dashCoodown)
-        {
-            dashDebounce = false;
-            dashTimer = 0;
-        }
-
-        if (isDashing)
-        {
-            dashDuration += Time.deltaTime;
-
-        }
-        else
-        {
-            dashDuration = 0;
-        }
         tick += Time.deltaTime;
     }
 
-    IEnumerator Dash(CharacterController characterController, float dashSpeed, Vector3 movement)
-    {
-        if (!dashDebounce)
-        {
-            dashDebounce = true;
-            isDashing = true;
+    IEnumerator Dash(float dashSpeed) {
+        dashDebounce = true;
+        dashing = true;
 
-            takeDashDamage = Physics.OverlapSphere(transform.position, 3f);
+        staminaValue -= Time.deltaTime * 2.5f;
 
-            foreach (Collider c in takeDashDamage)
-            {
-                if (c.tag.Equals("Enemy"))
-                {
-                    c.gameObject.GetComponent<EnemyHealth>().takeDamage(0, 25f);
-                }
+        controller.Move(movement * dashSpeed * Time.deltaTime);
 
+        dashAOE = Physics.OverlapSphere(transform.position, 3f);
+        foreach (Collider c in dashAOE) {
+        
+            if (c.tag.Equals("Enemy")) {
+            c.gameObject.GetComponent<EnemyHealth>().takeDamage(0, 5f);
+        
             }
-
-            while (dashDuration < 0.25f)
-            {
-                characterController.Move(movement * 5 * dashSpeed * Time.deltaTime);
-                //cam.applyCameraForce(Vector3.zero, new Vector3(0, 0.5f, -0.5f));
-                yield return new WaitForSeconds(0.025f * Time.deltaTime);
-            }
-
-            isDashing = false;
         }
+
+        yield return null;
     }
 
     public float getWalkspeed()

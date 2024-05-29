@@ -47,10 +47,10 @@ public class PlayerDamage : MonoBehaviour {
         }
         
         if (health <= 0) {
-            timeManager.StopGame();
+            health = 0;
             if (deathDebounce) {
                 deathDebounce = false;
-                uiManager.TurnOnDeathScreen();
+                timeManager.endGame();
 
             }
         } else {
@@ -89,7 +89,6 @@ public class PlayerDamage : MonoBehaviour {
     }
 
     private void OnCollisionEnter(Collision collision) {
-        Debug.Log("touching smth");
         if (collision.gameObject.tag.Equals("DEATH")) {
             takeDamage(999999999999999999);
 

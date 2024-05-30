@@ -14,7 +14,7 @@ public class VMEffects : MonoBehaviour
     private float bobX;
     private float bobY;
 
-    public GameObject arm;
+    public GameObject SideofVM;
     public GameObject player;
 
     private FireWeapon checkForFiring;
@@ -57,24 +57,23 @@ public class VMEffects : MonoBehaviour
         bobX = Mathf.Cos(tick * bobSpeed) * movespeed * 0.25f;
         bobY = -Mathf.Abs(Mathf.Sin(tick * bobSpeed)) * movespeed * 0.25f;
         
-        if (currentPosition.magnitude <= 0.5f) {
+        if (movespeed == 0) {
             bobX = 0;
             bobY = -Mathf.Abs(Mathf.Sin(tick) / 5);
         
         }
 
-        VMSway = new Vector3(Input.GetAxisRaw("Mouse X"), -Input.GetAxisRaw("Mouse Y"), 0);
+        VMSway = new Vector3(Input.GetAxisRaw("Mouse X"), -Input.GetAxisRaw("Mouse Y")) / 7.5f;
         
         if (forceSpeed == 1) {
-            bobVector = new Vector3(bobX, bobY, 0) * 0.75f;
- 
+            bobVector = new Vector3(bobX, bobY);
         } else {
             bobVector = Vector3.zero;
         
         }
         StartCoroutine(updateRecoilForces());
-        arm.transform.localPosition = currentPosition;
-        arm.transform.localRotation = Quaternion.Euler(currentRotation);
+        SideofVM.transform.localPosition = currentPosition;
+        SideofVM.transform.localRotation = Quaternion.Euler(currentRotation);
 
         tick += Time.deltaTime;
 
@@ -93,7 +92,7 @@ public class VMEffects : MonoBehaviour
     }
 
     IEnumerator updateRecoilForces() {
-        currentPosition = Vector3.Lerp(currentPosition, positionOffset + bobVector + VMSway / 7.5f, 7.5f * Time.deltaTime);
+        currentPosition = Vector3.Lerp(currentPosition, positionOffset + bobVector + VMSway, 7.5f * Time.deltaTime);
         currentRotation = Vector3.Slerp(currentRotation, angleOffset, 5 * Time.deltaTime);
 
         //forceSpeed = Mathf.Lerp(forceSpeed, 1, 5 * Time.deltaTime);

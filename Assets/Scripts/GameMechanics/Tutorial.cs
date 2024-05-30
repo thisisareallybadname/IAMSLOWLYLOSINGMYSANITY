@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Tutorial : MonoBehaviour {
 
     public GameObject enemy;
-    public Transform[] spawnpoints;
     public WaveManager waveManager;
     public TimeManager timeManager;
-    public Material[] enemySprites;
-    public TimeManager time;
     public MainMenuButton mainMenu;
+    public PerkManager perkManager;
 
     private bool finishedPart1;
     private bool finishedPart2;
@@ -29,49 +28,54 @@ public class Tutorial : MonoBehaviour {
     public Material targetMaterial;
 
     private GameObject spawnedEnemy;
+    private bool dashed;
 
     public bool skipTutorial;
     public bool tutorialFinished;
 
     public TMP_Text instructions;
+    public Image instructionsBox;
     private bool startedGame = false;
 
     // Start is called before the first frame update
     void Start() {
-        
+        instructionsBox.enabled = false;
 
     }
 
     // Update is called once per frame
     void Update() {
         if (!mainMenu.viewingMainMenu()) {
-            if (!finishedPart2) {
+            if (!finishedPart3) {
+                instructionsBox.enabled = true;
                 instructions.enabled = true;
-            
+
+
             } else {
-                instructions.enabled = false;
+                instructionsBox.enabled = false;
+                instructionsBox.enabled = false;
 
             }
             
             if (!finishedPart1) {
 
-                instructions.text = "Move around with WASD, press SPACE to jump, look around by moving mouse";
+                instructions.text = "Use WASD to walk around, SPACE to jump, and move your mouse to move the camera. Press LSHIFT to use some stamina to dash.";
 
-                movementDeltaCounter += (Mathf.Abs(Input.GetAxisRaw("Horizontal")) + Mathf.Abs(Input.GetAxisRaw("Vertical")) + Input.GetAxisRaw("Jump")) / 5f;
+                movementDeltaCounter += (Mathf.Abs(Input.GetAxisRaw("Horizontal")) + Mathf.Abs(Input.GetAxisRaw("Vertical")) + Input.GetAxisRaw("Jump")) / 2f;
                 mouseDeltaCounter += Input.mousePositionDelta.magnitude / 25f;
 
-                Debug.Log("part 1");
-                Debug.Log(movementDeltaCounter);
-                Debug.Log(mouseDeltaCounter);
+                if (Input.GetButton("Fire3") && !dashed) {
+                    dashed = true;
 
-                if (movementDeltaCounter > 100 && mouseDeltaCounter > 100)
+                }
+
+                if (movementDeltaCounter > 100 && mouseDeltaCounter > 100 && dashed)
                 {
                     finishedPart1 = true;
 
                 }
             }
-            else if (!finishedPart2)
-            {
+            else if (!finishedPart2) {
                 instructions.text = "Shoot left weapon with LMB, shoot right one with RMB. shoot down that target over there";
 
                 if (!spawnedTargetEnemy) {
@@ -83,11 +87,26 @@ public class Tutorial : MonoBehaviour {
 
                 if (spawnedEnemy == null) {
                     finishedPart2 = true;
-                    timeManager.StartGame();
+                    
 
                 }
 
+            } else if (!finishedPart3) {
+                instructions.text = "Pick a perk at the pick-a-perk station! however, pick wisely as the perks aren't very balanced!";
+                if (!spawnedPerks) {
+                    timeManager.StartGame();
+                    spawnedPerks = true;
+
+                    Debug.Log("test");
+                }
+                
+
+                if (perkManager.PlayerSelectedPerk()) {
+                    finishedPart3 = true;
+
+                }
             }
+
         } else {
             instructions.enabled = false;
 

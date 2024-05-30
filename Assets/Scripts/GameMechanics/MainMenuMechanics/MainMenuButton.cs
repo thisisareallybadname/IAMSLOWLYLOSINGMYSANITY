@@ -23,7 +23,8 @@ public class MainMenuButton : MonoBehaviour {
     public Camera playerCam;
     public Camera mainMenuCam;
 
-    public GameObject viewModel;
+    public GameObject leftArm;
+    public GameObject rightArm;
 
     private int childCount;
 
@@ -63,8 +64,8 @@ public class MainMenuButton : MonoBehaviour {
 
         player.GetComponent<PlayerDamage>().setHealth(5);
         player.GetComponent<PlayerDamage>().maxHealth = 5;
-        viewModel.transform.GetChild(0).GetComponent<FireWeapon>().damage = 1;
-        viewModel.transform.GetChild(1).GetComponent<FireWeapon>().damage = 1;
+        leftArm.transform.GetChild(0).GetComponent<FireWeapon>().damage = 1;
+        rightArm.transform.GetChild(0).GetComponent<FireWeapon>().damage = 1;
         movement.walkspeed = 12;
         waves.wave = 0;
         
@@ -84,8 +85,9 @@ public class MainMenuButton : MonoBehaviour {
 
         UImanager.ShowPlayerHUD();
 
-        for (int i = 0; i < viewModel.transform.childCount; i++) {
-            viewModel.transform.GetChild(i).GetComponent<Renderer>().enabled = true;
+        for (int i = 0; i < leftArm.transform.childCount; i++) {
+            leftArm.transform.GetChild(i).GetComponent<Renderer>().enabled = true;
+            rightArm.transform.GetChild(i).GetComponent<Renderer>().enabled = true;
 
         }
     }
@@ -113,8 +115,9 @@ public class MainMenuButton : MonoBehaviour {
 
         enemySpawn.turnOnEnemySpawning();
 
-        for (int i = 0; i < viewModel.transform.childCount; i++) {
-            viewModel.transform.GetChild(i).GetComponent<Renderer>().enabled = false;
+        for (int i = 0; i < leftArm.transform.childCount; i++) {
+            leftArm.transform.GetChild(i).GetComponent<Renderer>().enabled = false;
+            rightArm.transform.GetChild(i).GetComponent<Renderer>().enabled = false;
 
         }
 

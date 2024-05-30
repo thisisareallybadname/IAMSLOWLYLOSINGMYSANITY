@@ -131,8 +131,6 @@ public class TimeManager : MonoBehaviour {
 
             //-- the stuff that makes intermission phase work --\\
             if (pauseGame) {
-
-                playerHealth.setHealth(playerHealth.maxHealth); // keep the player alive at all costs because if they die in intermission phase it breaks a lot of stuff
                 
                 // pause the game 
                 if (!perkManager.PlayerSelectedPerk()) {
@@ -148,6 +146,7 @@ public class TimeManager : MonoBehaviour {
                  // !!! [pretty important] perk-selection phase
                  } else if (waveCompleteTimer >= 1) {
                     if (showPerks) {
+                        showPerks = false;
                         spawnPerkOptions(); // most of the perk-selecting phase code is in here
 
                     }
@@ -156,8 +155,11 @@ public class TimeManager : MonoBehaviour {
             // !!!!! [VERY important] code for waiting-phase of intermission
             } else {
 
+                playerHealth.setHealth(playerHealth.maxHealth); // keep the player alive at all costs because if they die in intermission phase it breaks a lot of stuff
+
                 // keep track of time spent in intermission phase + begin to set up map
                 if (waveCooldown < waveDelay && !waves.isSpawningEnemies()) {
+                    playerHealth.setHealth(playerHealth.maxHealth); // keep the player alive at all costs because if they die in intermission phase it breaks a lot of stuff
                     landmines.toggleSpawningBombs(true); // let landmine indicators spawn in
                     enemiesLeft.text = "Wave starting in " + Mathf.CeilToInt(waveDelay - waveCooldown); // update UI
                     
@@ -172,7 +174,7 @@ public class TimeManager : MonoBehaviour {
                     
                 } else if (waveCooldown >= waveDelay) {
                     landmines.toggleSpawningBombs(false); // spawn landmine indicators
-                    
+                    playerHealth.setHealth(playerHealth.maxHealth); // keep the player alive at all costs because if they die in intermission phase it breaks a lot of stuff
                     intermission = false;
                     waveCooldown = 0;
                     waves.StartWave();

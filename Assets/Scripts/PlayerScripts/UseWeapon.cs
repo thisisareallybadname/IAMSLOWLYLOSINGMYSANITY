@@ -20,7 +20,7 @@ public class FireWeapon : MonoBehaviour
 
     public LineRenderer tracer;
 
-    private bool canAttack;
+    private bool canAttack = false;
     public float attackSpeed;
     private float attackCooldown;
 
@@ -89,8 +89,6 @@ public class FireWeapon : MonoBehaviour
 
             }
         }
-
-        //weapon.transform.localPosition = hand.transform.localPosition + new Vector3(0, 0, 1);
     }
 
     public bool isFiring() {
@@ -121,7 +119,7 @@ public class FireWeapon : MonoBehaviour
         }
         
         handRecoil.applyForce(recoilValue, 5, rotationRecoilValue);
-        playerCamera.applyCameraForce(cameraRecoilValue, cameraRotationalRecoilValue);
+        //playerCamera.applyCameraForce(cameraRecoilValue, cameraRotationalRecoilValue);
 
         StartCoroutine(CreateTracer(tracer, start, end));
         yield return null;

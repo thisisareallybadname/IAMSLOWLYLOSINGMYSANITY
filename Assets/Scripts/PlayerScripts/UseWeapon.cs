@@ -44,6 +44,8 @@ public class FireWeapon : MonoBehaviour
     public float damage;
     public GameObject weapon;
 
+    private List<LineRenderer> listOfTracers;
+
     //private Vector3[] positions = new Vector3[2];
 
     // Start is called before the first frame update
@@ -53,6 +55,8 @@ public class FireWeapon : MonoBehaviour
         isRightHand = handName.Equals("right arm");
         attackCooldown = 0;
         canAttack = false;
+
+        listOfTracers = new List<LineRenderer>();
 
         if (isRightHand) {
             recoilValue = new Vector3(-recoilValue.x, recoilValue.y, -recoilValue.z);
@@ -135,12 +139,11 @@ public class FireWeapon : MonoBehaviour
 
         newTracer.positionCount = 2;
         newTracer.SetPositions(positions);
-
+        listOfTracers.Add(newTracer);
         yield return new WaitForSeconds(0.15f);
 
         newTracer.enabled = false;
-        
-        GameObject.Destroy(GameObject.Find(shootPos.name + "(Clone)"));
 
+        Destroy(newTracer.gameObject);
     }
 }

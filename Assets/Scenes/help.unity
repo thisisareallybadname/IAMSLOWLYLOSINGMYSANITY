@@ -5024,7 +5024,6 @@ MonoBehaviour:
   enemiesPerWave: 3
   spawningEnemies: 0
   intermission: 0
-  spawner: {fileID: 418151233}
   enemy: {fileID: 578801947}
   wave: 0
   waveCounter: {fileID: 1195810479}
@@ -6225,7 +6224,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCam: {fileID: 1546036662}
-  lookspeed: 600
+  lookspeed: 450
   playerMovement: {fileID: 1459420598}
 --- !u!114 &1459420598
 MonoBehaviour:

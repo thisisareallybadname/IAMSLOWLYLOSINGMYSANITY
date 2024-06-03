@@ -39,8 +39,8 @@ public class PlayerCamera : MonoBehaviour
     }
 
     private void cameraBob() {
-        bobX = Mathf.Cos(tick * 6) * movespeed * 0.25f;
-        bobY = Mathf.Abs(Mathf.Sin(tick * 6)) * movespeed * 0.5f;
+        bobX = Mathf.Cos(tick * 6) * movespeed * 0.125f;
+        bobY = -Mathf.Abs(Mathf.Sin(tick * 6)) * movespeed * 0.25f;
 
 
         bobVector = new Vector3(bobX, bobY);
@@ -52,8 +52,8 @@ public class PlayerCamera : MonoBehaviour
 
         movespeed = playerMovement.getMovespeed();
 
-        mouseX = Input.GetAxisRaw("Mouse X") * lookspeed * Time.deltaTime;
-        mouseY = Input.GetAxisRaw("Mouse Y") * lookspeed * Time.deltaTime;
+        mouseX = Input.GetAxis("Mouse X") * lookspeed * Time.deltaTime;
+        mouseY = Input.GetAxis("Mouse Y") * lookspeed * Time.deltaTime;
 
         // camera movement or smth
         rotationX -= mouseY;
@@ -69,14 +69,6 @@ public class PlayerCamera : MonoBehaviour
         playerCam.transform.localPosition = offset;
         playerCam.transform.rotation = Quaternion.Euler(rotationX, rotationY, force.z);
         transform.localRotation = Quaternion.Euler(0f, rotationY, 0);
-
-        if (Input.GetKeyDown(KeyCode.F)) {
-            GameObject landmine = Instantiate(GameObject.Find("bomb"), playerCam.transform.position + (playerCam.transform.forward * 5), transform.rotation);
-            landmine.name = "PlayerLandmine";
-            landmine.GetComponent<ProjectileBehavior>().dangerous = true;
-            Debug.Log("bomb has been set");
-
-        }
 
         tick += Time.deltaTime;
     }

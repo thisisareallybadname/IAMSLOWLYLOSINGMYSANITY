@@ -134,8 +134,8 @@ public class TimeManager : MonoBehaviour {
                 
                 // pause the game 
                 if (!perkManager.PlayerSelectedPerk()) {
-                    waves.stopGame(); ///// !!!!!!! [VERY IMPORTANT!!!] move this line of code out of this if statement because i think its pretty redundant
-
+                    ///// !!!!!!! [VERY IMPORTANT!!!] move this line of code out of this if statement because i think its pretty redundant
+                    waves.stopGame();
                 }
 
                 //-- little thing that makes the wave UI say "Wave Completed!" when you beat a wave for about a second

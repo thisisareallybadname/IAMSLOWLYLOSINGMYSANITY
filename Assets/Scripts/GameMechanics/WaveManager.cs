@@ -24,8 +24,8 @@ public class WaveManager : MonoBehaviour {
     public bool spawningEnemies = false;
     public bool intermission;
 
-    public EnemySpawnManager spawner;
     public GameObject enemy;
+    private Enemy enemyProperties;
 
     public float wave = 0;
     public TMP_Text waveCounter;
@@ -100,11 +100,8 @@ public class WaveManager : MonoBehaviour {
 
     }
 
-    public void toggleSpawning(bool option) {
-        spawningEnemies = option;
-
-    }
     
+
     public void StartWave() {
         wave++;
 
@@ -126,6 +123,24 @@ public class WaveManager : MonoBehaviour {
 
     }
 
+    private void spawnEnemy() {
+        GameObject newEnemy = Instantiate(enemy, spawns[((int)randomSpawn)].transform.position, Quaternion.identity);
+        Enemy enemyProperties = newEnemy.GetComponent<Enemy>();
+        enemyProperties.active = true;
+        enemyAI enemyMovementProperties = newEnemy.GetComponent<enemyAI>();
+
+        enemies.Add(newEnemy);
+
+        if (UnityEngine.Random.Range(0, 5) == 4)
+        {
+            enemyMovementProperties.walkspeed /= 2;
+            enemyMovementProperties.projectileFirerate += (UnityEngine.Random.Range(-100, 100) * 0.01f);
+            enemyMovementProperties.canFireProjectiles = true;
+
+        }
+
+    }
+
     private void Playing() {
         if (enemies.Count > 0) {
             enemyCounter.text = "Enemies Left: " + enemies.Count;
@@ -134,19 +149,7 @@ public class WaveManager : MonoBehaviour {
             timer = 0;
             randomSpawn = UnityEngine.Random.Range(0, 3);
 
-            GameObject newEnemy = Instantiate(enemy, spawns[((int)randomSpawn)].transform.position, Quaternion.identity);
-            Enemy enemyProperties = newEnemy.GetComponent<Enemy>();
-            enemyProperties.active = true;
-            enemyAI enemyMovementProperties = newEnemy.GetComponent<enemyAI>();
-
-            enemies.Add(newEnemy);
-
-            if (UnityEngine.Random.Range(0, 5) == 4) {
-                enemyMovementProperties.walkspeed /= 2;
-                enemyMovementProperties.projectileFirerate += (UnityEngine.Random.Range(-100, 100) * 0.01f);
-                enemyMovementProperties.canFireProjectiles = true;
-
-            }
+            spawnEnemy();
 
             enemiesSpawned++;
 
@@ -160,47 +163,6 @@ public class WaveManager : MonoBehaviour {
             timer += Time.fixedDeltaTime;
 
         }
-
-        // intermission period
-        /*
-        if (enemies.Count == 0 && !spawningEnemies) {
-            if (pauseDebounce) {
-                pauseGame = true;
-                pauseDebounce = false;
-
-            }
-
-            timeManager.spawnBombs = true;
-            if (waveCooldown < waveDelay && !spawningEnemies) {
-
-                waveCooldown += Time.fixedDeltaTime;
-                playerHealth.setHealth(playerHealth.maxHealth);
-                intermission = true;
-
-            }
-            else {
-                wave++;
-
-                pauseDebounce = true;
-
-                waveCounter.text = "Wave " + wave;
-                waveReached.text = "Reached Wave " + wave;
-
-                intermission = false;
-                waveCooldown = 0;
-                
-                enemiesSpawned = 0;
-                enemiesPerWave = 2 * wave;
-
-                spawningEnemies = true;
-            }
-
-        } else {
-            timeManager.spawnBombs = false;
-
-        }
-
-        */
 
     }
 }

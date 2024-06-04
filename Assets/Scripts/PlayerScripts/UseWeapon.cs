@@ -75,20 +75,24 @@ public class FireWeapon : MonoBehaviour
 
         }
 
-        if (attackCooldown >= attackSpeed) {
-            attackCooldown = 0;
-            canAttack = true;
-
-        } else {
-            attackCooldown += Time.deltaTime;
-
-        }
     }
 
     private void FixedUpdate() {
 
+        if (attackCooldown >= attackSpeed) {
+            attackCooldown = 0;
+            canAttack = true;
+
+        }
+        else
+        {
+            attackCooldown += Time.fixedDeltaTime;
+
+        }
+
         if (mouseDown) {
             if (canAttack) {
+                canAttack = false;
                 StartCoroutine(UseWeapon());
 
             }
@@ -100,7 +104,6 @@ public class FireWeapon : MonoBehaviour
     }
 
     IEnumerator UseWeapon() {
-
         canAttack = false;
         Vector3 start = shootPos.transform.position;
         Vector3 end;

@@ -111,11 +111,8 @@ public class EnemyHealth : MonoBehaviour {
     }
 
     public void takeDamage(float damage, float knockback) {
-
         if (!dead) {
-
-            if (isPerkOption)
-            {
+            if (isPerkOption) {
                 health = 0;
                 perks.PerkSelected(GetComponent<Enemy>());
 

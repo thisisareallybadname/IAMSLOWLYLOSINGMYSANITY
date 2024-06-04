@@ -85,7 +85,13 @@ public class ProjectileBehavior : MonoBehaviour {
             } else {
                 if (canExplode) {
                     Vector3 landmineLocalScale = transform.localScale;
-                    explosionEffect.transform.localScale = Vector3.Lerp(new Vector3(0.25f, 0.25f, 0.25f), new Vector3(explosionRadius * 2, explosionRadius * 4, explosionRadius * 2), countdown * 2.5f);
+                    if (walkspeed == 0) {
+                        explosionEffect.transform.localScale = Vector3.Lerp(new Vector3(0.25f, 0.25f, 0.25f), new Vector3(explosionRadius * 2, explosionRadius * 4, explosionRadius * 2), countdown * 2.5f);
+                    
+                    } else {
+                        explosionEffect.transform.localScale = Vector3.Lerp(new Vector3(0.25f, 0.25f, 0.25f), new Vector3(explosionRadius * 2, explosionRadius * 2, explosionRadius * 2), countdown * 2.5f);
+
+                    }
                 }
                 countdown += Time.fixedDeltaTime;
 

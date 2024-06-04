@@ -28,6 +28,8 @@ public class PlayerCamera : MonoBehaviour
     private float bobX;
     private float bobY;
 
+    private Vector3 newCameraAngle;
+
     private float tick;
 
     private VMEffects viewModelEffects;
@@ -67,7 +69,7 @@ public class PlayerCamera : MonoBehaviour
         offset = Vector3.Lerp(offset, new Vector3(0, 0.5f, 0) + bobVector, Time.deltaTime * 5);
 
         playerCam.transform.localPosition = offset;
-        playerCam.transform.rotation = Quaternion.Euler(rotationX, rotationY, force.z);
+        playerCam.transform.rotation = Quaternion.Lerp(playerCam.transform.rotation, Quaternion.Euler(rotationX, rotationY, force.z), Time.deltaTime);
         transform.localRotation = Quaternion.Euler(0f, rotationY, 0);
 
         tick += Time.deltaTime;

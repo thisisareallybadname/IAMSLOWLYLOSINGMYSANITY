@@ -11,7 +11,7 @@ public class LandmineSetter : MonoBehaviour {
 
     // fields that store the amount of bombs per wave 
     private float bombCounter;
-    public float bombLimit;
+    public float amountOfLandmines;
 
     private bool canDropBombs;
     private bool spawnIndicators;
@@ -38,12 +38,13 @@ public class LandmineSetter : MonoBehaviour {
     public float additionalLandmines; // extra landmines from movement thingy
 
     // make the landmine indicators
-    private void createLandmineSpawns() {
+    public void createLandmineSpawns() {
+        amountOfLandmines = waveManager.wave * 5 + additionalLandmines;
+
 
         // make bombLimit landmines/indicators
-        if (landmineSpawns.Count < bombLimit) {
-
-            // get a random point on the floor, and store that position in a list
+         for (int i = 0; i < amountOfLandmines; i++) {
+            // go to a random point on the floor, and store that position in a list
             transform.position = new Vector3(Random.Range(-floorX / 2, floorX / 2), 2, Random.Range(-floorZ / 2, floorZ / 2));
             landmineSpawns.Add(transform.position);
 
@@ -54,20 +55,28 @@ public class LandmineSetter : MonoBehaviour {
 
         }
     }
+
+    void placeLandmineIndicators() {
+
+
+    }
+
+    public void placeLandmines() {
+        for (int i = 0; i < amountOfLandmines; i++) {
+            GameObject newLandmine = Instantiate(landmine, landmineSpawns[0], Quaternion.identity);
+            newLandmine.GetComponent<ProjectileBehavior>().dangerous = true;
+            landmines.Add(newLandmine);
+
+            // destroy landmine indicator at the spot of the new landmine
+            Destroy(landmineSpawnIndicators[0]);
+            landmineSpawnIndicators.Remove(landmineSpawnIndicators[0]);
+            landmineSpawns.Remove(landmineSpawns[0]);
+
+
+        }
+
+    }
     
-    // Start is called before the first frame update
-
-    void Start() {
-
-    }
-
-    // changes value of canSpawnBombs
-    // if false, 
-    public void toggleSpawningBombs(bool status) {
-        clearLandmines = status;
-
-    }
-
     // destroy all landmines on field that aren't exploding 
     public void clearBombfield() {
         for (int i = 0; i < landmines.Count; i++) {
@@ -78,39 +87,5 @@ public class LandmineSetter : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
-        bombLimit = waveManager.wave * 5 + additionalLandmines;
-
-            // if clearLandmines, clear the minefield
-            if (clearLandmines) {
-                createLandmineSpawns();
-                clearBombfield();
-
-            // if not, spawn a bomb at every position stored
-            } else {
-
-                // when the list that stores landmine spawnpoints isn't empty, go through it and add a landmine at the point stored at landmineSpawns[0]
-                // after you spawned this landmine, get rid of landmineSpawns[0]
-
-                // VERY IMPORTANT!!!!!! CHANGE THIS TO LANDMINE SPAWNS
-                if (landmineSpawnIndicators.Count > 0) {
-                    landmineSpawns.Clear();
-
-                    // make a new landmine and add it to a list of landmines
-                    GameObject newLandmine = Instantiate(landmine, landmineSpawnIndicators[0].transform.position, Quaternion.identity);
-                    newLandmine.GetComponent<ProjectileBehavior>().dangerous = true;
-                    landmines.Add(newLandmine);
-
-                    // destroy landmine indicator at the spot of the new landmine
-                    Destroy(landmineSpawnIndicators[0]);
-                    landmineSpawnIndicators.Remove(landmineSpawnIndicators[0]);
-
-                }
-
-            }
-
-        
-        
-    }
 
 }

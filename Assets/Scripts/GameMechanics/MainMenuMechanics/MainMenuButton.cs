@@ -26,6 +26,8 @@ public class MainMenuButton : MonoBehaviour {
     public GameObject leftArm;
     public GameObject rightArm;
 
+    public GameObject VM;
+
     private int childCount;
 
     private bool viewingMenu;
@@ -85,11 +87,7 @@ public class MainMenuButton : MonoBehaviour {
 
         UImanager.ShowPlayerHUD();
 
-        for (int i = 0; i < leftArm.transform.childCount; i++) {
-            leftArm.transform.GetChild(i).GetComponent<Renderer>().enabled = true;
-            rightArm.transform.GetChild(i).GetComponent<Renderer>().enabled = true;
-
-        }
+        VM.gameObject.SetActive(true);
     }
 
     public void showMenu() {
@@ -115,11 +113,7 @@ public class MainMenuButton : MonoBehaviour {
 
         enemySpawn.turnOnEnemySpawning();
 
-        for (int i = 0; i < leftArm.transform.childCount; i++) {
-            leftArm.transform.GetChild(i).GetComponent<Renderer>().enabled = false;
-            rightArm.transform.GetChild(i).GetComponent<Renderer>().enabled = false;
-
-        }
+        VM.gameObject.SetActive(false);
 
     }
 

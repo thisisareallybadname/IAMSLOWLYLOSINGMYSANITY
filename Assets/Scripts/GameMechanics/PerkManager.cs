@@ -24,6 +24,8 @@ public class PerkManager : MonoBehaviour {
     public PlayerMovement movement;
     public FireWeapon leftDamage;
     public FireWeapon rightDamage;
+
+    private float newAttackSpeed;
     
     public GameObject floor;
     public GameObject originalEnemy;
@@ -55,7 +57,13 @@ public class PerkManager : MonoBehaviour {
                 leftDamage.attackSpeed *= 0.9f;
                 rightDamage.attackSpeed *= 0.9f;
 
-                
+                if (leftDamage.attackSpeed <= 0.2f) {
+                    rightDamage.attackSpeed = 0.2f;
+
+                } else if (rightDamage.attackSpeed <= 0.2f) {
+                    leftDamage.attackSpeed = 0.2f;
+
+                }
 
             } else if (variant == 1) { // health
                 health.maxHealth += 1;
@@ -76,7 +84,7 @@ public class PerkManager : MonoBehaviour {
             }
 
             perkOptions.Clear();
-            timeManager.UnpauseGame();
+            
         }
     }
 

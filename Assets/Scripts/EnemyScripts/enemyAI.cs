@@ -12,11 +12,16 @@ public class enemyAI : MonoBehaviour {
     private bool chasePlayer;
 
     public GameObject projectile;
-    public float projectileFirerate;
+    public float projectileFirerate = 1;
     private float fireCooldown = 0;
 
     // Start is called before the first frame update
     void Start() {
+    }
+
+    void activate() {
+        chasePlayer = true;
+
     }
 
     // Update is called once per frame
@@ -56,6 +61,11 @@ public class enemyAI : MonoBehaviour {
 
     public void MakeHostile(bool chase) {
         chasePlayer = chase;
+    }
+
+    void turnIntoRangedEnemy() {
+        canFireProjectiles = true;
+
     }
 
     

@@ -25,6 +25,9 @@ public class PerkManager : MonoBehaviour {
     public FireWeapon leftDamage;
     public FireWeapon rightDamage;
 
+    public GameObject newProjectile;
+
+
     private float newAttackSpeed;
     
     public GameObject floor;
@@ -82,6 +85,8 @@ public class PerkManager : MonoBehaviour {
                     option.GetComponent<EnemyHealth>().takeDamage(10000000, 10000000000000);
                 }
             }
+
+            timeManager.gameObject.SendMessage("UnpauseGame");
 
             perkOptions.Clear();
             

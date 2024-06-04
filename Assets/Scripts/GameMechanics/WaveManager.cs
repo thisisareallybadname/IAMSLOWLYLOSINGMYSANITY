@@ -125,17 +125,18 @@ public class WaveManager : MonoBehaviour {
 
     private void spawnEnemy() {
         GameObject newEnemy = Instantiate(enemy, spawns[((int)randomSpawn)].transform.position, Quaternion.identity);
-        Enemy enemyProperties = newEnemy.GetComponent<Enemy>();
-        enemyProperties.active = true;
-        enemyAI enemyMovementProperties = newEnemy.GetComponent<enemyAI>();
+        newEnemy.gameObject.SendMessage("activate");
+        
+        //Enemy enemyProperties = newEnemy.GetComponent<Enemy>();
+        //enemyProperties.active = true;
+        //enemyAI enemyMovementProperties = newEnemy.GetComponent<enemyAI>();
 
         enemies.Add(newEnemy);
 
-        if (UnityEngine.Random.Range(0, 5) == 4)
+        if (UnityEngine.Random.Range(0, 5) >= 0)
         {
-            enemyMovementProperties.walkspeed /= 2;
-            enemyMovementProperties.projectileFirerate += (UnityEngine.Random.Range(-100, 100) * 0.01f);
-            enemyMovementProperties.canFireProjectiles = true;
+            newEnemy.SendMessage("turnIntoRangedEnemy");
+            newEnemy.SendMessage("setMovementSpeed", 4);
 
         }
 

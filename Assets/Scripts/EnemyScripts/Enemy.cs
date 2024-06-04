@@ -27,7 +27,7 @@ public class Enemy : MonoBehaviour {
         speed = enemyMovement.walkspeed;
         health = enemyHealth.health;
 
-        enemyMovement.MakeHostile(active);
+        //enemyMovement.MakeHostile(active);
         enemyMovement.setMovementSpeed(speed);
 
     }

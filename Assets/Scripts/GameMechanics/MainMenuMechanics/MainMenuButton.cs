@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Networking.PlayerConnection;
@@ -33,8 +34,9 @@ public class MainMenuButton : MonoBehaviour {
     private bool viewingMenu;
     public WaveManager waves;
 
-    public GameObject aboutMe;
-    public GameObject everythingElse;
+    [SerializeField] Image aboutMe;
+    [SerializeField] Button aboutMeButton;
+    [SerializeField] Button exitAboutMeButton;
 
     // Start is called before the first frame update
     void Start() {
@@ -45,6 +47,7 @@ public class MainMenuButton : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        // debug
         if (Input.GetKey(KeyCode.P)) {
             showMenu();
 
@@ -73,7 +76,8 @@ public class MainMenuButton : MonoBehaviour {
         rightArm.transform.GetChild(0).GetComponent<FireWeapon>().damage = 1;
         movement.walkspeed = 12;
         waves.wave = 0;
-        
+
+        mainMenuUI.enabled = false;
 
         title.enabled = false;
         button.gameObject.SetActive(false);
@@ -94,6 +98,19 @@ public class MainMenuButton : MonoBehaviour {
     }
 
     public void showAboutMe() {
+        aboutMe.gameObject.SetActive(true);
+        aboutMeButton.interactable = false;
+        exitAboutMeButton.gameObject.SetActive(true);
+        exitAboutMeButton.GetComponent<Button>().interactable = true;
+
+        aboutMe.enabled = true;
+
+    }
+
+    public void hideAboutMe() {
+        aboutMe.gameObject.SetActive(false);
+        exitAboutMeButton.gameObject.SetActive(false);
+        aboutMeButton.interactable = true;
 
     }
 
@@ -113,6 +130,8 @@ public class MainMenuButton : MonoBehaviour {
 
         button.gameObject.SetActive(true);
 
+        mainMenuUI.enabled = true;
+
         movement.enabled = false;
         playerCamera.enabled = false;
         playerHUD.enabled = false;
@@ -125,7 +144,6 @@ public class MainMenuButton : MonoBehaviour {
     }
 
     public void respawn() {
-        Debug.Log("help");
         showMenu();
 
     }

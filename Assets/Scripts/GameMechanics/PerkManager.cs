@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PerkManager : MonoBehaviour { 
     GameObject selectedEnemy;
@@ -68,8 +69,7 @@ public class PerkManager : MonoBehaviour {
 
                 }
 
-                originalEnemy.GetComponent<enemyAI>().projectileFirerate *= 0.9f;
-                originalEnemy.GetComponent<enemyAI>().projectileSpeed *= 1.2f;
+                originalEnemy.GetComponent<enemyAI>().ModifyProjectileVariables(1.25f, 0.85f, true);
 
             } else if (variant == 1) { // health
                 health.maxHealth += 1;
@@ -77,19 +77,19 @@ public class PerkManager : MonoBehaviour {
 
             } else if (variant == 2) { // speed
                 movement.walkspeed += 2f;
-                movement.staminaLimit += 1.5f;
-                minefield.additionalLandmines += 10;
+                movement.staminaLimit += 0.5f;
+                minefield.additionalLandmines += Random.Range(2, 5);
 
             }
 
+            // destroy the other perk enemies to show which ones are which
             foreach (GameObject option in perkOptions) {
                 if (option.GetComponent<Enemy>().getIndex() != selectedOption.GetComponent<Enemy>().getIndex()) {
-                    option.GetComponent<EnemyHealth>().isPerkOption = false;
-                    option.GetComponent<EnemyHealth>().takeDamage(10000000, 10000000000000);
+                    Destroy(option.gameObject);
                 }
             }
 
-            timeManager.gameObject.SendMessage("UnpauseGame");
+            timeManager.UnpauseGame();
 
             perkOptions.Clear();
             
@@ -106,6 +106,7 @@ public class PerkManager : MonoBehaviour {
             newEnemy = Instantiate(enemy, perkSpawns[variant].transform.position, Quaternion.identity);
             newEnemy.GetComponent<EnemyHealth>().changeSprite(optionSprites[variant]);
             newEnemy.GetComponent<Enemy>().setIndex(variant);
+
             perkOptions.Add(newEnemy);
 
         }

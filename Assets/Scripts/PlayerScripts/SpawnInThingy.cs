@@ -6,7 +6,6 @@ using UnityEngine;
 public class SpawnInThingy : MonoBehaviour {
 
     public GameObject player;
-    public MainMenu mainMenu;
 
     // Start is called before the first frame update
     void Start()

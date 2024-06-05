@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MainMenuEnemyEffect : MonoBehaviour {
 
-    public GameObject enemy;
+    [SerializeField] GameObject enemy;
     private float timer;
     private bool spawnEnemies = true;
 
@@ -16,6 +16,9 @@ public class MainMenuEnemyEffect : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+
+        Application.targetFrameRate = 60;
+
         if (spawnEnemies) {
             if (timer < 0.05f) {
                 timer += Time.deltaTime;
@@ -27,12 +30,16 @@ public class MainMenuEnemyEffect : MonoBehaviour {
             }
         }
     }
-
     public IEnumerator spawnEnemy() {
         GameObject newEnemy = Instantiate(enemy, transform.position + transform.right * Random.Range(-15, 15), Quaternion.identity);
         newEnemy.GetComponent<EnemyHealth>().enabled = true;
         newEnemy.GetComponent<EnemyHealth>().lieOnFloorMaxTime = 3;
-        newEnemy.GetComponent<EnemyHealth>().takeDamage(10000000, 15);
+        if (Random.Range(0, 4) == 1) {
+            newEnemy.SendMessage("EnableRangedAttack");
+
+        }
+
+        newEnemy.GetComponent<EnemyHealth>().takeDamage(10000000, Random.Range(-15, 15));
         yield return null;
     }
 

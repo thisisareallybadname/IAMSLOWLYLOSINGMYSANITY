@@ -5,18 +5,23 @@ using UnityEngine;
 // script that controls the enemy's AI
 public class enemyAI : MonoBehaviour {
 
-    public GameObject player;
-    public int walkspeed; 
-    public Rigidbody rb;
+    [SerializeField] GameObject player;
+    [SerializeField] float walkspeed; 
+    private Rigidbody rb;
 
     public bool canFireProjectiles;
 
     public GameObject projectile;
 
-    public float projectileSpeed;
-    public float projectileFirerate = 1;
-    public float projectileFirerateVariation;
+    [SerializeField] float projectileSpeed;
+    [SerializeField] float projectileFirerate = 1;
+    [SerializeField] float projectileFirerateVariation;
     private float fireCooldown = 0;
+
+    private void Start() {
+        rb = GetComponent<Rigidbody>();
+
+    }
 
     // Start is called before the first frame update
     void Awake() {
@@ -52,6 +57,18 @@ public class enemyAI : MonoBehaviour {
             }
     }
 
+    public void ModifyProjectileVariables(float newSpeed, float newFirerate, bool multiply) {
+        if (multiply) {
+            projectileFirerate *= newFirerate;
+            projectileSpeed *= newSpeed;
+
+        } else {
+            projectileFirerate = newFirerate;
+            projectileSpeed = newSpeed;
+
+        }
+    }
+
     // make a new enemyprojectile object
     private void FireProjectile() {
 
@@ -66,8 +83,8 @@ public class enemyAI : MonoBehaviour {
     }
 
     // set the movespeed of the enemy
-    public void setMovementSpeed(float newWalkspeed) {
+    public void setWalkspeed(float newWalkspeed) {
 
-        walkspeed = (int)newWalkspeed;
+        walkspeed = newWalkspeed;
     }
 }

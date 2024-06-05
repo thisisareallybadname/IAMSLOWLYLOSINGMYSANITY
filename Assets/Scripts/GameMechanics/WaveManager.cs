@@ -134,10 +134,9 @@ public class WaveManager : MonoBehaviour {
 
         enemies.Add(newEnemy);
 
-        if (UnityEngine.Random.Range(0, 4) >= 3)
-        {
+        if (UnityEngine.Random.Range(0, 4) == 0) {
             newEnemy.SendMessage("EnableRangedAttack");
-            newEnemy.SendMessage("setMovementSpeed", 4);
+            newEnemy.SendMessage("setWalkspeed", 4);
 
         }
 

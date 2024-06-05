@@ -55,7 +55,7 @@ public class EnemyHealth : MonoBehaviour {
         maxHealth = health;
         dead = false;
         spriteRenderer = enemySprite.GetComponent<MeshRenderer>();
-        rb = GetComponentRigidBody>();
+        rb = GetComponent<Rigidbody>();
         
         FullHealthEnemySprite = FullHealthMeleeSprite;
         LowHealthEnemySprite = LowHealthMeleeSprite;
@@ -76,7 +76,7 @@ public class EnemyHealth : MonoBehaviour {
             
             // if you didn't already, apply death force to enemy
             if (!appliedDeathForce) {
-                rb.velocity = (new Vector3(Random.Range(-10, 10), Random.Range(-10, 10), Random.Range(-10, 10)));
+                rb.AddForce(new Vector3(Random.Range(-10, 10), Random.Range(-10, 10), Random.Range(-10, 10)), ForceMode.Impulse);
                 appliedDeathForce = true;
                 waveManager.enemyDeath(this.gameObject);
             }
@@ -156,6 +156,21 @@ public class EnemyHealth : MonoBehaviour {
     // change health (used w/ perkManager)
     public void addStatAmplifier(float newHealth) {
         health = newHealth;
+
+    }
+
+    public void setHealth(float newHealth) {
+        health = newHealth;
+
+    }
+
+    public float getHealth() {
+        return health;
+
+    }
+
+    public void changeStats(float newHealth) {
+
 
     }
 

@@ -24,11 +24,10 @@ public class Enemy : MonoBehaviour {
         enemyHealth = GetComponent<EnemyHealth>();
         enemyMovement = GetComponent<enemyAI>();
 
-        speed = enemyMovement.walkspeed;
-        health = enemyHealth.health;
+        //health = enemyHealth.health;
 
         //enemyMovement.MakeHostile(active);
-        enemyMovement.setMovementSpeed(speed);
+        //enemyMovement.setWalkspeed(speed);
 
     }
 

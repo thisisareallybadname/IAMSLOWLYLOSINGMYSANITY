@@ -62,7 +62,7 @@ public class PlayerDamage : MonoBehaviour {
 
 
     private void OnTriggerStay(Collider collision) {
-        if (collision.gameObject.tag.Equals("Enemy") && collision.gameObject.GetComponent<Enemy>().active) {
+        if (collision.gameObject.tag.Equals("Enemy") && collision.gameObject.GetComponent<EnemyHealth>().getHealth() > 0) {
             takeDamage(collision.gameObject.GetComponent<Enemy>().getDamage());
 
         }

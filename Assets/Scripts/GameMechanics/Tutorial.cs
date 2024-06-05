@@ -77,11 +77,14 @@ public class Tutorial : MonoBehaviour {
         if (!spawnedTargetEnemy) {
             spawnedEnemy = Instantiate(enemy, enemySpawn.transform.position, Quaternion.identity);
             spawnedEnemy.GetComponent<EnemyHealth>().enabled = true;
-            spawnedEnemy.GetComponent<EnemyHealth>().health = 5;
+            spawnedEnemy.GetComponent<EnemyHealth>().setHealth(5);
             spawnedEnemy.GetComponent<enemyAI>().enabled = true;
-            spawnedEnemy.GetComponent<enemyAI>().walkspeed = 0;
+            spawnedEnemy.GetComponent<enemyAI>().setWalkspeed(0);
             spawnedEnemy.gameObject.SendMessage("changeSprite", targetMaterial);
             spawnedTargetEnemy = true;
+
+
+            spawnedEnemy.GetComponent<enemyAI>().setWalkspeed(0);
         }
 
 

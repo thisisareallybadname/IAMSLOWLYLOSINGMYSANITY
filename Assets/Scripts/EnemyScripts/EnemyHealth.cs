@@ -16,9 +16,14 @@ public class EnemyHealth : MonoBehaviour {
 
     private bool canTakeDamage = true;
 
-    public Material FullHealthSprite;
-    public Material MidHealthSprite;
-    public Material LowHealthSprite;
+    public Material FullHealthMeleeSprite;
+    public Material LowHealthMeleeSprite;
+
+    public Material FullHealthRangedSprite;
+    public Material LowHealthRangedSprite;
+
+    private Material FullHealthEnemySprite;
+    private Material LowHealthEnemySprite;
 
     public GameObject enemySprite;
     public Collider collider;
@@ -44,11 +49,21 @@ public class EnemyHealth : MonoBehaviour {
     public PerkManager perks;
 
     // Start is called before the first frame update
-    void Start() {
+    void Awake() {
         appliedDeathForce = false;
         maxHealth = health;
         dead = false;
         spriteRenderer = enemySprite.GetComponent<MeshRenderer>();
+
+        FullHealthEnemySprite = FullHealthMeleeSprite;
+        LowHealthEnemySprite = LowHealthMeleeSprite;
+        
+    }
+
+    void EnableRangedAttack() {
+        FullHealthEnemySprite = FullHealthRangedSprite;
+        LowHealthEnemySprite = LowHealthRangedSprite;
+
     }
 
     // Update is called once per frame
@@ -77,15 +92,12 @@ public class EnemyHealth : MonoBehaviour {
         }
 
         if (health >= maxHealth * 0.75f) {
-            spriteRenderer.material = FullHealthSprite;
+            spriteRenderer.material = FullHealthEnemySprite;
 
         } else if (health >= maxHealth / 2) {
-            spriteRenderer.material = MidHealthSprite;
+            spriteRenderer.material = LowHealthEnemySprite;
 
-        } else {
-            spriteRenderer.material = LowHealthSprite;
-
-        }
+        } 
 
     }
 
@@ -104,9 +116,8 @@ public class EnemyHealth : MonoBehaviour {
     }
 
     public void changeSprite(Material newSprite) {
-        FullHealthSprite = newSprite;
-        MidHealthSprite = newSprite;
-        LowHealthSprite = newSprite;
+        FullHealthEnemySprite = newSprite;
+        LowHealthEnemySprite = newSprite;
 
     }
 

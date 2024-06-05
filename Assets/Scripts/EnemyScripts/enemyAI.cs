@@ -12,23 +12,26 @@ public class enemyAI : MonoBehaviour {
     private bool chasePlayer;
 
     public GameObject projectile;
+
+    public float projectileSpeed;
     public float projectileFirerate = 1;
+    public float projectileFirerateVariation;
     private float fireCooldown = 0;
 
     // Start is called before the first frame update
-    void Start() {
+    void Awake() {
+        projectileFirerate *= 1 + Random.Range(-projectileFirerateVariation, projectileFirerateVariation) / 50f;
     }
 
-    void activate() {
-        chasePlayer = true;
+    void EnableRangedAttack() {
+        canFireProjectiles = true;
 
     }
 
     // Update is called once per frame
     void FixedUpdate() {
-        transform.LookAt(player.transform.position);
+        gameObject.transform.LookAt(player.transform);
 
-        if (chasePlayer) {
             rb.AddForce(transform.forward * walkspeed * 200 * Time.deltaTime, ForceMode.Force);
             rb.drag = 2.5f;
 
@@ -43,15 +46,15 @@ public class enemyAI : MonoBehaviour {
 
             }
 
-        }
+        
     }
 
     private void FireProjectile() {
         GameObject newFireball = Instantiate(projectile, transform.position + transform.forward, transform.rotation);
         ProjectileBehavior fireballProperties = newFireball.GetComponent<ProjectileBehavior>();
+        fireballProperties.enabled = true;
         fireballProperties.canExplode = true;
-        fireballProperties.walkspeed = 10;
-        fireballProperties.dangerous = true;
+        fireballProperties.walkspeed = projectileSpeed;
     }
 
     public void setMovementSpeed(float newWalkspeed) {
@@ -62,12 +65,4 @@ public class enemyAI : MonoBehaviour {
     public void MakeHostile(bool chase) {
         chasePlayer = chase;
     }
-
-    void turnIntoRangedEnemy() {
-        canFireProjectiles = true;
-
-    }
-
-    
-
 }

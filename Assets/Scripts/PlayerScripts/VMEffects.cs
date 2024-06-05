@@ -92,10 +92,9 @@ public class VMEffects : MonoBehaviour
     }
 
     IEnumerator updateRecoilForces() {
-        currentPosition = Vector3.Lerp(currentPosition, positionOffset + bobVector + VMSway, 7.5f * Time.deltaTime);
+        currentPosition = Vector3.Lerp(currentPosition, positionOffset + bobVector, 7.5f * Time.deltaTime);
         currentRotation = Vector3.Slerp(currentRotation, angleOffset, 5 * Time.deltaTime);
 
-        //forceSpeed = Mathf.Lerp(forceSpeed, 1, 5 * Time.deltaTime);
         yield return null;
 
     }

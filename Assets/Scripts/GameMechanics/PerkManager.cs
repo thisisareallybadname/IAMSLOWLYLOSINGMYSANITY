@@ -68,6 +68,9 @@ public class PerkManager : MonoBehaviour {
 
                 }
 
+                originalEnemy.GetComponent<enemyAI>().projectileFirerate *= 0.9f;
+                originalEnemy.GetComponent<enemyAI>().projectileSpeed *= 1.2f;
+
             } else if (variant == 1) { // health
                 health.maxHealth += 1;
                 originalEnemy.GetComponent<Enemy>().setSpeed(originalEnemy.GetComponent<Enemy>().speed + 2);

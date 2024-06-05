@@ -33,6 +33,9 @@ public class MainMenuButton : MonoBehaviour {
     private bool viewingMenu;
     public WaveManager waves;
 
+    public GameObject aboutMe;
+    public GameObject everythingElse;
+
     // Start is called before the first frame update
     void Start() {
         movement = player.GetComponent<PlayerMovement>();
@@ -88,6 +91,10 @@ public class MainMenuButton : MonoBehaviour {
         UImanager.ShowPlayerHUD();
 
         VM.gameObject.SetActive(true);
+    }
+
+    public void showAboutMe() {
+
     }
 
     public void showMenu() {

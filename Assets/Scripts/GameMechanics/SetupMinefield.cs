@@ -64,7 +64,7 @@ public class LandmineSetter : MonoBehaviour {
     public void placeLandmines() {
         for (int i = 0; i < amountOfLandmines; i++) {
             GameObject newLandmine = Instantiate(landmine, landmineSpawns[0], Quaternion.identity);
-            newLandmine.GetComponent<ProjectileBehavior>().dangerous = true;
+            newLandmine.GetComponent<ProjectileBehavior>().enabled = true;
             landmines.Add(newLandmine);
 
             // destroy landmine indicator at the spot of the new landmine

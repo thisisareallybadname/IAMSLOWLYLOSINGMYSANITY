@@ -37,6 +37,8 @@ public class TimeManager : MonoBehaviour {
 
     public TMP_Text enemiesLeft; // thingy in player hud that shows how much enemies are left
 
+    public GameObject enemySpawnIndicator;
+
     private bool clearedMinefield;
     private bool spawnedLandmines;
     private bool spawnedLandmineIndicators;
@@ -102,6 +104,8 @@ public class TimeManager : MonoBehaviour {
             }
             waveCompleteTimer = 0;
 
+            enemySpawnIndicator.GetComponent<MeshRenderer>().enabled = true;
+
             // thing that keeps track of time
             waveCooldown += Time.deltaTime;
 
@@ -122,6 +126,8 @@ public class TimeManager : MonoBehaviour {
             clearedMinefield = false;
             spawnedLandmines = false;
             spawnedLandmineIndicators = false;
+
+            enemySpawnIndicator.GetComponent<MeshRenderer>().enabled = false;
 
         }
 

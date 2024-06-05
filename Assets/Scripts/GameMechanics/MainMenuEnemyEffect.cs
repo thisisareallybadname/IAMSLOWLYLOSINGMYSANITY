@@ -29,7 +29,8 @@ public class MainMenuEnemyEffect : MonoBehaviour {
     }
 
     public IEnumerator spawnEnemy() {
-        GameObject newEnemy = Instantiate(enemy, transform.position + transform.right * Random.Range(-15, 15), Quaternion.identity) as GameObject;
+        GameObject newEnemy = Instantiate(enemy, transform.position + transform.right * Random.Range(-15, 15), Quaternion.identity);
+        newEnemy.GetComponent<EnemyHealth>().enabled = true;
         newEnemy.GetComponent<EnemyHealth>().lieOnFloorMaxTime = 3;
         newEnemy.GetComponent<EnemyHealth>().takeDamage(10000000, 15);
         yield return null;

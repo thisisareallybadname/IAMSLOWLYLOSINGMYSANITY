@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour {
 
-    public float health;
+    [SerializeField] float health;
     private float maxHealth;
 
     public float kbResistance = 1;
@@ -16,50 +16,53 @@ public class EnemyHealth : MonoBehaviour {
 
     private bool canTakeDamage = true;
 
-    public Material FullHealthMeleeSprite;
-    public Material LowHealthMeleeSprite;
+    public Material FullHealthMeleeSprite; // melee enemy sprite when its health > 50
+    public Material LowHealthMeleeSprite; // melee enemy sprite when its health < 50
 
-    public Material FullHealthRangedSprite;
-    public Material LowHealthRangedSprite;
+    public Material FullHealthRangedSprite; // ranged enemy sprite when its health > 50
+    public Material LowHealthRangedSprite; // ranged enemy sprite when its health < 50
 
+     // default is melee enemy, changed to ranged enemy if specified
     private Material FullHealthEnemySprite;
     private Material LowHealthEnemySprite;
 
     public GameObject enemySprite;
     public Collider collider;
 
-    public Rigidbody rb;
+    private Rigidbody rb;
 
     private MeshRenderer spriteRenderer;
 
     private bool dead;
-    private float ragdollTimer;
-    public float lieOnFloorMaxTime;
+    private float ragdollTimer; // keeps track of how long ragdoll thingy is right now
+    public float lieOnFloorMaxTime; // ragdoll length at death
 
+    // debounce bool that makes it so while the enemy is doing that ragdoll thingy, it won't get moved
     private bool appliedDeathForce;
     public WaveManager waveManager;
+    
+    public enemyAI enemyAI; // disabled when health <= 0
+    public Enemy enemyStats; // to be deleted
 
-    public enemyAI enemyAI;
-    public Enemy enemyStats;
-
-    public float enemyControl;
-    public float knockbackControl;
+    public float enemyControl; // enemy drag, makes it less slippery and stupid
+    public float knockbackControl; // makes less knockback
 
     public bool isPerkOption;
     public PerkManager perks;
 
-    // Start is called before the first frame update
     void Awake() {
         appliedDeathForce = false;
         maxHealth = health;
         dead = false;
         spriteRenderer = enemySprite.GetComponent<MeshRenderer>();
-
+        rb = GetComponentRigidBody>();
+        
         FullHealthEnemySprite = FullHealthMeleeSprite;
         LowHealthEnemySprite = LowHealthMeleeSprite;
         
     }
 
+    // change sprites
     void EnableRangedAttack() {
         FullHealthEnemySprite = FullHealthRangedSprite;
         LowHealthEnemySprite = LowHealthRangedSprite;
@@ -68,33 +71,32 @@ public class EnemyHealth : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-
         if (health <= 0) {
-            GetComponent<enemyAI>().enabled = false;
+            GetComponent<enemyAI>().enabled = false; // disable enemy AI because it's dead
             
-            collider.enabled = false;
-
+            // if you didn't already, apply death force to enemy
             if (!appliedDeathForce) {
                 rb.velocity = (new Vector3(Random.Range(-10, 10), Random.Range(-10, 10), Random.Range(-10, 10)));
                 appliedDeathForce = true;
                 waveManager.enemyDeath(this.gameObject);
             }
 
+            // destroy enemy if it ragdolled too long
             if (ragdollTimer >= lieOnFloorMaxTime) {
                 Destroy(gameObject);
 
-            }
-            else {
+            } else {
                 ragdollTimer += Time.deltaTime;
 
             }
 
         }
 
-        if (health >= maxHealth * 0.75f) {
+        // change sprite depending on enemy's health
+        if (health >= maxHealth /2f) {
             spriteRenderer.material = FullHealthEnemySprite;
 
-        } else if (health >= maxHealth / 2) {
+        } else {
             spriteRenderer.material = LowHealthEnemySprite;
 
         } 
@@ -103,6 +105,7 @@ public class EnemyHealth : MonoBehaviour {
 
     private void FixedUpdate() {
 
+        // this makes knockback more dramatic????
         if (hitCooldown < immunityDuration) {
             hitCooldown += Time.fixedDeltaTime;
             rb.drag = knockbackControl;
@@ -115,33 +118,42 @@ public class EnemyHealth : MonoBehaviour {
         }
     }
 
+    // change the sprites
     public void changeSprite(Material newSprite) {
         FullHealthEnemySprite = newSprite;
         LowHealthEnemySprite = newSprite;
 
     }
 
+    // take damage (+ knockback if provided_ 
     public void takeDamage(float damage, float knockback) {
+        // make sure that if it can't take kb when its dead
         if (!dead) {
+
+            // since the perkOption enemy uses this as well (perk enemy), if the enemy is a perk option, instakill it
             if (isPerkOption) {
                 health = 0;
                 perks.PerkSelected(GetComponent<Enemy>());
 
             }
 
+            // if the enemyAI isn't deleted yet, add knockback
             if (enemyStats.active) {
                 hitCooldown = 0;
+
+                // add knockback force to player
+                rb.AddForce(new Vector3(0, 1, 0) * knockback * 50 + new Vector3(Random.Range(-knockback * 0.5f, knockback * 0.5f), 0, Random.Range(-knockback * 0.5f, knockback * 0.5f)) * (1 / kbResistance), ForceMode.Force);
                 rb.velocity = new Vector3(Mathf.Abs(rb.velocity.x), Mathf.Abs(rb.velocity.y), Mathf.Abs(rb.velocity.z));
                 enemyAI.enabled = false;
             }
         }
 
-        rb.AddForce(new Vector3(0, 1, 0) * knockback * 50 + new Vector3(Random.Range(-knockback * 0.5f, knockback * 0.5f), 0, Random.Range(-knockback * 0.5f, knockback * 0.5f)) * (1 / kbResistance), ForceMode.Force);
-
+        
         health -= damage;
         
     }
 
+    // change health (used w/ perkManager)
     public void addStatAmplifier(float newHealth) {
         health = newHealth;
 

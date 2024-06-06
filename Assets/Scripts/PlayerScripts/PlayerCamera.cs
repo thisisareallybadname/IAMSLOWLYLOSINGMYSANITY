@@ -43,7 +43,7 @@ public class PlayerCamera : MonoBehaviour {
         bobY = -Mathf.Abs(Mathf.Sin(tick * 6)) * movespeed * 0.25f;
 
 
-        bobVector = new Vector3(bobX, bobY);
+        bobVector = Vector3.Lerp(bobVector, new Vector3(bobX, bobY), 1 * Time.deltaTime);
     }
 
     // Update is called once per frame
@@ -62,10 +62,10 @@ public class PlayerCamera : MonoBehaviour {
     `    
         // make force and offset diminish until they reach vector3.zero
         force = Vector3.Lerp(force, Vector3.zero, Time.deltaTime * 5);
-        offset = Vector3.Lerp(offset, new Vector3(0, 0.5f, 0) + bobVector, Time.deltaTime * 5);
+        offset = Vector3.Lerp(offset, new Vector3(0, 0.5f, 0), Time.deltaTime * 5);
 
         // set positions
-        playerCam.transform.localPosition = offset + force;
+        playerCam.transform.localPosition = offset + force + bobVector;
         playerCam.transform.rotation = Quaternion.Euler(rotationX, rotationY, force.z);
         transform.localRotation = Quaternion.Euler(0f, rotationY, 0);
 

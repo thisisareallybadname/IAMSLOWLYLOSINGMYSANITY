@@ -6,18 +6,23 @@ using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
 // controls the player's camera
-public class PlayerCamera : MonoBehaviour
-{
+public class PlayerCamera : MonoBehaviour {
+
+    // player's camera
     [SerializeField] Camera playerCam;
 
+    // mouse delta coords
     private float mouseX;
     private float mouseY;
 
+    // rotation values
     private float rotationX;
     private float rotationY;
 
+    // camera sensitivity
     [SerializeField] float lookspeed;
 
+    // camera force stuff
     private Vector3 force;
     private Vector3 offset;
 
@@ -45,6 +50,7 @@ public class PlayerCamera : MonoBehaviour
     void Update() {
         movespeed = playerMovement.getMovespeed();
 
+        // get mouse deltas
         mouseX = Input.GetAxis("Mouse X") * lookspeed * Time.deltaTime;
         mouseY = Input.GetAxis("Mouse Y") * lookspeed * Time.deltaTime;
 
@@ -68,11 +74,11 @@ public class PlayerCamera : MonoBehaviour
 
     // set force and offset and stuff
     public void applyCameraForce(Vector3 newForce, Vector3 newOffset) {
-        force = newForce;
+        force += newForce; 
         force.x = Random.Range(-force.x, force.x);
         force.z = Random.Range(-force.z, force.z);
 
-        offset = newOffset;
+        offset += newOffset;
 
     }
 }

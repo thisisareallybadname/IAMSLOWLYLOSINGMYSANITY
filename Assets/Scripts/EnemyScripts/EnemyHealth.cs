@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
+// manages enemy's health
 public class EnemyHealth : MonoBehaviour {
 
     [SerializeField] float health;
@@ -50,6 +51,7 @@ public class EnemyHealth : MonoBehaviour {
     public bool isPerkOption;
     public PerkManager perks;
 
+    // assign all variables when enemy is created
     void Awake() {
         appliedDeathForce = false;
         maxHealth = health;
@@ -159,11 +161,13 @@ public class EnemyHealth : MonoBehaviour {
 
     }
 
+    // set enemy's health
     public void setHealth(float newHealth) {
         health = newHealth;
 
     }
 
+    // get enemy's health 
     public float getHealth() {
         return health;
 

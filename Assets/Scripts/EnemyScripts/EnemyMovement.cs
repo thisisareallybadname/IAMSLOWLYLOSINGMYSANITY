@@ -7,16 +7,17 @@ public class EnemyMovement : MonoBehaviour {
 
     [SerializeField] GameObject player;
     [SerializeField] float walkspeed; 
-    private Rigidbody rb;
+    private Rigidbody rb; // enemy's rigidbody
 
-    public bool canFireProjectiles;
+    [SerializeField] bool canFireProjectiles;
 
-    public GameObject projectile;
+    [SerializeField] GameObject projectile;
 
-    [SerializeField] float projectileSpeed;
+    [SerializeField] float projectileSpeed; // speed projectile is travelling at
     [SerializeField] float projectileFirerate = 1;
-    [SerializeField] float projectileFirerateVariation;
-    private float fireCooldown = 0;
+
+    [SerializeField] float projectileFirerateVariation; // add variation between each enemy's ROF so it wont be too easy to dodge
+    private float fireCooldown = 0; // tiner for keeping track of rate of fire
 
     private void Start() {
         rb = GetComponent<Rigidbody>();

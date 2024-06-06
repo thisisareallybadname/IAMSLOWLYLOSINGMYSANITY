@@ -57,34 +57,25 @@ public class PlayerCamera : MonoBehaviour
         mouseX = Input.GetAxis("Mouse X") * lookspeed * Time.deltaTime;
         mouseY = Input.GetAxis("Mouse Y") * lookspeed * Time.deltaTime;
 
-        // camera movement or smth
-        rotationX -= mouseY;
+        // rotationX is on the x-axis, so adding mouse-y delta will make it move up/down
+        // same thing with rotationY  & adding mouse-x delta, but its on the x-axis, so it moves left-right
+        rotationX -= mouseY - force.y;
         rotationX = Mathf.Clamp(rotationX, -90f, 90f);
-        rotationY += mouseX;
-
-        rotationX -= force.y;
-        rotationY -= force.x;
-
+        rotationY += mouseX - force.x;
+    `    
+        // make force and offset diminish until they reach vector3.zero
         force = Vector3.Lerp(force, Vector3.zero, Time.deltaTime * 5);
         offset = Vector3.Lerp(offset, new Vector3(0, 0.5f, 0) + bobVector, Time.deltaTime * 5);
 
-        playerCam.transform.localPosition = offset;
+        // set positions
+        playerCam.transform.localPosition = offset + force;
         playerCam.transform.rotation = Quaternion.Euler(rotationX, rotationY, force.z);
         transform.localRotation = Quaternion.Euler(0f, rotationY, 0);
 
         tick += Time.deltaTime;
     }
 
-    public Quaternion getPlayerRotation() {
-        return playerCam.transform.rotation;
-
-    }
-
-    public Quaternion getLocalPlayerRotation() { 
-        return playerCam.transform.localRotation;
-
-    }
-
+    // set force and offset and stuff
     public void applyCameraForce(Vector3 newForce, Vector3 newOffset) {
         force = newForce;
         force.x = Random.Range(-force.x, force.x);

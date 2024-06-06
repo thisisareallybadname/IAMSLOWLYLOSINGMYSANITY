@@ -5,10 +5,10 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
+// controls the player's camera
 public class PlayerCamera : MonoBehaviour
 {
-    private Vector3 camVector;
-    public Camera playerCam;
+    [SerializeField] Camera playerCam;
 
     private float mouseX;
     private float mouseY;
@@ -16,30 +16,23 @@ public class PlayerCamera : MonoBehaviour
     private float rotationX;
     private float rotationY;
 
-    public float lookspeed;
+    [SerializeField] float lookspeed;
 
+    private Vector3 force;
     private Vector3 offset;
-    public PlayerMovement playerMovement;
+
+    // used to get walkspeed
+    [SerializeField] PlayerMovement playerMovement;
     private float movespeed; 
 
-    Vector3 force;
-
+    // bob vector stuff
     private Vector3 bobVector;
     private float bobX;
     private float bobY;
+    
+    private float tick; // used for bobVector
 
-    private Vector3 newCameraAngle;
-
-    private float tick;
-
-    private VMEffects viewModelEffects;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        viewModelEffects = GetComponent<VMEffects>();
-    }
-
+    // generate cameraBob
     private void cameraBob() {
         bobX = Mathf.Cos(tick * 6) * movespeed * 0.125f;
         bobY = -Mathf.Abs(Mathf.Sin(tick * 6)) * movespeed * 0.25f;
@@ -50,8 +43,6 @@ public class PlayerCamera : MonoBehaviour
 
     // Update is called once per frame
     void Update() {
-        camVector = playerCam.transform.position;
-
         movespeed = playerMovement.getMovespeed();
 
         mouseX = Input.GetAxis("Mouse X") * lookspeed * Time.deltaTime;

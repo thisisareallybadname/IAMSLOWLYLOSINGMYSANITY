@@ -6,53 +6,43 @@ using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
 
+// manages player HUD and death HUD
 public class UIManager : MonoBehaviour {
-    public Image healthbar;
-    public Image staminabar;
+    
+    [SerializeField] Image healthbar;
+    [SerializeField] Image staminabar; 
 
-    private float health;
-    public float maxHealth;
+    private float health; // player's max health
+    [SerializeField] float maxHealth;
 
-    private float stamina;
-    public float maxStamina;
+    private float stamina; // player's max stamina
+    [SerializeField] float staminaLimit; 
+    
+    private RectTransform healthTransform; // the size vector of healthbar
+    private RectTransform staminaTransform; // size vector of stamina bar
 
-    private RectTransform healthTransform;
-    private RectTransform staminaTransform;
+    public PlayerDamage damageManager; // used to keep constantly update health var
+    public PlayerMovement playerMovement; // used to constantly update stamina bar
 
-    public PlayerDamage damageManager;
-    public PlayerMovement playerMovement;
+    [SerializeField] Camera mainCam; // player camera
+    [SerializeField] Camera deathCam; // spinning camera in "YOu DIED!!!!!" screen
 
-    public Camera mainCam;
-    public Camera deathCam;
-
-    private bool deathCamRotating;
-    private float tick;
-
-    private SpringModule recoilSpring;
+    private bool deathCamRotating; 
+    private float tick; // used for moving death camera
 
     private bool toggleDeathUI;
 
-    public Canvas playerUI;
-    public Canvas deathUI;
-
-    private bool deathDebounce;
-
-    public Image crosshair;
+    [SerializeField] Canvas playerUI; // player HUD (healthbar + staminabar, wave counter, etc.)
+    [SerializeField] Canvas deathUI; // you died + respawn button
 
     private float healthRatio; // ratio of current health / maximum health
-    private float healthbarLost; // the amount of pixels the healthbar lost
-    private float healthbarRemaining; // x width of healthbar
+    private float healthbarLost; // how much pixels healthbar shrank
 
-    private float staminaRatio;
-    private float staminabarLost;
-    private float staminabarRemaining;
+    private float staminaRatio; // stamina / maxStamina
+    private float staminabarLost; // same thing as healthbarLost but for stamina
 
-    private float staminaValue;
-    private float staminaLimit;
-
-    // Start is called before the first frame update
+    // set up variables
     void Start() {
-
         health = damageManager.getHealth();
         healthTransform = healthbar.GetComponent<RectTransform>();
 
@@ -79,29 +69,33 @@ public class UIManager : MonoBehaviour {
 
         }
 
+        // constantly update health & stamina variables
         stamina = playerMovement.getStaminaValue();
         staminaLimit = playerMovement.GetStaminaLimit();
 
         health = damageManager.getHealth();
 
-        healthRatio = health / damageManager.maxHealth;
-
-        healthbarRemaining = healthTransform.sizeDelta.x;
-        healthbarLost = 240 - healthbarRemaining;
+        // calculate ratios for bars
+        healthRatio = health / damageManager.getMaxHealth();
+        healthbarLost = 240 - healthTransform.sizeDelta.x;
 
         stamina = playerMovement.getStaminaValue();
         staminaRatio = stamina / staminaLimit;
 
-        staminabarRemaining = staminaTransform.sizeDelta.x;
-        staminabarLost = 240 - staminabarRemaining;
+        staminabarLost = 240 - staminaTransform.sizeDelta.x;
 
+        // update both bars
         StartCoroutine(updateBar(healthTransform, healthbarLost, health / damageManager.maxHealth, 166.1f));
         StartCoroutine(updateBar(staminaTransform, staminabarLost, stamina / staminaLimit, 133.1f));
 
     }
 
+    // lerp bar's position and size
     IEnumerator updateBar(RectTransform barTransform, float barLost, float ratio, float yOffset) {
+
         barTransform.sizeDelta = Vector2.Lerp(barTransform.sizeDelta, new Vector2(260f * ratio, 21.6f), 3 * Time.deltaTime);
+
+        // lerp value for position is so high compared to its size because it actually does its job really well and finishes first
         barTransform.anchoredPosition = Vector2.Lerp(barTransform.anchoredPosition, new Vector2(-267.5273f - barLost / 2, yOffset), 300 * Time.deltaTime);
 
         if (barTransform.anchoredPosition.x < -475) {

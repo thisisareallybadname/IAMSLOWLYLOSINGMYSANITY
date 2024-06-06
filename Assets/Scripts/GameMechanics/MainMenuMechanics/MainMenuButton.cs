@@ -7,32 +7,35 @@ using UnityEngine.UI;
 
 public class MainMenuButton : MonoBehaviour {
 
-    public Image title;
-    public Button button;
+    [SerializeField] Image title;
+    [SerializeField] Button button;
 
-    public GameObject player;
+    [SerializeField] GameObject player;
     private PlayerMovement movement;
+    private PlayerDamage playerHealth;
     private PlayerCamera playerCamera;
-    public UIManager UImanager;
-    
-    public Canvas playerHUD;
-    public Canvas deathUI;
-    public Canvas mainMenuUI;
-    public MainMenuEnemyEffect enemySpawn;
+    [SerializeField] UIManager UImanager;
 
-    public Camera deathCam;
-    public Camera playerCam;
-    public Camera mainMenuCam;
+    [SerializeField] PlayerMovement playerController;
 
-    public GameObject leftArm;
-    public GameObject rightArm;
+    [SerializeField] Canvas playerHUD;
+    [SerializeField] Canvas deathUI;
+    [SerializeField] Canvas mainMenuUI;
+    [SerializeField] MainMenuEnemyEffect enemySpawn;
 
-    public GameObject VM;
+    [SerializeField] Camera deathCam;
+    [SerializeField] Camera playerCam;
+    [SerializeField] Camera mainMenuCam;
+
+    [SerializeField] GameObject leftArm;
+    [SerializeField] GameObject rightArm;
+
+    [SerializeField] GameObject VM;
 
     private int childCount;
 
     private bool viewingMenu;
-    public WaveManager waves;
+    [SerializeField] WaveManager waves;
 
     [SerializeField] Image aboutMe;
     [SerializeField] Button aboutMeButton;
@@ -41,6 +44,7 @@ public class MainMenuButton : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         movement = player.GetComponent<PlayerMovement>();
+        playerHealth = player.GetComponent<PlayerDamage>();
         playerCamera = player.GetComponent<PlayerCamera>();
         showMenu();
     }
@@ -70,11 +74,18 @@ public class MainMenuButton : MonoBehaviour {
         playerCam.enabled = true;
         mainMenuCam.enabled = false;
 
-        player.GetComponent<PlayerDamage>().setHealth(5);
-        player.GetComponent<PlayerDamage>().maxHealth = 5;
-        leftArm.transform.GetChild(0).GetComponent<FireWeapon>().damage = 1;
-        rightArm.transform.GetChild(0).GetComponent<FireWeapon>().damage = 1;
-        movement.walkspeed = 12;
+        movement.enabled = true;
+        playerCamera.enabled = true;
+        playerHUD.enabled = true;
+        deathUI.enabled = false;
+
+        playerController.ResetPlayerPosition();
+
+        leftArm.transform.GetComponent<FireWeapon>().resetWeaponStats();
+        rightArm.transform.GetComponent<FireWeapon>().resetWeaponStats();
+        movement.setMovementStats(12, 5, "set");
+        playerHealth.setMaxHealth(5, "set");
+            
         waves.wave = 0;
 
         mainMenuUI.enabled = false;
@@ -84,11 +95,6 @@ public class MainMenuButton : MonoBehaviour {
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
-        movement.enabled = true;
-        playerCamera.enabled = true;
-        playerHUD.enabled = true;
-        deathUI.enabled = false;
 
         enemySpawn.turnOffEnemySpawning();
 
@@ -144,7 +150,8 @@ public class MainMenuButton : MonoBehaviour {
     }
 
     public void respawn() {
-        showMenu();
+        help();
+        
 
     }
 }

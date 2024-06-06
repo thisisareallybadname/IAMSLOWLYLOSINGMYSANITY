@@ -13,36 +13,35 @@ using UnityEngine.Playables;
 
 public class FireWeapon : MonoBehaviour
 {
-    public GameObject shootPos;
+    [SerializeField] GameObject shootPos;
     private RaycastHit hit;
     private GameObject enemy;
 
-
-    public LineRenderer tracer;
+    [SerializeField] LineRenderer tracer;
 
     private bool canAttack = false;
-    public float attackSpeed;
+    [SerializeField] float attackSpeed;
     private float attackCooldown;
 
     private bool attacking;
 
-    private VMEffects recoilForce;
-    public PlayerCamera playerCamera;
+    private float originalDamage;
+    private float originalFirerate;
 
-    public Vector3 recoilValue;
-    public Vector3 rotationRecoilValue;
+    [SerializeField] PlayerCamera playerCamera;
 
-    public Vector3 cameraRecoilValue;
-    public Vector3 cameraRotationalRecoilValue;
+    [SerializeField] Vector3 VMrecoil;
+    [SerializeField] Vector3 VMAngleRecoil;
 
-    public GameObject hand;
-    private VMEffects handRecoil;
-    public String handName;
-    private bool isRightHand;
+    [SerializeField] Vector3 cameraRecoil;
+    [SerializeField] Vector3 cameraAngleRecoil;
+
+    [SerializeField] VMEffects handRecoil;
+    [SerializeField] bool isRightHand;
     private bool mouseDown;
 
-    public float damage;
-    public GameObject weapon;
+    [SerializeField] float damage;
+    [SerializeField] GameObject weapon;
 
     private List<LineRenderer> listOfTracers;
 
@@ -50,17 +49,19 @@ public class FireWeapon : MonoBehaviour
 
     // Start is called before the first frame update
     void Start() {
-        recoilForce = GetComponent<VMEffects>();
-        handRecoil = hand.GetComponent<VMEffects>();
-        isRightHand = handName.Equals("right arm");
+        handRecoil = GetComponent<VMEffects>();
         attackCooldown = 0;
         canAttack = false;
+
+        originalDamage = damage;
+        originalFirerate = attackSpeed;
 
         listOfTracers = new List<LineRenderer>();
 
         if (isRightHand) {
-            recoilValue = new Vector3(-recoilValue.x, recoilValue.y, -recoilValue.z);
-            cameraRotationalRecoilValue = new Vector3(cameraRotationalRecoilValue.z, cameraRotationalRecoilValue.y, cameraRotationalRecoilValue.x);
+            VMrecoil = new Vector3(-VMrecoil.x, VMrecoil.y, -VMrecoil.z);
+            cameraAngleRecoil = 
+            new Vector3(cameraAngleRecoil.z, cameraAngleRecoil.y, cameraAngleRecoil.x);
 
         }
 
@@ -103,13 +104,39 @@ public class FireWeapon : MonoBehaviour
         return attacking;
     }
 
+    public void resetWeaponStats() {
+        damage = originalDamage;
+        attackSpeed = originalFirerate;
+
+    }
+
+    public void SetWeaponStats(float newDamage, float newFirerate, bool multi) {
+        if (multi) {
+            damage *= newDamage;
+            attackSpeed *= newFirerate;
+
+        } else {
+            damage = newDamage;
+            attackSpeed = newFirerate;
+
+        }
+
+    }
+
+    public float getDamage() {
+        return damage;
+
+    }
+
     IEnumerator UseWeapon() {
         canAttack = false;
-        Vector3 start = shootPos.transform.position;
-        Vector3 end;
+        Vector3 origin = shootPos.transform.position + shootPos.transform.forward;
+        Vector3 direction = shootPos.transform.forward;
+        Vector3 endPoint;
 
-        if (Physics.Raycast(shootPos.transform.position + shootPos.transform.forward, shootPos.transform.forward, out hit, Mathf.Infinity)) {
-            if (hit.collider.gameObject.tag.Equals("Enemy") || hit.collider.gameObject.tag.Equals("PerkEnemy")) {
+        // fire raycast in front of player's shoot position
+        if (Physics.Raycast(origin, direction, out hit, Mathf.Infinity)) {
+            if (hit.collider.gameObject.tag.Contains("Enemy")) {
                 enemy = hit.collider.gameObject;
                 enemy.GetComponent<EnemyHealth>().takeDamage(damage, damage * 2f);
 
@@ -118,22 +145,25 @@ public class FireWeapon : MonoBehaviour
 
             }
 
-            end = hit.point;
+            endPoint = hit.point;
 
         } else {
-            end = shootPos.transform.position + shootPos.transform.forward * 150;
+            endPoint = shootPos.transform.position + shootPos.transform.forward * 150;
 
         }
         
-        handRecoil.applyForce(recoilValue, 5, rotationRecoilValue);
-        //playerCamera.applyCameraForce(cameraRecoilValue, cameraRotationalRecoilValue);
+        handRecoil.applyForce(VMrecoil, 5, VMAngleRecoil);
 
-        StartCoroutine(CreateTracer(tracer, start, end));
+        if (isRightHand) {
+            playerCamera.applyCameraForce(cameraRecoil, cameraAngleRecoil);
+        }
+
+        StartCoroutine(CreateTracer(tracer, origin, endPoint));
         yield return null;
     }
 
     IEnumerator CreateTracer(LineRenderer tracer, Vector3 start, Vector3 end) {
-        LineRenderer newTracer = Instantiate(tracer, shootPos.transform.position, shootPos.transform.rotation);
+        LineRenderer newTracer = Instantiate(tracer, start, Quaternion.identity);
 
         Vector3[] positions = new Vector3[2];
 
@@ -147,6 +177,7 @@ public class FireWeapon : MonoBehaviour
 
         newTracer.enabled = false;
 
-        Destroy(newTracer.gameObject);
+        Destroy(listOfTracers[0]);
+        listOfTracers.RemoveAt(0);
     }
 }

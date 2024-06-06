@@ -101,7 +101,6 @@ public class WaveManager : MonoBehaviour {
     }
 
     
-
     public void StartWave() {
         wave++;
 
@@ -126,7 +125,7 @@ public class WaveManager : MonoBehaviour {
     private void spawnEnemy() {
         GameObject newEnemy = Instantiate(enemy, spawns[((int)randomSpawn)].transform.position, Quaternion.identity);
         newEnemy.GetComponent<EnemyHealth>().enabled = true;
-        newEnemy.GetComponent<enemyAI>().enabled = true;
+        newEnemy.GetComponent<EnemyMovement>().enabled = true;
 
         //Enemy enemyProperties = newEnemy.GetComponent<Enemy>();
         //enemyProperties.active = true;

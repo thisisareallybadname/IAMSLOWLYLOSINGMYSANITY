@@ -4,16 +4,17 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.UI.Image;
 
 public class PlayerMovement : MonoBehaviour
 {
     // public fields
-    public CharacterController controller; // character controller
-    public GameObject groundChecker; // checks if there's something under player
-    public Camera playerCam; // stores player's camera (Usually Main Camera)
-    public float lookspeed; // aim sensitivity
-    public float walkspeed; // name is pretty self explanatory
-    public float jumpHeight; // same thing as above
+    [SerializeField] CharacterController controller; // character controller
+    [SerializeField] GameObject groundChecker; // checks if there's something under player
+    [SerializeField] Camera playerCam; // stores player's camera (Usually Main Camera)
+    [SerializeField] float lookspeed; // aim sensitivity
+    [SerializeField] float walkspeed; // name is pretty self explanatory
+    [SerializeField] float jumpHeight; // same thing as above
 
     // movement 
     private Vector3 movement;
@@ -24,6 +25,8 @@ public class PlayerMovement : MonoBehaviour
     private float gravity;
 
     private bool touchingGround;
+
+    [SerializeField] float speedWhileDashing;
 
     // camera fields
     private float mouseX;
@@ -37,20 +40,22 @@ public class PlayerMovement : MonoBehaviour
 
     // fields for ViewModel effects
     private Vector3 cameraBob;
-    private float tick = 0f;
 
     // dash vars
     private bool dashDebounce = false;
-    public float staminaValue;
-    public PlayerCamera cam;
+    [SerializeField] float staminaValue;
+    [SerializeField] PlayerCamera cam;
     private bool canDash;
     private bool dashing;
-    public float staminaLimit = 5;
+    [SerializeField] float staminaLimit = 5;
 
-    public Collider[] dashAOE;
+    private Collider[] dashAOE;
+    private RaycastHit hit;
 
     // Start is called before the first frame update
     void Start() {
+        staminaValue = staminaLimit;
+
         yMovement = Vector3.zero;
         gravity = -9.8f * 2;
 
@@ -58,7 +63,7 @@ public class PlayerMovement : MonoBehaviour
 
     // Update is called once per frame
     void Update() {
-        canDash = staminaValue > 0;
+        canDash = staminaValue > 0 && !dashing;
 
         if (staminaValue < staminaLimit && !dashing) {
             staminaValue += Time.deltaTime * 1.5f;
@@ -67,7 +72,11 @@ public class PlayerMovement : MonoBehaviour
 
         movementSpeed = walkspeed;
 
-        touchingGround = Physics.CheckSphere(groundChecker.transform.position, 0.2f);
+        
+
+        touchingGround = Physics.Raycast(transform.position - new Vector3(0, 1.01f, 0), -transform.up, out hit, 0.1f);
+        Debug.DrawRay(transform.position - new Vector3(0, 1.01f, 0), -transform.up);
+        
         movement = (transform.forward * Input.GetAxisRaw("Vertical")) + (transform.right * Input.GetAxisRaw("Horizontal"));
 
         if (touchingGround && Input.GetAxis("Jump") > 0.25f) {
@@ -79,7 +88,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (Input.GetKey(KeyCode.LeftShift) && canDash) {
-            StartCoroutine(Dash(7.5f));
+            StartCoroutine(Dash(speedWhileDashing));
         
         } else {
             dashing = false;
@@ -92,17 +101,11 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    private void FixedUpdate()
-    {
-
-        tick += Time.deltaTime;
-    }
-
     IEnumerator Dash(float dashSpeed) {
         dashDebounce = true;
         dashing = true;
 
-        staminaValue -= Time.deltaTime * 2.5f;
+        staminaValue -= Time.deltaTime * 5f;
 
         controller.Move(movement * dashSpeed * Time.deltaTime);
 
@@ -118,15 +121,46 @@ public class PlayerMovement : MonoBehaviour
         yield return null;
     }
 
-    public float getWalkspeed()
-    {
+    public float getWalkspeed() {
         return walkspeed;
     }
 
-    public float getMovespeed()
-    {
+    public float getMovespeed() {
         return movement.magnitude;
     }
+
+    public void ResetPlayerPosition() {
+        controller.enabled = false;
+        transform.position = new Vector3(0, 10, 0);
+        controller.enabled = true;
+    }
+
+    public void setMovementStats(float newWalkspeed, float newStaminaLimit, string mode) {
+        if (mode.Equals("add")) {
+            walkspeed += newWalkspeed;
+            staminaLimit += newStaminaLimit;
+
+        } else if (mode.Equals("multi")) {
+            walkspeed *= newWalkspeed;
+            staminaLimit *= newStaminaLimit;
+
+        } else {
+            walkspeed = newWalkspeed;
+            staminaLimit = newStaminaLimit;
+
+        }
+    }
+
+    public float getStaminaValue() {
+        return staminaValue;
+
+    }
+
+    public float GetStaminaLimit() {
+        return staminaLimit;
+
+    }
+
 
     public Vector3 getMovementVector() {
         return movement;

@@ -14,10 +14,10 @@ public class Tutorial : MonoBehaviour {
     public MainMenuButton mainMenu;
     public PerkManager perkManager;
 
-    private bool finishedPart1;
-    private bool finishedPart2;
-    private bool finishedPart3;
-    private bool finishedPart4;
+    [SerializeField] bool finishedPart1;
+    [SerializeField] bool finishedPart2;
+    [SerializeField] bool finishedPart3;
+    [SerializeField] bool finishedPart4;
 
     private bool spawnedLandmine;
 
@@ -78,13 +78,13 @@ public class Tutorial : MonoBehaviour {
             spawnedEnemy = Instantiate(enemy, enemySpawn.transform.position, Quaternion.identity);
             spawnedEnemy.GetComponent<EnemyHealth>().enabled = true;
             spawnedEnemy.GetComponent<EnemyHealth>().setHealth(5);
-            spawnedEnemy.GetComponent<enemyAI>().enabled = true;
-            spawnedEnemy.GetComponent<enemyAI>().setWalkspeed(0);
+            spawnedEnemy.GetComponent<EnemyMovement>().enabled = true;
+            spawnedEnemy.GetComponent<EnemyMovement>().setWalkspeed(0);
             spawnedEnemy.gameObject.SendMessage("changeSprite", targetMaterial);
             spawnedTargetEnemy = true;
 
 
-            spawnedEnemy.GetComponent<enemyAI>().setWalkspeed(0);
+            spawnedEnemy.GetComponent<EnemyMovement>().setWalkspeed(0);
         }
 
 
@@ -121,8 +121,6 @@ public class Tutorial : MonoBehaviour {
         {
             timeManager.StartGame();
             spawnedPerks = true;
-
-            Debug.Log("test");
         }
 
 

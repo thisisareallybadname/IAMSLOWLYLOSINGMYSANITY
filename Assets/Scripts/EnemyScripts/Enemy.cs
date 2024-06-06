@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour {
     public Material enemySprite;
     public GameObject enemyPNG;
     
-    private enemyAI enemyMovement;
+    private EnemyMovement enemyMovement;
     private EnemyHealth enemyHealth;
 
     private float variantIndex;
@@ -22,7 +22,7 @@ public class Enemy : MonoBehaviour {
     void Start() {
         
         enemyHealth = GetComponent<EnemyHealth>();
-        enemyMovement = GetComponent<enemyAI>();
+        enemyMovement = GetComponent<EnemyMovement>();
 
         //health = enemyHealth.health;
 

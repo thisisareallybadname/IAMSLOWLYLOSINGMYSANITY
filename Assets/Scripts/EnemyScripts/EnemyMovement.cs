@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // script that controls the enemy's AI
-public class enemyAI : MonoBehaviour {
+public class EnemyMovement : MonoBehaviour {
 
     [SerializeField] GameObject player;
     [SerializeField] float walkspeed; 
@@ -57,15 +57,21 @@ public class enemyAI : MonoBehaviour {
             }
     }
 
-    public void ModifyProjectileVariables(float newSpeed, float newFirerate, bool multiply) {
-        if (multiply) {
+    public void ModifyProjectileVariables(float newSpeed, float newFirerate, string mode) {
+        if (mode.Equals("multi"))
+        {
             projectileFirerate *= newFirerate;
             projectileSpeed *= newSpeed;
+
+        }
+        else if (mode.Equals("add")) {
+            projectileFirerate += newFirerate;
+            projectileSpeed += newSpeed;
 
         } else {
             projectileFirerate = newFirerate;
             projectileSpeed = newSpeed;
-
+        
         }
     }
 

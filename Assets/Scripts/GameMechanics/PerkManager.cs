@@ -55,30 +55,18 @@ public class PerkManager : MonoBehaviour {
 
             float variant = selectedOption.getIndex();
             if (variant == 0) { // damage
-                leftDamage.damage += 2.5f;
-                rightDamage.damage += 2.5f;
+                leftDamage.SetWeaponStats(1.05f, 0.9f, true);
+                rightDamage.SetWeaponStats(1.1f, 0.95f, true);
 
-                leftDamage.attackSpeed *= 0.9f;
-                rightDamage.attackSpeed *= 0.9f;
-
-                if (leftDamage.attackSpeed <= 0.2f) {
-                    rightDamage.attackSpeed = 0.2f;
-
-                } else if (rightDamage.attackSpeed <= 0.2f) {
-                    leftDamage.attackSpeed = 0.2f;
-
-                }
-
-                originalEnemy.GetComponent<enemyAI>().ModifyProjectileVariables(1.25f, 0.85f, true);
+                originalEnemy.GetComponent<EnemyMovement>().ModifyProjectileVariables(-2.5f, -0.05f, "add");
 
             } else if (variant == 1) { // health
                 health.maxHealth += 1;
                 originalEnemy.GetComponent<Enemy>().setSpeed(originalEnemy.GetComponent<Enemy>().speed + 2);
 
             } else if (variant == 2) { // speed
-                movement.walkspeed += 2f;
-                movement.staminaLimit += 0.5f;
-                minefield.additionalLandmines += Random.Range(2, 5);
+                movement.setMovementStats(0.25f, 0.25f, "add");
+                minefield.additionalLandmines += 5;
 
             }
 

@@ -47,13 +47,16 @@ public class UIManager : MonoBehaviour {
     private float staminabarLost;
     private float staminabarRemaining;
 
+    private float staminaValue;
+    private float staminaLimit;
+
     // Start is called before the first frame update
     void Start() {
 
         health = damageManager.getHealth();
         healthTransform = healthbar.GetComponent<RectTransform>();
 
-        stamina = playerMovement.staminaValue;
+        stamina = playerMovement.GetStaminaLimit();
         staminaTransform = staminabar.GetComponent<RectTransform>();
 
         mainCam.enabled = true;
@@ -76,27 +79,29 @@ public class UIManager : MonoBehaviour {
 
         }
 
+        stamina = playerMovement.getStaminaValue();
+        staminaLimit = playerMovement.GetStaminaLimit();
+
         health = damageManager.getHealth();
-        stamina = playerMovement.staminaValue;
 
         healthRatio = health / damageManager.maxHealth;
 
         healthbarRemaining = healthTransform.sizeDelta.x;
         healthbarLost = 240 - healthbarRemaining;
 
-        stamina = playerMovement.staminaValue;
-        staminaRatio = stamina / playerMovement.staminaLimit;
+        stamina = playerMovement.getStaminaValue();
+        staminaRatio = stamina / staminaLimit;
 
         staminabarRemaining = staminaTransform.sizeDelta.x;
         staminabarLost = 240 - staminabarRemaining;
 
         StartCoroutine(updateBar(healthTransform, healthbarLost, health / damageManager.maxHealth, 166.1f));
-        StartCoroutine(updateBar(staminaTransform, staminabarLost, stamina / playerMovement.staminaLimit, 133.1f));
+        StartCoroutine(updateBar(staminaTransform, staminabarLost, stamina / staminaLimit, 133.1f));
 
     }
 
     IEnumerator updateBar(RectTransform barTransform, float barLost, float ratio, float yOffset) {
-        barTransform.sizeDelta = Vector2.Lerp(barTransform.sizeDelta, new Vector2(273.7f * ratio, 21.6f), 3 * Time.deltaTime);
+        barTransform.sizeDelta = Vector2.Lerp(barTransform.sizeDelta, new Vector2(260f * ratio, 21.6f), 3 * Time.deltaTime);
         barTransform.anchoredPosition = Vector2.Lerp(barTransform.anchoredPosition, new Vector2(-267.5273f - barLost / 2, yOffset), 300 * Time.deltaTime);
 
         if (barTransform.anchoredPosition.x < -475) {

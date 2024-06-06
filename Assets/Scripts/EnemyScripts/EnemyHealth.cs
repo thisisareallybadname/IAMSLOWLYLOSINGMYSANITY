@@ -41,7 +41,7 @@ public class EnemyHealth : MonoBehaviour {
     private bool appliedDeathForce;
     public WaveManager waveManager;
     
-    public enemyAI enemyAI; // disabled when health <= 0
+    public EnemyMovement enemyAI; // disabled when health <= 0
     public Enemy enemyStats; // to be deleted
 
     public float enemyControl; // enemy drag, makes it less slippery and stupid
@@ -72,7 +72,7 @@ public class EnemyHealth : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         if (health <= 0) {
-            GetComponent<enemyAI>().enabled = false; // disable enemy AI because it's dead
+            GetComponent<EnemyMovement>().enabled = false; // disable enemy AI because it's dead
             
             // if you didn't already, apply death force to enemy
             if (!appliedDeathForce) {

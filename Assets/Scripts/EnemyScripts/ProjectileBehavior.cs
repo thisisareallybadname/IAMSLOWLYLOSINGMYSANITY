@@ -41,7 +41,7 @@ public class ProjectileBehavior : MonoBehaviour {
         exploded = false;
 
         player = GameObject.Find("Player");
-        playerWalkspeed = player.GetComponent<PlayerMovement>().walkspeed;
+        playerWalkspeed = player.GetComponent<PlayerMovement>().getWalkspeed();
 
         if (canExplode) {
             explosionEffect = Instantiate(GameObject.Find("explosion"), transform.position, Quaternion.identity);

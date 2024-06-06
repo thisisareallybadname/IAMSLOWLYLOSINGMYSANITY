@@ -20,7 +20,7 @@ public class MainMenuEnemyEffect : MonoBehaviour {
         Application.targetFrameRate = 60;
 
         if (spawnEnemies) {
-            if (timer < 0.05f) {
+            if (timer < 0.25f) {
                 timer += Time.deltaTime;
 
             }  else {

@@ -48,6 +48,9 @@ public class PlayerDamage : MonoBehaviour {
         
         if (health <= 0) {
             health = 0;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+
             if (deathDebounce) {
                 deathDebounce = false;
                 timeManager.endGame();
@@ -73,8 +76,27 @@ public class PlayerDamage : MonoBehaviour {
         return health;
     }
 
-    public void setHealth(float newHealth) { 
-        health = newHealth; 
+    public void setMaxHealth(float newHealth, string mode) {
+        if (mode.Equals("add")) {
+            maxHealth += newHealth;
+
+        } else if (mode.Equals("mult")) {
+            maxHealth *= newHealth;
+
+        } else {
+            maxHealth = newHealth;
+
+        }
+
+    }
+
+    public float getMaxHealth() {
+        return maxHealth;
+
+    }
+
+    public void resetStats() {
+        maxHealth = 5;
 
     }
 
@@ -85,6 +107,11 @@ public class PlayerDamage : MonoBehaviour {
             health -= damage;
 
         }
+
+    }
+
+    public void setHealth(float newHealth) {
+        health = newHealth;
 
     }
 

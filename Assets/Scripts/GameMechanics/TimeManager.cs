@@ -13,7 +13,7 @@ public class TimeManager : MonoBehaviour {
     public WaveManager waves; // wave manager
     public PerkManager perkManager; // perk manager, current script tells this to summmon perk options, and this one tells current script when player did select a perk 
     public LandmineSetter landmines; // creates landmine field
-    public PlayerDamage playerHealth; // player's health, heals it to max during intermission phase 
+    [SerializeField] PlayerDamage playerHealth; // player's health, heals it to max during intermission phase 
     public MainMenuButton mainMenu;
     public UIManager UIManager;
 
@@ -93,9 +93,8 @@ public class TimeManager : MonoBehaviour {
     }
 
     private void ManageIntermissionPhase() {
-        if (waveCooldown < waveDelay && !waves.isSpawningEnemies())
-        {
-            playerHealth.setHealth(playerHealth.maxHealth); // keep the player alive at all costs because if they die in intermission phase it breaks a lot of stuff
+        if (waveCooldown < waveDelay && !waves.isSpawningEnemies()) {
+            playerHealth.setMaxHealth(playerHealth.getMaxHealth(), "set"); // keep the player alive at all costs because if they die in intermission phase it breaks a lot of stuff
             enemiesLeft.text = "Wave starting in " + Mathf.CeilToInt(waveDelay - waveCooldown); // update UI
 
             if (!spawnedLandmineIndicators) {
@@ -118,7 +117,7 @@ public class TimeManager : MonoBehaviour {
                 spawnedLandmines = true;
             }
             
-            playerHealth.setHealth(playerHealth.maxHealth); // keep the player alive at all costs because if they die in intermission phase it breaks a lot of stuff
+            playerHealth.setHealth(playerHealth.getMaxHealth()); // keep the player alive at all costs because if they die in intermission phase it breaks a lot of stuff
             waveCooldown = 0;
             waves.StartWave();
             pauseDebounce = true;
@@ -127,18 +126,21 @@ public class TimeManager : MonoBehaviour {
             spawnedLandmines = false;
             spawnedLandmineIndicators = false;
 
+            intermission = false;
+
             enemySpawnIndicator.GetComponent<MeshRenderer>().enabled = false;
 
         }
 
     }
 
+    public bool GameInIntermissionPhase() {
+        return intermission;
+
+    }
+
     // update method
     private void Update() {
-
-        // checks if the player is playing the game (fighting through waves and stuff)
-        // if they are doing this, lock their cursor onto the screen
-        // if they aren't, unlock it
 
         // intermission phase
         
@@ -153,7 +155,6 @@ public class TimeManager : MonoBehaviour {
         
         if (waves.EnemiesLeft() == 0 && !waves.isSpawningEnemies() && startGame) {
 
-            playerHealth.setHealth(playerHealth.maxHealth);
             if (!clearedMinefield){
                 clearedMinefield = true;
                 landmines.clearBombfield();
@@ -176,6 +177,7 @@ public class TimeManager : MonoBehaviour {
                 
                 // pause the game 
                 if (!perkManager.PlayerSelectedPerk()) {
+                    intermission = true;
                     waves.stopGame();
                 }
 

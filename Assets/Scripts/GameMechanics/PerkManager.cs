@@ -58,7 +58,7 @@ public class PerkManager : MonoBehaviour {
                 leftDamage.SetWeaponStats(1.05f, 0.9f, true);
                 rightDamage.SetWeaponStats(1.1f, 0.95f, true);
 
-                originalEnemy.GetComponent<EnemyMovement>().ModifyProjectileVariables(-2.5f, -0.05f, "add");
+                originalEnemy.GetComponent<EnemyMovement>().ModifyProjectileVariables(0.85f, 0.85f, 1.25f, "multi");
 
             } else if (variant == 1) { // health
                 health.maxHealth += 1;

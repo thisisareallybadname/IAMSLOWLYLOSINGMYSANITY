@@ -79,12 +79,9 @@ public class Tutorial : MonoBehaviour {
             spawnedEnemy.GetComponent<EnemyHealth>().enabled = true;
             spawnedEnemy.GetComponent<EnemyHealth>().setHealth(5);
             spawnedEnemy.GetComponent<EnemyMovement>().enabled = true;
-            spawnedEnemy.GetComponent<EnemyMovement>().setWalkspeed(0);
+            spawnedEnemy.GetComponent<EnemyMovement>().setWalkspeed(0, "set");
             spawnedEnemy.gameObject.SendMessage("changeSprite", targetMaterial);
             spawnedTargetEnemy = true;
-
-
-            spawnedEnemy.GetComponent<EnemyMovement>().setWalkspeed(0);
         }
 
 

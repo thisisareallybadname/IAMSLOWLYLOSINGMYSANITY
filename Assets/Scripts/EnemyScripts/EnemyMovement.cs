@@ -6,7 +6,7 @@ using UnityEngine;
 public class EnemyMovement : MonoBehaviour {
 
     [SerializeField] GameObject player;
-    [SerializeField] float walkspeed; 
+    [SerializeField] float walkspeed;
     private Rigidbody rb; // enemy's rigidbody
 
     [SerializeField] bool canFireProjectiles;
@@ -38,27 +38,27 @@ public class EnemyMovement : MonoBehaviour {
     void FixedUpdate() {
         gameObject.transform.LookAt(player.transform); // look at the player
 
-            // move rigidbody to position in front of enemy, so it will go towards player
-            rb.AddForce(transform.forward * walkspeed * 200 * Time.deltaTime, ForceMode.Force);
-            rb.drag = 1.25f;
+        // move rigidbody to position in front of enemy, so it will go towards player
+        rb.AddForce(transform.forward * walkspeed * 200 * Time.deltaTime, ForceMode.Force);
+        rb.drag = 1.25f;
 
-            // a little bit of acceleration because why not
-            rb.velocity += walkspeed * (rb.transform.forward.normalized / 7.5f);
+        // a little bit of acceleration because why not
+        rb.velocity += walkspeed * (rb.transform.forward.normalized / 7.5f);
 
-            // if the enemy is a ranged enemy, fire a projectile 
-            if (canFireProjectiles) {
-                if (fireCooldown >= projectileFirerate) {
-                    FireProjectile();
-                    fireCooldown = 0;
-    
-                } else {
-                    fireCooldown += Time.fixedDeltaTime;
-    
-                }
+        // if the enemy is a ranged enemy, fire a projectile 
+        if (canFireProjectiles) {
+            if (fireCooldown >= projectileFirerate) {
+                FireProjectile();
+                fireCooldown = 0;
+
+            } else {
+                fireCooldown += Time.fixedDeltaTime;
+
             }
+        }
     }
 
-    public void ModifyProjectileVariables(float newSpeed, float newFirerate, string mode) {
+    public void ModifyProjectileVariables(float newSpeed, float newFirerate, float newDamage, string mode) {
         if (mode.Equals("multi"))
         {
             projectileFirerate *= newFirerate;
@@ -72,8 +72,10 @@ public class EnemyMovement : MonoBehaviour {
         } else {
             projectileFirerate = newFirerate;
             projectileSpeed = newSpeed;
-        
+
         }
+
+        projectile.GetComponent<ProjectileBehavior>().setDamage(newDamage, mode);
     }
 
     // make a new enemyprojectile object
@@ -82,7 +84,7 @@ public class EnemyMovement : MonoBehaviour {
         // nake fireball object
         GameObject newFireball = Instantiate(projectile, transform.position + transform.forward, transform.rotation);
         ProjectileBehavior fireballProperties = newFireball.GetComponent<ProjectileBehavior>();
-        
+
         // by default the projectile's behavior is disabled so it won't accidentally blow up
         fireballProperties.enabled = true;
         fireballProperties.canExplode = true;
@@ -90,8 +92,16 @@ public class EnemyMovement : MonoBehaviour {
     }
 
     // set the movespeed of the enemy
-    public void setWalkspeed(float newWalkspeed) {
+    public void setWalkspeed(float newWalkspeed, string mode) {
+        if (mode.Contains("mult")) {
+            walkspeed *= newWalkspeed;
 
-        walkspeed = newWalkspeed;
+        } else if (mode.Equals("add")) {
+            walkspeed += newWalkspeed;
+
+        } else
+            walkspeed = newWalkspeed;
     }
+
+    
 }

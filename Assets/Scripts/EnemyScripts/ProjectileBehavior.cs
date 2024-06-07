@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using Microsoft.Win32.SafeHandles;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Sockets;
@@ -35,9 +36,14 @@ public class ProjectileBehavior : MonoBehaviour {
     public float aimTime;
     private Rigidbody rb;
 
+    private Vector3 size;
+    private bool lopsided;
+
     // Start is called before the first frame update
     void Awake() {
 
+        size = transform.localScale;
+        lopsided = !(size.x == size.y && size.y == size.z);
         exploded = false;
 
         player = GameObject.Find("Player");
@@ -86,7 +92,7 @@ public class ProjectileBehavior : MonoBehaviour {
             } else {
                 if (canExplode) {
                     Vector3 landmineLocalScale = transform.localScale;
-                    if (walkspeed == 0) {
+                    if (lopsided) {
                         explosionEffect.transform.localScale = Vector3.Lerp(new Vector3(0.25f, 0.25f, 0.25f), new Vector3(explosionRadius, explosionRadius * 2, explosionRadius), countdown * 4.5f);
                     
                     } else {
@@ -127,15 +133,28 @@ public class ProjectileBehavior : MonoBehaviour {
 
     }
 
+    public void setDamage(float newDamage, string mode) {
+        if (mode.Contains("mult")) {
+            damage *= newDamage;
+
+        } else if (mode.Equals("add")) {
+            damage += newDamage;
+
+        } else {
+            damage = newDamage;
+
+        }
+
+    }
+
     public void explode() {
         if (!exploded) {
             exploded = true;
-            hits = Physics.OverlapSphere(transform.position, explosionRadius);
+            hits = Physics.OverlapSphere(transform.position, explosionRadius / 4);
 
             GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
 
-            foreach (Collider collider in hits)
-            {
+            foreach (Collider collider in hits) {
 
                 if (collider.gameObject.GetComponent<Rigidbody>() != null) {
                     collider.gameObject.GetComponent<Rigidbody>().AddForce((collider.gameObject.transform.position - transform.position) * 5, ForceMode.Impulse);

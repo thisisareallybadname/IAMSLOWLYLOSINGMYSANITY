@@ -120,7 +120,7 @@ public class PlayerDamage : MonoBehaviour {
             canTakeDamage = false;
 
             // camera hurt effect
-            hurtEffect.applyCameraForce(new Vector3(0, 0, -22.5f), new Vector3(0, 0.75f, -0.5f));
+            hurtEffect.applyCameraForce(new Vector3(0, 0, -22.5f), Quaternion.Euler(0, 0.75f, -0.5f));
             health -= damage;
 
         }

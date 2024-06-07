@@ -24,7 +24,7 @@ public class PlayerCamera : MonoBehaviour {
 
     // camera force stuff
     private Vector3 force;
-    private Vector3 offset;
+    private Quaternion forceAngle;
 
     // used to get walkspeed
     [SerializeField] PlayerMovement playerMovement;
@@ -56,29 +56,29 @@ public class PlayerCamera : MonoBehaviour {
 
         // rotationX is on the x-axis, so adding mouse-y delta will make it move up/down
         // same thing with rotationY  & adding mouse-x delta, but its on the x-axis, so it moves left-right
-        rotationX -= mouseY - force.y;
+        rotationX -= mouseY + force.y;
         rotationX = Mathf.Clamp(rotationX, -90f, 90f);
-        rotationY += mouseX - force.x;
-    `    
+        rotationY += mouseX + force.x;
+        
         // make force and offset diminish until they reach vector3.zero
         force = Vector3.Lerp(force, Vector3.zero, Time.deltaTime * 5);
-        offset = Vector3.Lerp(offset, new Vector3(0, 0.5f, 0), Time.deltaTime * 5);
+        forceAngle = Quaternion.Lerp(forceAngle, Quaternion.identity, Time.deltaTime * 5);
 
         // set positions
-        playerCam.transform.localPosition = offset + force + bobVector;
-        playerCam.transform.rotation = Quaternion.Euler(rotationX, rotationY, force.z);
+        playerCam.transform.localPosition =  force + bobVector;
+        playerCam.transform.rotation = Quaternion.Euler(rotationX, rotationY, force.z) * forceAngle;
         transform.localRotation = Quaternion.Euler(0f, rotationY, 0);
 
         tick += Time.deltaTime;
     }
 
     // set force and offset and stuff
-    public void applyCameraForce(Vector3 newForce, Vector3 newOffset) {
+    public void applyCameraForce(Vector3 newForce, Quaternion newOffset) {
         force += newForce; 
         force.x = Random.Range(-force.x, force.x);
         force.z = Random.Range(-force.z, force.z);
 
-        offset += newOffset;
+        forceAngle *= newOffset;
 
     }
 }

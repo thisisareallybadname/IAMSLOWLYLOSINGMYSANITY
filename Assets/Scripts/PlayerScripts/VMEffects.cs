@@ -29,9 +29,9 @@ public class VMEffects : MonoBehaviour
     private float forceSpeed = 1;
 
     private Vector3 currentPosition;
-    private Vector3 currentRotation;
+    private Quaternion currentRotation;
 
-    public Vector3 angleOffset;
+    public Quaternion angleOffset;
     public Vector3 positionOffset;
 
     private bool isFiring = false;
@@ -73,7 +73,7 @@ public class VMEffects : MonoBehaviour
         }
         StartCoroutine(updateRecoilForces());
         SideofVM.transform.localPosition = currentPosition;
-        SideofVM.transform.localRotation = Quaternion.Euler(currentRotation);
+        SideofVM.transform.localRotation = currentRotation;
 
         tick += Time.deltaTime;
 
@@ -83,9 +83,9 @@ public class VMEffects : MonoBehaviour
         playerMovespeed = speed;
     }
 
-    public void applyForce(Vector3 newForce, float speed, Vector3 newRotation) {
+    public void applyForce(Vector3 newForce, float speed, Quaternion newRotation) {
         currentPosition = newForce + positionOffset;
-        currentRotation = newRotation + angleOffset;
+        currentRotation = newRotation * angleOffset;
         //forceSpeed = speed;
 
 
@@ -93,7 +93,7 @@ public class VMEffects : MonoBehaviour
 
     IEnumerator updateRecoilForces() {
         currentPosition = Vector3.Lerp(currentPosition, positionOffset + bobVector, 7.5f * Time.deltaTime);
-        currentRotation = Vector3.Slerp(currentRotation, angleOffset, 5 * Time.deltaTime);
+        currentRotation = Quaternion.Slerp(currentRotation, angleOffset, 5 * Time.deltaTime);
 
         yield return null;
 

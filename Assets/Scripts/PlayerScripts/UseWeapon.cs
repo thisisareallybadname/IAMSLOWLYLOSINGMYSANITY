@@ -31,10 +31,10 @@ public class FireWeapon : MonoBehaviour
     [SerializeField] PlayerCamera playerCamera;
 
     [SerializeField] Vector3 VMrecoil;
-    [SerializeField] Vector3 VMAngleRecoil;
+    [SerializeField] Quaternion VMAngleRecoil;
 
     [SerializeField] Vector3 cameraRecoil;
-    [SerializeField] Vector3 cameraAngleRecoil;
+    [SerializeField] Quaternion cameraAngleRecoil;
 
     [SerializeField] VMEffects handRecoil;
     [SerializeField] bool isRightHand;
@@ -59,11 +59,13 @@ public class FireWeapon : MonoBehaviour
         listOfTracers = new List<LineRenderer>();
 
         if (isRightHand) {
-            VMrecoil = new Vector3(-VMrecoil.x, VMrecoil.y, -VMrecoil.z);
+            VMrecoil = new Vector3(-VMrecoil.x, VMrecoil.y, -VMrecoil.z); 
             cameraAngleRecoil = 
-            new Vector3(cameraAngleRecoil.z, cameraAngleRecoil.y, cameraAngleRecoil.x);
+            Quaternion.Euler(cameraAngleRecoil.z, cameraAngleRecoil.y, cameraAngleRecoil.x);
 
         }
+        VMAngleRecoil = Quaternion.Euler(VMAngleRecoil.x / 10, VMAngleRecoil.y / 10, VMAngleRecoil.z / 10);
+        cameraAngleRecoil = Quaternion.Euler(cameraAngleRecoil.x / 10, cameraAngleRecoil.y / 10, cameraAngleRecoil.z / 10);
 
     }
 
@@ -154,9 +156,7 @@ public class FireWeapon : MonoBehaviour
         
         handRecoil.applyForce(VMrecoil, 5, VMAngleRecoil);
 
-        if (isRightHand) {
-            playerCamera.applyCameraForce(cameraRecoil, cameraAngleRecoil);
-        }
+        playerCamera.applyCameraForce(cameraRecoil, cameraAngleRecoil);
 
         StartCoroutine(CreateTracer(tracer, origin, endPoint));
         yield return null;
@@ -171,6 +171,10 @@ public class FireWeapon : MonoBehaviour
         positions[1] = end;
 
         newTracer.positionCount = 2;
+
+        newTracer.startWidth = damage / 7.5f;
+        newTracer.endWidth = damage / 7.5f;
+
         newTracer.SetPositions(positions);
         listOfTracers.Add(newTracer);
         yield return new WaitForSeconds(0.15f);

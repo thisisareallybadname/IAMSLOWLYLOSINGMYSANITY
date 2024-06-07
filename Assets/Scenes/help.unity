@@ -389,7 +389,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e102923ae0520784a863ffdb6065ae1d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fccdad03ad488fe48a75f3a78dba2a25, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2166,7 +2166,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -8, y: 85}
+  m_AnchoredPosition: {x: -8, y: 33.300488}
   m_SizeDelta: {x: 350, y: 51.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &586414289
@@ -3277,7 +3277,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 801342149}
-  m_Mesh: {fileID: -5495902117074765545, guid: 292b59ccec7dbb549a42cf52798c8602, type: 3}
+  m_Mesh: {fileID: -5495902117074765545, guid: 6f3fd0d51fe85734a928a32dc0a79f20, type: 3}
 --- !u!4 &801342152
 Transform:
   m_ObjectHideFlags: 0
@@ -3823,14 +3823,13 @@ MonoBehaviour:
   healthbar: {fileID: 1291619079}
   staminabar: {fileID: 662864752}
   maxHealth: 5
-  maxStamina: 5
+  staminaLimit: 0
   damageManager: {fileID: 1459420600}
   playerMovement: {fileID: 1459420598}
   mainCam: {fileID: 1546036662}
   deathCam: {fileID: 960281701}
   playerUI: {fileID: 1036484701}
   deathUI: {fileID: 1434578732}
-  crosshair: {fileID: 0}
 --- !u!1 &1036845993
 GameObject:
   m_ObjectHideFlags: 0
@@ -5384,7 +5383,7 @@ MonoBehaviour:
   SideofVM: {fileID: 1272047095}
   player: {fileID: 1459420583}
   bobSpeed: 2
-  angleOffset: {x: 0, y: 0, z: 0}
+  angleOffset: {x: 0, y: 0, z: 0, w: 0}
   positionOffset: {x: -0.45, y: -0.15, z: 0}
   playerCam: {fileID: 1546036662}
 --- !u!114 &1272047098
@@ -5403,10 +5402,10 @@ MonoBehaviour:
   tracer: {fileID: 1209092215}
   attackSpeed: 0.5
   playerCamera: {fileID: 1459420592}
-  VMrecoil: {x: 0, y: 0.01, z: -0.15}
-  VMAngleRecoil: {x: 0, y: 0, z: 0}
-  cameraRecoil: {x: 0, y: 0, z: 0}
-  cameraAngleRecoil: {x: 0, y: 0, z: 0}
+  VMrecoil: {x: 0, y: 0.01, z: -0.25}
+  VMAngleRecoil: {x: 0, y: 0, z: 0, w: 0}
+  cameraRecoil: {x: 0, y: 0.05, z: 0}
+  cameraAngleRecoil: {x: 0, y: 0.5, z: 0, w: 0}
   handRecoil: {fileID: 1272047097}
   isRightHand: 0
   damage: 1.5
@@ -6141,7 +6140,7 @@ MonoBehaviour:
   SideofVM: {fileID: 1356657745}
   player: {fileID: 1459420583}
   bobSpeed: 2
-  angleOffset: {x: 0, y: 0, z: 0}
+  angleOffset: {x: 0, y: 0, z: 0, w: 0}
   positionOffset: {x: 0.45, y: -0.15, z: 0}
   playerCam: {fileID: 1546036662}
 --- !u!114 &1356657748
@@ -6161,9 +6160,9 @@ MonoBehaviour:
   attackSpeed: 1
   playerCamera: {fileID: 1459420592}
   VMrecoil: {x: 0, y: -0.2, z: 0.5}
-  VMAngleRecoil: {x: 0, y: 0, z: 0}
-  cameraRecoil: {x: 0.1, y: 0.1, z: 0.1}
-  cameraAngleRecoil: {x: 0.1, y: 0.2, z: 0.1}
+  VMAngleRecoil: {x: 0, y: 0, z: 0, w: 0}
+  cameraRecoil: {x: 0.05, y: 0.15, z: 0.05}
+  cameraAngleRecoil: {x: 0, y: 0.25, z: 0, w: 0}
   handRecoil: {fileID: 1356657747}
   isRightHand: 1
   damage: 3
@@ -7051,7 +7050,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 15415
+    m_Bits: 11319
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -8108,6 +8107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 578801947}
+  lookAtThis: {fileID: 1816294960}
 --- !u!1 &1851453963
 GameObject:
   m_ObjectHideFlags: 0
@@ -8448,7 +8448,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 68ebb2211f2043640a4e144a7a82c6de, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b9c501d727bb03b43ab9f9e56976dec4, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

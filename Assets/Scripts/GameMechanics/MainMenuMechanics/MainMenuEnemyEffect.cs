@@ -5,6 +5,7 @@ using UnityEngine;
 public class MainMenuEnemyEffect : MonoBehaviour {
 
     [SerializeField] GameObject enemy;
+    [SerializeField] Camera lookAtThis;
     private float timer;
     private bool spawnEnemies = true;
 
@@ -32,6 +33,7 @@ public class MainMenuEnemyEffect : MonoBehaviour {
     }
     public IEnumerator spawnEnemy() {
         GameObject newEnemy = Instantiate(enemy, transform.position + transform.right * Random.Range(-15, 15), Quaternion.identity);
+        newEnemy.transform.LookAt(lookAtThis.transform);
         newEnemy.GetComponent<EnemyHealth>().enabled = true;
         newEnemy.GetComponent<EnemyHealth>().lieOnFloorMaxTime = 3;
         if (Random.Range(0, 4) == 1) {

@@ -6,63 +6,49 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 public class PerkManager : MonoBehaviour { 
-    GameObject selectedEnemy;
-    public GameObject enemy;
-    public List<GameObject> perkSpawns = new List<GameObject>();
-    GameObject newEnemy;
 
-    public TimeManager timeManager;
+    // perk enemy stuff
+    [SerializeField] GameObject perkEnemy;
+    [SerializeField] List<GameObject> perkSpawns = new List<GameObject>();
+
+    [SerializeField] TimeManager timeManager;
     List<GameObject> options = new List<GameObject>();
-    public WaveManager waves;
 
-    public bool selectedPerk;
-    public bool perkSelecting;
+    [SerializeField] bool selectedPerk = false;
+    [SerializeField] bool perkSelecting;
 
-    public Material[] optionSprites = new Material[3];
+    [SerializeField] Material[] optionSprites = new Material[3];
     private List<GameObject> perkOptions = new List<GameObject>();
-
-    public PlayerDamage health;
-    public PlayerMovement movement;
-    public FireWeapon leftDamage;
-    public FireWeapon rightDamage;
-
-    public GameObject newProjectile;
-
-
-    private float newAttackSpeed;
     
-    public GameObject floor;
-    public GameObject originalEnemy;
+    // important player fields
+    [SerializeField] PlayerDamage health;
+    [SerializeField] PlayerMovement movement;
+    [SerializeField] FireWeapon leftDamage;
+    [SerializeField] FireWeapon rightDamage;
 
-    public LandmineSetter minefield;
+    [SerializeField] GameObject newProjectile;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    // modified to change the stats
+    [SerializeField] GameObject originalEnemy;
+    [SerializeField] LandmineSetter minefield;
 
-    // Update is called once per frame
-    void Update() {
-        
-
-    }
-
-    public void PerkSelected(Enemy selectedOption) {
+    // called by perk enemy when they get hit by raycast
+    // sets perk stuff
+    public void PerkSelected(int variant) {
         if (!selectedPerk) {
-            Debug.Log("perk selected");
             selectedPerk = true;
 
-            float variant = selectedOption.getIndex();
-            if (variant == 0) { // damage
-                leftDamage.SetWeaponStats(1.05f, 0.9f, true);
-                rightDamage.SetWeaponStats(1.1f, 0.95f, true);
+            EnemyMovement enemyMovement = originalEnemy.GetComponent<EnemyMovement>();
 
-                originalEnemy.GetComponent<EnemyMovement>().ModifyProjectileVariables(0.85f, 0.85f, 1.25f, "multi");
+            if (variant == 0) { // damage
+                leftDamage.SetWeaponStats(1.05f, 0.9f, "multi");
+                rightDamage.SetWeaponStats(1.1f, 0.95f, "multi");
+
+                enemyMovement.ModifyProjectileVariables(0.85f, 0.85f, 1.25f, "multi");
 
             } else if (variant == 1) { // health
                 health.maxHealth += 1;
-                originalEnemy.GetComponent<Enemy>().setSpeed(originalEnemy.GetComponent<Enemy>().speed + 2);
+                enemyMovement.setWalkspeed(1.25f, "multi");
 
             } else if (variant == 2) { // speed
                 movement.setMovementStats(0.25f, 0.25f, "add");
@@ -72,7 +58,8 @@ public class PerkManager : MonoBehaviour {
 
             // destroy the other perk enemies to show which ones are which
             foreach (GameObject option in perkOptions) {
-                if (option.GetComponent<Enemy>().getIndex() != selectedOption.GetComponent<Enemy>().getIndex()) {
+                float index = option.GetComponent<EnemyHealth>().getIndex();
+                if (index != variant) {
                     Destroy(option.gameObject);
                 }
             }
@@ -84,16 +71,25 @@ public class PerkManager : MonoBehaviour {
         }
     }
 
+    public void setSelectedPerkStatus(bool status) {
+        selectedPerk = status;
+
+    }
+
     public bool PlayerSelectedPerk() {
         return selectedPerk;
 
     }
+
+    // spawn perk option
     public void SpawnPerkOption(int variant) {
         if (!perkSelecting) { 
             selectedPerk = false;
-            newEnemy = Instantiate(enemy, perkSpawns[variant].transform.position, Quaternion.identity);
+
+            // physically create a new perk option
+            GameObject newEnemy = Instantiate(perkEnemy, perkSpawns[variant].transform.position, Quaternion.identity);
             newEnemy.GetComponent<EnemyHealth>().changeSprite(optionSprites[variant]);
-            newEnemy.GetComponent<Enemy>().setIndex(variant);
+            newEnemy.GetComponent<EnemyHealth>().setIndex(variant);
 
             perkOptions.Add(newEnemy);
 

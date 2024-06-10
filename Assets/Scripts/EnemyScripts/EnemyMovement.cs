@@ -58,24 +58,26 @@ public class EnemyMovement : MonoBehaviour {
         }
     }
 
-    public void ModifyProjectileVariables(float newSpeed, float newFirerate, float newDamage, string mode) {
+    // modify the projectile's stats
+    // three modes that can be used, multiply stats, add stats, or just set them (default)
+    public void ModifyProjectileVariables(float speed, float firerate, float damage, string mode) {
         if (mode.Equals("multi"))
         {
-            projectileFirerate *= newFirerate;
-            projectileSpeed *= newSpeed;
+            projectileFirerate *= firerate;
+            projectileSpeed *= speed;
 
         }
         else if (mode.Equals("add")) {
-            projectileFirerate += newFirerate;
-            projectileSpeed += newSpeed;
+            projectileFirerate += firerate;
+            projectileSpeed += speed;
 
         } else {
-            projectileFirerate = newFirerate;
-            projectileSpeed = newSpeed;
+            projectileFirerate = firerate;
+            projectileSpeed = speed;
 
         }
 
-        projectile.GetComponent<ProjectileBehavior>().setDamage(newDamage, mode);
+        projectile.GetComponent<ProjectileBehavior>().setDamage(damage, mode);
     }
 
     // make a new enemyprojectile object
@@ -87,8 +89,7 @@ public class EnemyMovement : MonoBehaviour {
 
         // by default the projectile's behavior is disabled so it won't accidentally blow up
         fireballProperties.enabled = true;
-        fireballProperties.canExplode = true;
-        fireballProperties.walkspeed = projectileSpeed;
+        fireballProperties.setMovespeed(projectileSpeed, "set");
     }
 
     // set the movespeed of the enemy
@@ -102,6 +103,5 @@ public class EnemyMovement : MonoBehaviour {
         } else
             walkspeed = newWalkspeed;
     }
-
     
 }

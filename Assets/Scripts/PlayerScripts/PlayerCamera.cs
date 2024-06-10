@@ -28,22 +28,14 @@ public class PlayerCamera : MonoBehaviour {
 
     // used to get walkspeed
     [SerializeField] PlayerMovement playerMovement;
-    private float movespeed; 
+    private float movespeed;
 
-    // bob vector stuff
-    private Vector3 bobVector;
-    private float bobX;
-    private float bobY;
+    private Quaternion cameraGoal;
     
     private float tick; // used for bobVector
 
-    // generate cameraBob
-    private void cameraBob() {
-        bobX = Mathf.Cos(tick * 6) * movespeed * 0.125f;
-        bobY = -Mathf.Abs(Mathf.Sin(tick * 6)) * movespeed * 0.25f;
-
-
-        bobVector = Vector3.Lerp(bobVector, new Vector3(bobX, bobY), 1 * Time.deltaTime);
+    private void Start() {
+        Application.targetFrameRate = 30;
     }
 
     // Update is called once per frame
@@ -51,8 +43,8 @@ public class PlayerCamera : MonoBehaviour {
         movespeed = playerMovement.getMovespeed();
 
         // get mouse deltas
-        mouseX = Input.GetAxis("Mouse X") * lookspeed * Time.deltaTime;
-        mouseY = Input.GetAxis("Mouse Y") * lookspeed * Time.deltaTime;
+        mouseX = Input.GetAxis("Mouse X") * lookspeed * Time.smoothDeltaTime;
+        mouseY = Input.GetAxis("Mouse Y") * lookspeed * Time.smoothDeltaTime;
 
         // rotationX is on the x-axis, so adding mouse-y delta will make it move up/down
         // same thing with rotationY  & adding mouse-x delta, but its on the x-axis, so it moves left-right
@@ -61,12 +53,15 @@ public class PlayerCamera : MonoBehaviour {
         rotationY += mouseX + force.x;
         
         // make force and offset diminish until they reach vector3.zero
-        force = Vector3.Lerp(force, Vector3.zero, Time.deltaTime * 5);
-        forceAngle = Quaternion.Lerp(forceAngle, Quaternion.identity, Time.deltaTime * 5);
+        force = Vector3.Lerp(force, Vector3.zero, Time.smoothDeltaTime * 5);
+        forceAngle = Quaternion.Lerp(forceAngle, Quaternion.identity, Time.smoothDeltaTime * 5);
 
         // set positions
-        playerCam.transform.localPosition =  force + bobVector;
-        playerCam.transform.rotation = Quaternion.Euler(rotationX, rotationY, force.z) * forceAngle;
+
+        cameraGoal = Quaternion.Euler(rotationX, rotationY, force.z) * forceAngle;
+        playerCam.transform.localPosition =  force + new Vector3(0, 0.5f, 0);
+        playerCam.transform.rotation = 
+        Quaternion.Slerp(playerCam.transform.rotation, cameraGoal, Time.deltaTime * 25);
         transform.localRotation = Quaternion.Euler(0f, rotationY, 0);
 
         tick += Time.deltaTime;

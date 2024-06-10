@@ -6,18 +6,26 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
+// teaches player how to play game
 public class Tutorial : MonoBehaviour {
 
-    public GameObject enemy;
-    public WaveManager waveManager;
-    public TimeManager timeManager;
-    public MainMenuButton mainMenu;
-    public PerkManager perkManager;
+    // important fields for setting up tutorial
+    [SerializeField] GameObject enemy;
+    [SerializeField] WaveManager waveManager;
+    [SerializeField] TimeManager timeManager;
+    [SerializeField] MainMenuButton mainMenu;
+    [SerializeField] PerkManager perkManager;
 
+    // detects which parts player finished
     [SerializeField] bool finishedPart1;
     [SerializeField] bool finishedPart2;
     [SerializeField] bool finishedPart3;
     [SerializeField] bool finishedPart4;
+
+    [SerializeField] TMP_Text enemiesLeft; // thingy in player hud that shows how much enemies are left
+    [SerializeField] TMP_Text waveCounter;
+    [SerializeField] Image enemiesLeftBG;
+    [SerializeField] Image waveCounterBG;
 
     private bool spawnedLandmine;
 
@@ -27,21 +35,19 @@ public class Tutorial : MonoBehaviour {
     private float movementDeltaCounter;
     private float mouseDeltaCounter;
 
-    public GameObject targetEnemy;
-    public GameObject enemySpawn;
-    public Material targetMaterial;
+    [SerializeField] GameObject targetEnemy;
+    [SerializeField] GameObject enemySpawn;
+    [SerializeField] Material targetMaterial;
 
     private GameObject spawnedEnemy;
     private bool dashed;
 
-    public bool skipTutorial;
-    public bool tutorialFinished;
+    // tutorial box
+    [SerializeField] TMP_Text instructions;
+    [SerializeField] Image instructionsBox;
 
-    public TMP_Text instructions;
-    public Image instructionsBox;
-    private bool startedGame = false;
-
-    public GameObject landmine;
+    // landmine stuff
+    [SerializeField] GameObject landmine;
     private GameObject tutorialLandmine;
 
     // Start is called before the first frame update
@@ -51,9 +57,10 @@ public class Tutorial : MonoBehaviour {
 
     }
 
+    // shows how to move
     private void tutorialPart1() {
         if (!finishedPart1) {
-            instructions.text = "uh wasd to move, move mouse to move camera, space to jump, lshift to dash (try it out!!!!!)";
+            instructions.text = "use wasd to move around, space to jump, and left shift to dash!! (try it out)";
 
             movementDeltaCounter += (Mathf.Abs(Input.GetAxisRaw("Horizontal")) + Mathf.Abs(Input.GetAxisRaw("Vertical")) + Input.GetAxisRaw("Jump")) / 2f;
             mouseDeltaCounter += Input.mousePositionDelta.magnitude / 5f;
@@ -71,13 +78,18 @@ public class Tutorial : MonoBehaviour {
         }
     }
 
+    // teaches how to use weapon
     private void tutorialPart2() {
-        instructions.text = "oh look a target I spent two minutes on magaically materialized out of nowhere! shoot it with your weapons!!11! (LMB for crossbow, RMB for cannon)";
+        instructions.text = "oh look a target I spent two minutes on magaically " +
+            "materialized out of thin air! destroy it with your " +
+            "awfully-modeled weapons! (LMB for crossbow, RMB for cannon)";
 
         if (!spawnedTargetEnemy) {
+
+            // set enemy stats
             spawnedEnemy = Instantiate(enemy, enemySpawn.transform.position, Quaternion.identity);
             spawnedEnemy.GetComponent<EnemyHealth>().enabled = true;
-            spawnedEnemy.GetComponent<EnemyHealth>().setHealth(5);
+            spawnedEnemy.GetComponent<EnemyHealth>().setHealth(5, "set");
             spawnedEnemy.GetComponent<EnemyMovement>().enabled = true;
             spawnedEnemy.GetComponent<EnemyMovement>().setWalkspeed(0, "set");
             spawnedEnemy.gameObject.SendMessage("changeSprite", targetMaterial);
@@ -92,13 +104,20 @@ public class Tutorial : MonoBehaviour {
 
     }
 
+    // shows landmines
     private void tutorialPart3() {
 
+        // make dummy landmine
         if (!spawnedLandmine) {
             spawnedLandmine = true;
-            instructions.text = "a wild landmine appeared! these landmines spawn in every wave, and at the wooden signs!!!!! step on it/shoot it to see what happens!!!";
-            tutorialLandmine = Instantiate(landmine, enemySpawn.transform.position, Quaternion.identity);
-            ProjectileBehavior landmineBehavior = tutorialLandmine.GetComponent<ProjectileBehavior>();
+            instructions.text = "a wild landmine appeared! these landmines spawn in every wave," +
+                " and at the wooden signs!!!!! step on it/shoot it to see what happens!!!";
+            tutorialLandmine = 
+                Instantiate(landmine, enemySpawn.transform.position, Quaternion.identity);
+
+            // activate landmine
+            ProjectileBehavior landmineBehavior = 
+                tutorialLandmine.GetComponent<ProjectileBehavior>();
 
             landmineBehavior.enabled = true;
 
@@ -112,8 +131,12 @@ public class Tutorial : MonoBehaviour {
 
     }
 
+    // shows perk system
     private void tutorialPart4() {
-        instructions.text = "Pick a perk at the pick-a-perk station! however, pick wisely as the perks aren't very balanced!";
+
+        // spawn perks
+        instructions.text = 
+        "shoot one of the perk enemies to get a new perk and finish the tutorial!";
         if (!spawnedPerks)
         {
             timeManager.StartGame();
@@ -121,9 +144,9 @@ public class Tutorial : MonoBehaviour {
         }
 
 
-        if (perkManager.PlayerSelectedPerk())
-        {
-            finishedPart4 = true;
+        if (perkManager.PlayerSelectedPerk()) {
+           finishedPart4 = true;
+
 
         }
 
@@ -132,6 +155,8 @@ public class Tutorial : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         if (!mainMenu.viewingMainMenu()) {
+
+            // hide tutorial ui once tutorial is finished
             if (!finishedPart4) {
                 instructionsBox.enabled = true;
                 instructions.enabled = true;
@@ -143,6 +168,7 @@ public class Tutorial : MonoBehaviour {
 
             }
             
+            // runs parts in chronological order
             if (!finishedPart1) {
                 tutorialPart1();
 

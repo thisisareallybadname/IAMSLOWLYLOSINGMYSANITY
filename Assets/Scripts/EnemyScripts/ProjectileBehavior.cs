@@ -7,47 +7,46 @@ using Unity.VisualScripting;
 using UnityEditor.DeviceSimulation;
 using UnityEngine;
 
+// hazard for player, either moves as a projectile or stands stationary as a landmine
 public class ProjectileBehavior : MonoBehaviour {
 
-    public float walkspeed;
-    public float timer;
+    [SerializeField] float walkspeed; // projectile movespeed
+    [SerializeField] float timer;
 
     private Collider[] hits = new Collider[0];
     private GameObject player;
-    private GameObject explosionEffect;
-    private float playerWalkspeed;
+    private GameObject explosionEffect; // the orange circle
+    private GameObject TransparentExplosionEffect; // the slightly bigger, slightly translucent orange circle
 
-    private bool touchingSomething;
     private float countdown;
 
     private bool explosionExpanding;
-    private float aimingTimer = 0;
 
-    public float damage;
-    public bool canExplode;
+    [SerializeField] float damage; 
+    [SerializeField] bool canExplode; // true if projectile causes explosion effect
     private bool exploded = false;
 
-    public float explosionRadius;
-    private bool deleteAfterExplosion;
+    [SerializeField] float explosionRadius; // radius of explosion
 
-    public float lifespan;
+    [SerializeField] float lifespan; // how long projectile lasts
     private float existenceTimer;
 
-    public float aimTime;
     private Rigidbody rb;
 
     private Vector3 size;
     private bool lopsided;
 
+    private Vector3 targetSize; // max size for explosion effect
+
     // Start is called before the first frame update
     void Awake() {
+
 
         size = transform.localScale;
         lopsided = !(size.x == size.y && size.y == size.z);
         exploded = false;
 
         player = GameObject.Find("Player");
-        playerWalkspeed = player.GetComponent<PlayerMovement>().getWalkspeed();
 
         if (canExplode) {
             explosionEffect = Instantiate(GameObject.Find("explosion"), transform.position, Quaternion.identity);
@@ -55,11 +54,24 @@ public class ProjectileBehavior : MonoBehaviour {
             explosionEffect.transform.parent = transform;
             explosionEffect.transform.localPosition = Vector3.zero;
 
+            TransparentExplosionEffect = explosionEffect.transform.GetChild(0).gameObject;
+
         }
         
         rb = GetComponent<Rigidbody>();
 
         GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+
+        if (lopsided)
+        { // lopsided = transform scale isn't a cube
+            targetSize =
+            new Vector3(explosionRadius, explosionRadius * 2, explosionRadius) / 2;
+        }
+        else
+        {
+            targetSize = Vector3.one * explosionRadius;
+
+        }
 
         transform.LookAt(player.transform);
     }
@@ -84,21 +96,23 @@ public class ProjectileBehavior : MonoBehaviour {
             }
         }
 
+        // cause explosion effect to grow
         if (explosionExpanding) {
-            if (countdown >= 1) {
+
+            // if explosion effect reaches certain size, delete stuff
+            if (countdown >= 0.5f) {
                 Destroy(explosionEffect);
                 Destroy(transform.gameObject);
 
             } else {
                 if (canExplode) {
-                    Vector3 landmineLocalScale = transform.localScale;
-                    if (lopsided) {
-                        explosionEffect.transform.localScale = Vector3.Lerp(new Vector3(0.25f, 0.25f, 0.25f), new Vector3(explosionRadius, explosionRadius * 2, explosionRadius), countdown * 4.5f);
-                    
-                    } else {
-                        explosionEffect.transform.localScale = Vector3.Lerp(new Vector3(0.25f, 0.25f, 0.25f), new Vector3(explosionRadius, explosionRadius, explosionRadius ), countdown * 4.5f);
 
-                    }
+                    // lerp explosion effect
+                    explosionEffect.transform.localScale = 
+                    Vector3.Lerp(Vector3.one / 4, targetSize, countdown * 2.5f);
+                    TransparentExplosionEffect.transform.localScale = 
+                    Vector3.Lerp(Vector3.one * 1.25f, Vector3.one * 1.75f, countdown * 2.5f);
+
                 }
                 countdown += Time.fixedDeltaTime;
 
@@ -107,7 +121,8 @@ public class ProjectileBehavior : MonoBehaviour {
         }
 
     }
-
+       
+    // explode if it touches something thats not a bomb/floor
     private void OnTriggerStay(Collider collision) {
         if (!collision.gameObject.tag.Equals("floor") && !collision.gameObject.tag.Equals("bomb")) {
             explode();
@@ -124,6 +139,21 @@ public class ProjectileBehavior : MonoBehaviour {
 
     public void enableLandmine() {
         enabled = true;
+
+    }
+
+    // set projectile movespeed
+    public void setMovespeed(float speed, string mode) {
+        if (mode.Contains("mult")) {
+            walkspeed *= speed;
+
+        } else if (mode.Equals("add")) {
+            walkspeed += speed;
+
+        } else {
+            walkspeed = speed;
+
+        }
 
     }
 
@@ -147,35 +177,39 @@ public class ProjectileBehavior : MonoBehaviour {
 
     }
 
+    // explode, the selling point of the landmine
     public void explode() {
         if (!exploded) {
             exploded = true;
+
+            // deal damage to all entities in radius
             hits = Physics.OverlapSphere(transform.position, explosionRadius / 4);
 
+            // freeze landmine in place so explosion isnt affected by gravity
             GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
 
+
+            // affect everything in radius
             foreach (Collider collider in hits) {
 
-                if (collider.gameObject.GetComponent<Rigidbody>() != null) {
-                    collider.gameObject.GetComponent<Rigidbody>().AddForce((collider.gameObject.transform.position - transform.position) * 5, ForceMode.Impulse);
-
-                }
-
+                // deal dmg to player
                 if (collider.gameObject.tag.Equals("Player")) {
                     player.GetComponent<PlayerDamage>().takeDamage(damage);
-                    touchingSomething = true;
 
                 }
-                else if (collider.gameObject.tag.Equals("Enemy")) {
-                    collider.gameObject.GetComponent<EnemyHealth>().takeDamage(damage, 25);
-                    touchingSomething = true;
 
+                // deal dmg to enemy
+                else if (collider.gameObject.tag.Equals("Enemy")) {
+                    collider.gameObject.GetComponent<EnemyHealth>().takeDamage(damage, damage * 3);
+
+                // explode other bombs
                 } else if (collider.gameObject.tag.Equals("bomb")) {
                     exploded = true;
                     collider.gameObject.GetComponent<ProjectileBehavior>().explode();
 
                 }
 
+                // used to start explosion grow thingy
                 explosionExpanding = true;
 
             }

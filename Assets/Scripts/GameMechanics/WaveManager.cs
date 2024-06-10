@@ -8,50 +8,38 @@ using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.UI;
 
+// summons waves of enemies for player to fight
 public class WaveManager : MonoBehaviour {
 
+    // used to keep track of spawn delay
     private float timer;
-    public float waveDelay;
-    public float spawnDelay;
+    [SerializeField] float spawnDelay;
     
-    private float waveCooldown;
-
-    public float enemiesPerWave;
+    [SerializeField] float enemiesPerWave;
     private float enemiesSpawned;
 
-    private float enemiesKilled = 0;
+    [SerializeField] bool spawningEnemies = false;
+    [SerializeField] bool intermission;
 
-    public bool spawningEnemies = false;
-    public bool intermission;
+    [SerializeField] GameObject enemy;
+    private EnemyHealth enemyHealth;
 
-    public GameObject enemy;
-    private Enemy enemyProperties;
+    [SerializeField] float wave = 0;
+    [SerializeField] TMP_Text waveCounter; // thingy in "Wave : [wave]" ui
 
-    public float wave = 0;
-    public TMP_Text waveCounter;
-
-    HashSet<GameObject> enemies = new HashSet<GameObject>();
-    public GameObject[] spawns = new GameObject[3];
+    HashSet<GameObject> enemies = new HashSet<GameObject>(); // keeps track of enemy count
+    [SerializeField] GameObject[] spawns = new GameObject[3]; // holds spawn positions
     private float randomSpawn;
 
-    public PlayerDamage playerHealth;
-
-    public TMP_Text enemyCounter;
-    public TMP_Text waveReached;
+    // ui elements 
+    [SerializeField] TMP_Text enemyCounter;
+    [SerializeField] TMP_Text waveReached;
 
     private bool running;
-    private bool pauseGame;
-    private bool pauseDebounce = true;
-
-    public TimeManager timeManager;
-
-    private bool perkDebounce;
-
-    private float perkTimer;
-    public float perkTimerLength;
 
     // Start is called before the first frame update
     void Start() {
+        enemyHealth = enemy.GetComponent<EnemyHealth>();
         running = false;
     }
 
@@ -63,14 +51,10 @@ public class WaveManager : MonoBehaviour {
 
         }
     }
+    
 
-    public void resetGame() {
-        wave = 0;
-
-    }
-
+    // bunch of setters and getters
     public void startGame() {
-        pauseGame = false;
         running = true;
 
     }
@@ -80,18 +64,13 @@ public class WaveManager : MonoBehaviour {
     
     }
 
+    // used to update enemies list
     public void enemyDeath(GameObject enemy) {
         enemies.Remove(enemy);
-        enemiesKilled++;
     }
 
     public float EnemiesLeft() {
         return enemies.Count;
-
-    }
-
-    public bool WaveOver() {
-        return pauseGame;
 
     }
 
@@ -100,20 +79,26 @@ public class WaveManager : MonoBehaviour {
 
     }
 
+    public void clearWave(){
+        wave = 0;
+        waveCounter.text = "Wave 1";
+        foreach (GameObject enemy in enemies)
+        {
+            enemy.GetComponent<EnemyHealth>().takeDamage(10000, 0);
+
+        }
+
+    }
     
     public void StartWave() {
         wave++;
 
-        enemy.GetComponent<EnemyHealth>().addStatAmplifier(wave);
-
         running = true;
-        pauseDebounce = true;
 
         waveCounter.text = "Wave " + wave;
         waveReached.text = "Reached Wave " + wave;
 
         intermission = false;
-        waveCooldown = 0;
 
         enemiesSpawned = 0;
         enemiesPerWave = 2 * wave;
@@ -122,17 +107,17 @@ public class WaveManager : MonoBehaviour {
 
     }
 
+    // spawns enemy (pretty self explanatory ngl)
     private void spawnEnemy() {
         GameObject newEnemy = Instantiate(enemy, spawns[((int)randomSpawn)].transform.position, Quaternion.identity);
         newEnemy.GetComponent<EnemyHealth>().enabled = true;
         newEnemy.GetComponent<EnemyMovement>().enabled = true;
 
-        //Enemy enemyProperties = newEnemy.GetComponent<Enemy>();
-        //enemyProperties.active = true;
-        //enemyAI enemyMovementProperties = newEnemy.GetComponent<enemyAI>();
+        //newEnemy.GetComponent<EnemyHealth>().setHealth(5, "set");
 
         enemies.Add(newEnemy);
 
+        // 1/4 chance for enemy to be ranged enemy
         if (UnityEngine.Random.Range(0, 4) == 0) {
             newEnemy.SendMessage("EnableRangedAttack");
             newEnemy.GetComponent<EnemyMovement>().setWalkspeed(0.5f, "multi");
@@ -140,11 +125,19 @@ public class WaveManager : MonoBehaviour {
         }
 
     }
+    public bool isRunning(){
+        return running;
+
+    }
 
     private void Playing() {
+
+        // update ui
         if (enemies.Count > 0) {
             enemyCounter.text = "Enemies Left: " + enemies.Count;
         }
+
+        // spawn enemies every [spawnDelay] seconds
         if (timer >= spawnDelay && enemiesSpawned < enemiesPerWave && spawningEnemies) {
             timer = 0;
             randomSpawn = UnityEngine.Random.Range(0, 3);
@@ -164,5 +157,15 @@ public class WaveManager : MonoBehaviour {
 
         }
 
+    }
+
+    public float getWave() { 
+        return wave; 
+    
+    }
+
+    public void setWave(float newWave) {
+        wave = newWave;
+        print(wave);
     }
 }

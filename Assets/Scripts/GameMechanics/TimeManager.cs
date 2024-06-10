@@ -4,25 +4,29 @@ using System.Security;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
-// time manager, 
+// time manager, makes the scripts run on time
 public class TimeManager : MonoBehaviour {
 
     // public variables
-    public WaveManager waves; // wave manager
-    public PerkManager perkManager; // perk manager, current script tells this to summmon perk options, and this one tells current script when player did select a perk 
-    public LandmineSetter landmines; // creates landmine field
+    [SerializeField] WaveManager waves; // wave manager
+    [SerializeField] PerkManager perkManager; // perk manager, current script tells this to summmon perk options, and this one tells current script when player did select a perk 
+    [SerializeField] LandmineSetter landmines; // creates landmine field
     [SerializeField] PlayerDamage playerHealth; // player's health, heals it to max during intermission phase 
-    public MainMenuButton mainMenu;
-    public UIManager UIManager;
+    [SerializeField] MainMenuButton mainMenu;
+    [SerializeField] UIManager UIManager;
 
     private bool startGame; // true if tutorial has been finished
     private bool gameOver; // true if player is at 0 hp
     
-    public bool spawnBombs;
+    [SerializeField] bool spawnBombs;
     private bool pauseDebounce;
-    
+
+    [SerializeField] GameObject originalEnemy;
+    private EnemyMovement originalEnemyMovement;
+    private EnemyHealth originalEnemyHealth;
+
     public bool pauseGame; // true if game is paused (obviously) | enabled when selecting perk 
     private bool playerInMenu; // true if player is in main menu/game over screen
 
@@ -30,14 +34,18 @@ public class TimeManager : MonoBehaviour {
     private float waveCooldown; // timer thingy
     
     private float waveDelay = 5; // length of intermission waiting phase
-    public bool intermission; // true if ongoing intermission phase (more on that later) 
+    [SerializeField] bool intermission; // true if ongoing intermission phase (more on that later) 
 
     private float waveCompleteTimer; // more on this later
     private bool spawnedInPerkOptions = false; // true if perks are showing
 
-    public TMP_Text enemiesLeft; // thingy in player hud that shows how much enemies are left
+    [SerializeField] TMP_Text enemiesLeft; // thingy in player hud that shows how much enemies are left
+    [SerializeField] TMP_Text waveCounter;
+    [SerializeField] Image enemiesLeftBG;
 
-    public GameObject enemySpawnIndicator;
+    [SerializeField] Image waveCounterBG;
+
+    [SerializeField] GameObject enemySpawnIndicator;
 
     private bool clearedMinefield;
     private bool spawnedLandmines;
@@ -51,10 +59,16 @@ public class TimeManager : MonoBehaviour {
 
     // starts a new game, resets stats
     public void StartGame() {
-        Debug.Log("tutorial finished");
         pauseDebounce = true;
         startGame = true;
-        
+
+        enemiesLeftBG.enabled = true;
+        waveCounterBG.enabled = true;
+        enemiesLeft.enabled = true;
+        waveCounter.enabled = true;
+
+        originalEnemyMovement = originalEnemy.GetComponent<EnemyMovement>();
+        originalEnemyHealth = originalEnemy.GetComponent<EnemyHealth>();
 
     }
 
@@ -66,7 +80,6 @@ public class TimeManager : MonoBehaviour {
 
     // unpauses game, used when player selects perk
     public void UnpauseGame() {
-        Debug.Log("perk selected");
         pauseGame = false;
 
     }
@@ -75,6 +88,7 @@ public class TimeManager : MonoBehaviour {
     public void endGame() {
         gameOver = true;
         pauseGame = true;
+        startGame = false;
         UIManager.ShowDeathUI();
 
     }
@@ -94,8 +108,12 @@ public class TimeManager : MonoBehaviour {
 
     private void ManageIntermissionPhase() {
         if (waveCooldown < waveDelay && !waves.isSpawningEnemies()) {
-            playerHealth.setMaxHealth(playerHealth.getMaxHealth(), "set"); // keep the player alive at all costs because if they die in intermission phase it breaks a lot of stuff
-            enemiesLeft.text = "Wave starting in " + Mathf.CeilToInt(waveDelay - waveCooldown); // update UI
+            // update "Enemies Left" ui
+            enemiesLeft.text = "Wave starting in " + Mathf.CeilToInt(waveDelay - waveCooldown);
+            if (waveCounter.text.Equals("Tutorial")) {
+                waveCounter.text = "Wave 0";
+
+            }
 
             if (!spawnedLandmineIndicators) {
                 spawnedLandmineIndicators = true;
@@ -104,6 +122,8 @@ public class TimeManager : MonoBehaviour {
             waveCompleteTimer = 0;
 
             enemySpawnIndicator.GetComponent<MeshRenderer>().enabled = true;
+
+            playerHealth.heal(1);
 
             // thing that keeps track of time
             waveCooldown += Time.deltaTime;
@@ -117,11 +137,13 @@ public class TimeManager : MonoBehaviour {
                 spawnedLandmines = true;
             }
             
-            playerHealth.setHealth(playerHealth.getMaxHealth()); // keep the player alive at all costs because if they die in intermission phase it breaks a lot of stuff
+            // prepare stuff for enemy
             waveCooldown = 0;
             waves.StartWave();
+            
             pauseDebounce = true;
 
+            // reset vars
             clearedMinefield = false;
             spawnedLandmines = false;
             spawnedLandmineIndicators = false;
@@ -135,7 +157,7 @@ public class TimeManager : MonoBehaviour {
     }
 
     public bool GameInIntermissionPhase() {
-        return intermission;
+        return intermission || spawnedInPerkOptions || !startGame ;
 
     }
 
@@ -174,7 +196,10 @@ public class TimeManager : MonoBehaviour {
 
             //-- the stuff that makes intermission phase work --\\
             if (pauseGame) {
-                
+
+                // keep the player alive at all costs because if they die in intermission phase it breaks a lot of stuff
+                playerHealth.heal(1);
+
                 // pause the game 
                 if (!perkManager.PlayerSelectedPerk()) {
                     intermission = true;
@@ -183,13 +208,27 @@ public class TimeManager : MonoBehaviour {
 
                 //-- little thing that makes the wave UI say "Wave Completed!" when you beat a wave for about a second
                  if (waveCompleteTimer < 1) {
-                     waveCompleteTimer += Time.deltaTime;
-                     enemiesLeft.text = "Wave Completed!";
+                    if (waves.getWave() > 0)
+                    {
+                        waveCompleteTimer += Time.deltaTime;
+                        enemiesLeft.text = "Wave Completed!";
 
+                    } else {
+                        waveCompleteTimer = 2f;
+                        enemiesLeft.text = "Pick a Perk!";
+
+                    }
                  // !!! [pretty important] perk-selection phase
                  } else if (waveCompleteTimer >= 1) {
                     if (!spawnedInPerkOptions) {
                         spawnedInPerkOptions = true;
+
+                        // buff enemies a little bit, it's in this method because 
+                        // 1. it will only run once (hopefully)
+                        // 2. it's placed right before the stats get modified again
+                        originalEnemyMovement.setWalkspeed(waves.getWave() / 8.75f, "add");
+                        originalEnemyHealth.setHealth(waves.getWave() + 1, "set");
+
                         spawnPerkOptions(); // most of the perk-selecting phase code is in here
 
                     }
@@ -197,6 +236,7 @@ public class TimeManager : MonoBehaviour {
 
             } else {
                 ManageIntermissionPhase();
+
             }
         }
     }

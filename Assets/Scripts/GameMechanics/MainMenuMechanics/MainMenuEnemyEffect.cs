@@ -5,7 +5,7 @@ using UnityEngine;
 public class MainMenuEnemyEffect : MonoBehaviour {
 
     [SerializeField] GameObject enemy;
-    [SerializeField] Camera lookAtThis;
+    [SerializeField] GameObject target;
     private float timer;
     private bool spawnEnemies = true;
 
@@ -31,20 +31,28 @@ public class MainMenuEnemyEffect : MonoBehaviour {
             }
         }
     }
+
+    // spawn enemy every 1/4 of a second
     public IEnumerator spawnEnemy() {
-        GameObject newEnemy = Instantiate(enemy, transform.position + transform.right * Random.Range(-15, 15), Quaternion.identity);
-        newEnemy.transform.LookAt(lookAtThis.transform);
+        GameObject newEnemy = 
+        Instantiate(enemy, transform.position + transform.right * Random.Range(-15, 15), Quaternion.identity);
+        newEnemy.transform.LookAt(target.transform);
         newEnemy.GetComponent<EnemyHealth>().enabled = true;
-        newEnemy.GetComponent<EnemyHealth>().lieOnFloorMaxTime = 3;
+        newEnemy.GetComponent<EnemyHealth>().setLieOnFloorTime(3);
+        newEnemy.GetComponent<EnemyMovement>().enabled = false;
+
+        // chance for enemy to be a ranged one
         if (Random.Range(0, 4) == 1) {
             newEnemy.SendMessage("EnableRangedAttack");
 
         }
 
-        newEnemy.GetComponent<EnemyHealth>().takeDamage(10000000, Random.Range(-15, 15));
-        yield return null;
+        // kill the enemy
+        newEnemy.GetComponent<EnemyHealth>().takeDamage(10000000, 5);
+        yield return new WaitForSeconds(1.5f);
     }
 
+    // enable/disable effect
     public void turnOffEnemySpawning() {
         spawnEnemies = false;
         

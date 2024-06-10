@@ -5,21 +5,25 @@ using UnityEngine;
 public class DeathZone : MonoBehaviour {
     [SerializeField] TimeManager timeManager;
     [SerializeField] PlayerMovement playerMovement;
+    [SerializeField] WaveManager waveManager;
 
     // Update is called once per frame
     private void OnTriggerStay(Collider collision) {
         GameObject thingTouchingRigidBody = collision.gameObject;
 
-        if (thingTouchingRigidBody.tag.Equals("Enemy")) {
+        // delete enemy from reality
+        if (thingTouchingRigidBody.tag.Equals("Enemy"))
+        {
             thingTouchingRigidBody.GetComponent<EnemyHealth>().takeDamage(10000000, 250);
 
-        } else if (thingTouchingRigidBody.tag.Equals("Player")) {
-            if (!timeManager.GameInIntermissionPhase()) {
-                thingTouchingRigidBody.GetComponent<PlayerDamage>().takeDamage(10000000000000);
-
+            // delete player from reality
+        }
+        else if (thingTouchingRigidBody.tag.Equals("Player")) {
+            if (waveManager.isRunning()) { 
+                thingTouchingRigidBody.GetComponent<PlayerDamage>().setHealth(0);
             }
-
-            playerMovement.ResetPlayerPosition();
+            // tp player back to spawnpoint so they wont get softlocked at death zone
+            playerMovement.SetPosition(new Vector3(0, 10, 0));
         }
     }
 }

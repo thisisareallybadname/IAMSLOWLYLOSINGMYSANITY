@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -10,25 +11,25 @@ public class EnemyHealth : MonoBehaviour {
     [SerializeField] float health;
     private float maxHealth;
 
-    public float kbResistance = 1;
+    [SerializeField] float kbResistance = 1;
 
-    public float immunityDuration;
+    [SerializeField] float immunityDuration;
     private float hitCooldown = 999;
 
     private bool canTakeDamage = true;
 
-    public Material FullHealthMeleeSprite; // melee enemy sprite when its health > 50
-    public Material LowHealthMeleeSprite; // melee enemy sprite when its health < 50
+    [SerializeField] Material FullHealthMeleeSprite; // melee enemy sprite when its health > 50
+    [SerializeField] Material LowHealthMeleeSprite; // melee enemy sprite when its health < 50
 
-    public Material FullHealthRangedSprite; // ranged enemy sprite when its health > 50
-    public Material LowHealthRangedSprite; // ranged enemy sprite when its health < 50
+    [SerializeField] Material FullHealthRangedSprite; // ranged enemy sprite when its health > 50
+    [SerializeField] Material LowHealthRangedSprite; // ranged enemy sprite when its health < 50
 
      // default is melee enemy, changed to ranged enemy if specified
     private Material FullHealthEnemySprite;
     private Material LowHealthEnemySprite;
 
-    public GameObject enemySprite;
-    public Collider collider;
+    [SerializeField] GameObject enemySprite;
+    [SerializeField] Collider collider;
 
     private Rigidbody rb;
 
@@ -36,20 +37,21 @@ public class EnemyHealth : MonoBehaviour {
 
     private bool dead;
     private float ragdollTimer; // keeps track of how long ragdoll thingy is right now
-    public float lieOnFloorMaxTime; // ragdoll length at death
+    [SerializeField] float lieOnFloorMaxTime; // ragdoll length at death
 
     // debounce bool that makes it so while the enemy is doing that ragdoll thingy, it won't get moved
     private bool appliedDeathForce;
     public WaveManager waveManager;
     
-    public EnemyMovement enemyAI; // disabled when health <= 0
-    public Enemy enemyStats; // to be deleted
+    [SerializeField] EnemyMovement enemyAI; // disabled when health <= 0
 
-    public float enemyControl; // enemy drag, makes it less slippery and stupid
-    public float knockbackControl; // makes less knockback
-
+    [SerializeField] float enemyControl; // enemy drag, makes it less slippery and stupid
+    [SerializeField] float knockbackControl; // makes less knockback
+       
+    // used for perk option stuff
     public bool isPerkOption;
     public PerkManager perks;
+    [SerializeField] int perkIndex;
 
     // assign all variables when enemy is created
     void Awake() {
@@ -78,7 +80,10 @@ public class EnemyHealth : MonoBehaviour {
             
             // if you didn't already, apply death force to enemy
             if (!appliedDeathForce) {
-                rb.AddForce(new Vector3(Random.Range(-10, 10), Random.Range(-10, 10), Random.Range(-10, 10)), ForceMode.Impulse);
+                Vector3 deathForce = 
+                new Vector3(UnityEngine.Random.Range(-10, 10), UnityEngine.Random.Range(-10, 10), UnityEngine.Random.Range(-10, 10));
+
+                rb.AddForce(deathForce, ForceMode.Impulse);
                 appliedDeathForce = true;
                 waveManager.enemyDeath(this.gameObject);
             }
@@ -135,19 +140,20 @@ public class EnemyHealth : MonoBehaviour {
             // since the perkOption enemy uses this as well (perk enemy), if the enemy is a perk option, instakill it
             if (isPerkOption) {
                 health = 0;
-                perks.PerkSelected(GetComponent<Enemy>());
+                perks.PerkSelected(perkIndex);
 
             }
+            
+            hitCooldown = 0;
 
-            // if the enemyAI isn't deleted yet, add knockback
-            if (enemyStats.active) {
-                hitCooldown = 0;
+            // add knockback force to enemy 
+            float randomX = UnityEngine.Random.Range(-knockback * 0.5f, knockback * 0.5f);
+            float randomY = UnityEngine.Random.Range(-knockback * 0.5f, knockback * 0.5f);
 
-                // add knockback force to player
-                rb.AddForce(new Vector3(0, 1, 0) * knockback * 50 + new Vector3(Random.Range(-knockback * 0.5f, knockback * 0.5f), 0, Random.Range(-knockback * 0.5f, knockback * 0.5f)) * (1 / kbResistance), ForceMode.Force);
-                rb.velocity = new Vector3(Mathf.Abs(rb.velocity.x), Mathf.Abs(rb.velocity.y), Mathf.Abs(rb.velocity.z));
-                enemyAI.enabled = false;
-            }
+            // this line used to be >200 chars lmao
+            rb.AddForce(new Vector3(randomX, 1, randomY) * knockback * (50 / kbResistance), ForceMode.Force);
+            enemyAI.enabled = false;
+            
         }
 
         
@@ -155,15 +161,23 @@ public class EnemyHealth : MonoBehaviour {
         
     }
 
-    // change health (used w/ perkManager)
-    public void addStatAmplifier(float newHealth) {
-        health = newHealth;
+    // set enemy's health
+    public void setHealth(float newHealth, String mode) {
+        if (mode.Contains("mult")) {
+            health *= newHealth;
 
+        } else if (mode.Equals("add")) {
+            health += newHealth;
+
+        } else {
+            health = newHealth;
+        
+        }
     }
 
-    // set enemy's health
-    public void setHealth(float newHealth) {
-        health = newHealth;
+    // set lieOnFloorTime
+    public void setLieOnFloorTime(float newTime) {
+        lieOnFloorMaxTime = newTime;
 
     }
 
@@ -173,8 +187,14 @@ public class EnemyHealth : MonoBehaviour {
 
     }
 
-    public void changeStats(float newHealth) {
+    // basic setters and getters for index
+    public void setIndex(int newIndex) {
+        perkIndex = newIndex;
 
+    }
+
+    public int getIndex() {
+        return perkIndex;
 
     }
 

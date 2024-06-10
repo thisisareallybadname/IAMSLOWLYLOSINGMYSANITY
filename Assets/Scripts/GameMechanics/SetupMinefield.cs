@@ -10,11 +10,8 @@ using UnityEngine;
 public class LandmineSetter : MonoBehaviour {
 
     // fields that store the amount of bombs per wave 
-    private float bombCounter;
     public float amountOfLandmines;
 
-    private bool canDropBombs;
-    private bool spawnIndicators;
 
     // the floor's width along the x axis and z axis
     public float floorX;
@@ -39,25 +36,29 @@ public class LandmineSetter : MonoBehaviour {
 
     // make the landmine indicators
     public void createLandmineSpawns() {
-        amountOfLandmines = waveManager.wave * 5 + additionalLandmines;
+        amountOfLandmines = waveManager.getWave() * 5 + additionalLandmines;
 
 
         // make bombLimit landmines/indicators
          for (int i = 0; i < amountOfLandmines; i++) {
             // go to a random point on the floor, and store that position in a list
-            transform.position = new Vector3(Random.Range(-floorX / 2, floorX / 2), 2, Random.Range(-floorZ / 2, floorZ / 2));
+            transform.position = new Vector3
+            (Random.Range(-floorX / 2, floorX / 2), 2, Random.Range(-floorZ / 2, floorZ / 2));
             landmineSpawns.Add(transform.position);
 
             // make a landmine indicator at that position, make it a little crooked and place it on said point
             GameObject newIndicator = Instantiate(landmineIndicator, transform.position, Quaternion.identity);
-            newIndicator.transform.rotation = Quaternion.Euler(-90 + Random.Range(-15, 15), Random.Range(-180, 180), Random.Range(-180, 180));
+            Quaternion signRotation = 
+            Quaternion.Euler(-90 + Random.Range(-15, 15), Random.Range(-180, 180), Random.Range(-180, 180));
+
+            newIndicator.transform.rotation = signRotation;
             landmineSpawnIndicators.Add(newIndicator);
 
         }
     }
 
-    void placeLandmineIndicators() {
-
+    public void resetLandmineCount() {
+        additionalLandmines = 0;
 
     }
 
@@ -85,7 +86,5 @@ public class LandmineSetter : MonoBehaviour {
             }
         }
     }
-
-    // Update is called once per frame
 
 }

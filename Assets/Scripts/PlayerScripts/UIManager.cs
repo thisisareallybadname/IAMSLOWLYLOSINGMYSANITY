@@ -26,6 +26,7 @@ public class UIManager : MonoBehaviour {
 
     [SerializeField] Camera mainCam; // player camera
     [SerializeField] Camera deathCam; // spinning camera in "YOu DIED!!!!!" screen
+    [SerializeField] Camera VMcam;
 
     private bool deathCamRotating; 
     private float tick; // used for moving death camera
@@ -93,8 +94,11 @@ public class UIManager : MonoBehaviour {
     // lerp bar's position and size
     IEnumerator updateBar(RectTransform barTransform, float barLost, float ratio, float yOffset) {
 
-        barTransform.sizeDelta = Vector2.Lerp(barTransform.sizeDelta, new Vector2(260f * ratio, 21.6f), 3 * Time.deltaTime);
+        barTransform.sizeDelta = Vector2.Lerp(barTransform.sizeDelta, new Vector2(258f * ratio, 21.6f), 3 * Time.deltaTime);
+        if (barTransform.sizeDelta.x > 258) {
+            barTransform.sizeDelta = new Vector2(258, 21.6f);
 
+        }
         // lerp value for position is so high compared to its size because it actually does its job really well and finishes first
         barTransform.anchoredPosition = Vector2.Lerp(barTransform.anchoredPosition, new Vector2(-267.5273f - barLost / 2, yOffset), 300 * Time.deltaTime);
 
@@ -105,6 +109,7 @@ public class UIManager : MonoBehaviour {
         yield return null;
     }
 
+    // shows the player hud, disables death ui
     public void ShowPlayerHUD() {
         mainCam.enabled = true;
         deathCam.enabled = false;
@@ -118,11 +123,13 @@ public class UIManager : MonoBehaviour {
         deathUI.enabled = false;
     }
 
+    // disables hud, shows death ui stuff
     public void ShowDeathUI() {
         deathCamRotating = true;
 
         mainCam.enabled = false;
         deathCam.enabled = true;
+        VMcam.enabled = false;
 
         mainCam.GetComponent<AudioListener>().enabled = false;
         deathCam.GetComponent<AudioListener>().enabled = true;

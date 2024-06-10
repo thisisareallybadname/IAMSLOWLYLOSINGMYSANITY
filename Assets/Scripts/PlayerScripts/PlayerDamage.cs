@@ -14,6 +14,10 @@ public class PlayerDamage : MonoBehaviour {
 
     public float health;
 
+    [SerializeField] PlayerMovement playerMovement;
+    [SerializeField] FireWeapon leftWeapon;
+    [SerializeField] FireWeapon rightWeapon;
+
     // doctors' recommended damage intake is 1 dmg / 1 sec
     
     // immunity timers 
@@ -24,6 +28,7 @@ public class PlayerDamage : MonoBehaviour {
     // shove player camera every time player takes damage thru playerCamera
     public PlayerCamera hurtEffect;
     public TimeManager timeManager;
+    [SerializeField] WaveManager waveManager;
     public UIManager uiManager;
 
     // make sure that timaManager doesn't get spammed w/ stopGame()
@@ -58,8 +63,8 @@ public class PlayerDamage : MonoBehaviour {
 
             // end the game when player dead
             if (deathDebounce) {
-                deathDebounce = false;
                 timeManager.endGame();
+                waveManager.clearWave();
 
             }
         } else {
@@ -75,7 +80,8 @@ public class PlayerDamage : MonoBehaviour {
 
     // if player is touching an enemy and if they have no iframes, make them take damage
     private void OnTriggerStay(Collider collision) {
-        if (collision.gameObject.tag.Equals("Enemy") && collision.gameObject.GetComponent<EnemyHealth>().getHealth() > 0) {
+        if (collision.gameObject.tag.Equals("Enemy") && 
+            collision.gameObject.GetComponent<EnemyHealth>().getHealth() > 0) {
             takeDamage(1);
             
         }
@@ -84,6 +90,13 @@ public class PlayerDamage : MonoBehaviour {
     // get player's health, used in player UI script
     public float getHealth() {
         return health;
+    }
+
+    // too lazy to do some complicated stuff this is really convient to make
+    // percentage here is 1 / value wanted
+    public void heal(float percentage) {
+        health = percentage * maxHealth;
+
     }
 
     // set max health, with three modes, add, mutl, and set
@@ -120,7 +133,7 @@ public class PlayerDamage : MonoBehaviour {
             canTakeDamage = false;
 
             // camera hurt effect
-            hurtEffect.applyCameraForce(new Vector3(0, 0, -22.5f), Quaternion.Euler(0, 0.75f, -0.5f));
+            hurtEffect.applyCameraForce(new Vector3(0, 0, -1.25f), Quaternion.Euler(0, 1.75f, -0.5f));
             health -= damage;
 
         }

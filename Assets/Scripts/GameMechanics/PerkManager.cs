@@ -1,4 +1,3 @@
-using Palmmedia.ReportGenerator.Core.Reporting.Builders;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -48,7 +47,7 @@ public class PerkManager : MonoBehaviour {
 
             } else if (variant == 1) { // health
                 health.maxHealth += 1;
-                enemyMovement.setWalkspeed(1.25f, "multi");
+                enemyMovement.setWalkspeed(1f, "add");
 
             } else if (variant == 2) { // speed
                 movement.setMovementStats(0.25f, 0.25f, "add");
@@ -60,17 +59,17 @@ public class PerkManager : MonoBehaviour {
             foreach (GameObject option in perkOptions) {
                 float index = option.GetComponent<EnemyHealth>().getIndex();
                 if (index != variant) {
-                    Destroy(option.gameObject);
+                    Destroy(option);
                 }
             }
 
+            print(perkOptions.Count);
             timeManager.UnpauseGame();
 
             perkOptions.Clear();
             
         }
     }
-
     public void setSelectedPerkStatus(bool status) {
         selectedPerk = status;
 
@@ -81,6 +80,16 @@ public class PerkManager : MonoBehaviour {
 
     }
 
+    public void forceQuitPerkSelection() {
+        selectedPerk = false;
+        foreach (GameObject option in perkOptions)
+        {
+            Destroy(option);
+        }
+
+        timeManager.UnpauseGame();
+
+    }
     // spawn perk option
     public void SpawnPerkOption(int variant) {
         if (!perkSelecting) { 

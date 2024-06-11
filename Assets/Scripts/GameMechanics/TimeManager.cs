@@ -14,7 +14,7 @@ public class TimeManager : MonoBehaviour {
     [SerializeField] PerkManager perkManager; // perk manager, current script tells this to summmon perk options, and this one tells current script when player did select a perk 
     [SerializeField] LandmineSetter landmines; // creates landmine field
     [SerializeField] PlayerDamage playerHealth; // player's health, heals it to max during intermission phase 
-    [SerializeField] MainMenuButton mainMenu;
+    [SerializeField] ButtonManager mainMenu;
     [SerializeField] UIManager UIManager;
 
     private bool startGame; // true if tutorial has been finished
@@ -44,18 +44,11 @@ public class TimeManager : MonoBehaviour {
     [SerializeField] Image enemiesLeftBG;
 
     [SerializeField] Image waveCounterBG;
-
     [SerializeField] GameObject enemySpawnIndicator;
 
     private bool clearedMinefield;
     private bool spawnedLandmines;
     private bool spawnedLandmineIndicators;
-
-    // pauses the game, maybe unused?????
-    public void PauseGame() {
-        waves.stopGame();
-
-    }
 
     // starts a new game, resets stats
     public void StartGame() {
@@ -69,12 +62,6 @@ public class TimeManager : MonoBehaviour {
 
         originalEnemyMovement = originalEnemy.GetComponent<EnemyMovement>();
         originalEnemyHealth = originalEnemy.GetComponent<EnemyHealth>();
-
-    }
-
-    // stops the game, probably unused
-    public void StopGame() {
-        waves.stopGame();
 
     }
 
@@ -158,6 +145,14 @@ public class TimeManager : MonoBehaviour {
 
     public bool GameInIntermissionPhase() {
         return intermission || spawnedInPerkOptions || !startGame ;
+
+    }
+
+    // force quit intermission or perk
+    public void QuitIntermissionPeriod() {
+        intermission = false;
+        pauseGame = true;
+        waveCooldown = 0;
 
     }
 

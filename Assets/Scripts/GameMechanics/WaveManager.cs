@@ -25,11 +25,15 @@ public class WaveManager : MonoBehaviour {
     private EnemyHealth enemyHealth;
 
     [SerializeField] float wave = 0;
+    private float highestWave;
     [SerializeField] TMP_Text waveCounter; // thingy in "Wave : [wave]" ui
 
     HashSet<GameObject> enemies = new HashSet<GameObject>(); // keeps track of enemy count
     [SerializeField] GameObject[] spawns = new GameObject[3]; // holds spawn positions
     private float randomSpawn;
+
+    [SerializeField] Image waveCompletedImage;
+    [SerializeField] Image enemiesLeft;
 
     // ui elements 
     [SerializeField] TMP_Text enemyCounter;

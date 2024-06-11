@@ -42,6 +42,9 @@ public class PlayerCamera : MonoBehaviour {
     void Update() {
         movespeed = playerMovement.getMovespeed();
 
+        // script heavilly based off this yt video, i tweaked it as i developed this script to account for features i need (ex: camera shake)
+        // https://www.youtube.com/watch?v=Nxg0vQk05os&list=PLtLToKUhgzwnk4U2eQYridNnObc2gqWo
+
         // get mouse deltas
         mouseX = Input.GetAxis("Mouse X") * lookspeed * Time.smoothDeltaTime;
         mouseY = Input.GetAxis("Mouse Y") * lookspeed * Time.smoothDeltaTime;
@@ -58,6 +61,7 @@ public class PlayerCamera : MonoBehaviour {
 
         // set positions
 
+        // help prevent jitter
         cameraGoal = Quaternion.Euler(rotationX, rotationY, force.z) * forceAngle;
         playerCam.transform.localPosition =  force + new Vector3(0, 0.5f, 0);
         playerCam.transform.rotation = 

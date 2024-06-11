@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +12,7 @@ public class Tutorial : MonoBehaviour {
     [SerializeField] GameObject enemy;
     [SerializeField] WaveManager waveManager;
     [SerializeField] TimeManager timeManager;
-    [SerializeField] MainMenuButton mainMenu;
+    [SerializeField] ButtonManager mainMenu;
     [SerializeField] PerkManager perkManager;
 
     // detects which parts player finished
@@ -26,6 +25,7 @@ public class Tutorial : MonoBehaviour {
     [SerializeField] TMP_Text waveCounter;
     [SerializeField] Image enemiesLeftBG;
     [SerializeField] Image waveCounterBG;
+    [SerializeField] Canvas tutorialCanvas;
 
     private bool spawnedLandmine;
 
@@ -52,8 +52,14 @@ public class Tutorial : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        instructionsBox.enabled = false;
-        instructions.enabled = false;
+        instructionsBox.enabled = true;
+        instructions.enabled = true;
+
+
+        enemiesLeftBG.enabled = false;
+        waveCounterBG.enabled = false;
+        enemiesLeft.enabled = false;
+        waveCounter.enabled = false;
 
     }
 
@@ -152,6 +158,59 @@ public class Tutorial : MonoBehaviour {
 
     }
 
+    public bool finishedTutorial(float part) {
+        
+        // obligatory spaghetti code
+        if (part == 1) {
+            return finishedPart1;
+
+        } else if (part == 2) {
+            return finishedPart2;
+
+        } else if (part == 3) {
+            return finishedPart3;
+
+        } else {
+            return finishedPart4;
+
+        }
+
+    }
+
+    public void automaticallyFinishTutorial() {
+        instructionsBox.enabled = false;
+        instructions.enabled = false;
+        finishedPart1 = true;
+        finishedPart2 = true;
+        finishedPart3 = true;
+        tutorialCanvas.enabled = false;
+
+    }
+
+    public void ResetTutorial() {
+        if (tutorialLandmine != null)
+        {
+            Destroy(tutorialLandmine);
+
+        }
+
+        if (spawnedEnemy != null)
+        {
+            Destroy(spawnedEnemy);
+
+        }
+
+        finishedPart1 = false;
+        finishedPart2 = false;
+        finishedPart3 = false;
+        finishedPart4 = false;
+        finishedPart3 = false;
+        finishedPart2 = false;
+        finishedPart1 = false;
+
+
+    }
+
     // Update is called once per frame
     void Update() {
         if (!mainMenu.viewingMainMenu()) {
@@ -163,9 +222,7 @@ public class Tutorial : MonoBehaviour {
 
 
             } else {
-                instructionsBox.enabled = false;
-                instructions.enabled = false;
-
+                automaticallyFinishTutorial();
             }
             
             // runs parts in chronological order

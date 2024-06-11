@@ -18,6 +18,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float walkspeed; // name is pretty self explanatory
     [SerializeField] float jumpHeight; // same thing as above
 
+    [SerializeField] WaveManager waveManager;
+    [SerializeField] PlayerDamage damage;
     // movement variables
     private Vector3 movement;
     private Vector3 yMovement;
@@ -88,6 +90,13 @@ public class PlayerMovement : MonoBehaviour
 
         }
      
+        if (transform.position.y < -10) {
+            SetPosition(new Vector3(0, 10, 0));
+            if (waveManager.isRunning()) {
+                damage.setHealth(0);
+
+            }
+        }
 
         yMovement.y += gravity * Time.deltaTime;
         controller.Move((movement * walkspeed + yMovement) * Time.deltaTime);
@@ -108,7 +117,7 @@ public class PlayerMovement : MonoBehaviour
         foreach (Collider c in dashAOE) {
         
             if (c.tag.Equals("Enemy")) {
-            c.gameObject.GetComponent<EnemyHealth>().takeDamage(0, 5f);
+            c.gameObject.GetComponent<EnemyHealth>().takeDamage(0, 1.25f);
         
             }
         }
@@ -125,8 +134,18 @@ public class PlayerMovement : MonoBehaviour
     }
 
     public void SetPosition(Vector3 position) {
-        controller.enabled = false;
-        transform.position = position;
+        StartCoroutine(SetPositionOfPlayer(position));
+    }
+
+    IEnumerator SetPositionOfPlayer(Vector3 position) {
+        while (transform.position != position) {
+            staminaValue = 0;
+            controller.enabled = false;
+            transform.position = position;
+
+        }
+        
+        yield return null;
         controller.enabled = true;
     }
 

@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using Unity.VisualScripting;
-using UnityEditor.DeviceSimulation;
 using UnityEngine;
 
 // hazard for player, either moves as a projectile or stands stationary as a landmine
@@ -199,7 +198,7 @@ public class ProjectileBehavior : MonoBehaviour {
                 }
 
                 // deal dmg to enemy
-                else if (collider.gameObject.tag.Equals("Enemy")) {
+                else if (collider.gameObject.tag.Equals("Enemy") && lopsided) {
                     collider.gameObject.GetComponent<EnemyHealth>().takeDamage(damage, damage * 3);
 
                 // explode other bombs

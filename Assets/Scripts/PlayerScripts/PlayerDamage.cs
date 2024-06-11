@@ -17,6 +17,7 @@ public class PlayerDamage : MonoBehaviour {
     [SerializeField] PlayerMovement playerMovement;
     [SerializeField] FireWeapon leftWeapon;
     [SerializeField] FireWeapon rightWeapon;
+    [SerializeField] PauseGame pauseManagerThingy;
 
     // doctors' recommended damage intake is 1 dmg / 1 sec
     
@@ -65,7 +66,7 @@ public class PlayerDamage : MonoBehaviour {
             if (deathDebounce) {
                 timeManager.endGame();
                 waveManager.clearWave();
-
+                pauseManagerThingy.enabled = false;
             }
         } else {
 
@@ -133,7 +134,7 @@ public class PlayerDamage : MonoBehaviour {
             canTakeDamage = false;
 
             // camera hurt effect
-            hurtEffect.applyCameraForce(new Vector3(0, 0, -1.25f), Quaternion.Euler(0, 1.75f, -0.5f));
+            hurtEffect.applyCameraForce(new Vector3(0, 0, -0.75f), Quaternion.Euler(0, 1.75f, -0.5f));
             health -= damage;
 
         }

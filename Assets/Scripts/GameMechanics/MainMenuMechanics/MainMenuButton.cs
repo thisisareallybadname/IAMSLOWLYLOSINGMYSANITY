@@ -1,12 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Networking.PlayerConnection;
 using UnityEngine;
 using UnityEngine.UI;
 
-// manages main menu shenannigans (hides everything except menu stuff in specific circumstances)
-public class MainMenuButton : MonoBehaviour {
+// manages button shenannigans (hides everything except menu stuff in specific circumstances)
+public class ButtonManager : MonoBehaviour {
 
     // you have no idea how awful it was to see all of these vars without comments
     // just [serializefield] spam because this script toggles so much stuff lmao
@@ -14,6 +13,8 @@ public class MainMenuButton : MonoBehaviour {
 
     //-- main menu stuff
     [SerializeField] Image title;
+
+    // buttons
     [SerializeField] Button button;
 
     //player fields
@@ -23,22 +24,26 @@ public class MainMenuButton : MonoBehaviour {
     private PlayerCamera playerCamera;
     [SerializeField] UIManager UImanager;
 
-    // player behaviors
+    // important behaviors
     [SerializeField] PlayerMovement playerController;
-    [SerializeField] Canvas playerHUD;
-    [SerializeField] Canvas deathUI;
-    [SerializeField] Canvas mainMenuUI;
     [SerializeField] MainMenuEnemyEffect enemySpawn;
     [SerializeField] TimeManager timeManager;
     [SerializeField] LandmineSetter bombDropper;
-
+    [SerializeField] Tutorial tutorial;
+       
+    // canvases
+    [SerializeField] Canvas playerHUD;
+    [SerializeField] Canvas deathUI;
+    [SerializeField] Canvas mainMenuUI;
+    [SerializeField] Canvas tutorialUI;
+    
     // all the cameras used in the game
     [SerializeField] Camera deathCam;
     [SerializeField] Camera playerCam;
     [SerializeField] Camera mainMenuCam;
     [SerializeField] Camera VMcamera;
 
-    private bool startedTutorial;
+    private bool finishedTutorial;
 
     // arms 
     [SerializeField] GameObject leftArm;
@@ -58,10 +63,22 @@ public class MainMenuButton : MonoBehaviour {
     // game mechanics
     [SerializeField] WaveManager waves;
     [SerializeField] PerkManager perkManager;
+    [SerializeField] PauseGame pauseMenu;
 
+    // stuff that pops up from button
+    
+    // about me
     [SerializeField] Image aboutMe;
     [SerializeField] Button aboutMeButton;
     [SerializeField] Button exitAboutMeButton;
+
+    // controls
+    [SerializeField] Image controls;
+    [SerializeField] Button controlsButton;
+    [SerializeField] Button exitControlsButton;
+
+    // [REDACTED
+    [SerializeField] Image REDACTED;
 
     // Start is called before the first frame update
     void Start() {
@@ -72,6 +89,8 @@ public class MainMenuButton : MonoBehaviour {
 
         enemyMovement = originalEnemy.GetComponent<EnemyMovement>();
         enemyHealth = originalEnemy.GetComponent<EnemyHealth>();
+
+        Application.targetFrameRate = 145;
     }
 
     // Update is called once per frame
@@ -79,6 +98,9 @@ public class MainMenuButton : MonoBehaviour {
         if (viewingMenu) {
             deathCam.enabled = false;
             deathUI.enabled = false;
+
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
 
     }
@@ -86,6 +108,16 @@ public class MainMenuButton : MonoBehaviour {
     // basic getters
     public bool viewingMainMenu() {
         return viewingMenu;
+
+    }
+
+    public void PauseGame() {
+        Time.timeScale = 0;
+
+    }
+
+    public void UnpauseGame() {
+        Time.timeScale = 1;
 
     }
 
@@ -105,8 +137,10 @@ public class MainMenuButton : MonoBehaviour {
         playerHUD.enabled = true;
         deathUI.enabled = false;
         UImanager.enabled = true;
+        pauseMenu.enabled = true;
+        tutorialUI.enabled = true;
 
-        bombDropper.resetLandmineCount();
+        bombDropper.resetMinefield();
 
         // make player go back to spawn point
         playerController.SetPosition(new Vector3(0, 10, 0));
@@ -137,12 +171,12 @@ public class MainMenuButton : MonoBehaviour {
         UImanager.ShowPlayerHUD();
 
         VM.SetActive(true);
-        if (startedTutorial){
+        if (finishedTutorial){
             timeManager.StartGame();
 
         }
 
-        startedTutorial = true;
+        finishedTutorial = true;
     }
 
     // makes about me and close about me button visible
@@ -167,8 +201,42 @@ public class MainMenuButton : MonoBehaviour {
 
     }
 
+    // same thing as about me stuff but for controls
+    public void showControls() {
+        controls.gameObject.SetActive(true);
+        controlsButton.interactable = false;
+        exitControlsButton.gameObject.SetActive(true);
+        exitControlsButton.GetComponent<Button>().interactable = true;
+
+        controls.enabled = true;
+
+    }
+
+    public void hideControls() {
+        controls.gameObject.SetActive(false);
+        exitControlsButton.gameObject.SetActive(false);
+        controlsButton.interactable = true;
+
+    }
+
+    public void QuitGame() {
+        REDACTED.enabled = true;
+        Application.Quit();
+    }
+
     // show all menu UI, hide everything else
     public void showMenu() {
+
+        waves.clearWave();
+        perkManager.forceQuitPerkSelection();
+
+        /*
+        if (!tutorial.finishedTutorial(3) && !finishedTutorial) {
+            finishedTutorial = false;
+
+        }
+        */
+
         viewingMenu = true;
 
         UImanager.enabled = false;
@@ -181,10 +249,6 @@ public class MainMenuButton : MonoBehaviour {
 
         title.enabled = true;
 
-        // make cursor lock at screen
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-
         button.gameObject.SetActive(true);
 
         mainMenuUI.enabled = true;
@@ -196,6 +260,7 @@ public class MainMenuButton : MonoBehaviour {
         playerCamera.enabled = false;
         playerHUD.enabled = false;
         deathUI.enabled = false;
+        tutorialUI.enabled = false;
 
         enemySpawn.turnOnEnemySpawning();
 
@@ -204,12 +269,14 @@ public class MainMenuButton : MonoBehaviour {
         deathCam.enabled = false;
 
 
-    
 
+        // make cursor lock at screen
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void respawn() {
-        startedTutorial = true;
+        finishedTutorial = true;
         startGame();
 
     }

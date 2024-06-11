@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
-using UnityEditor.Timeline;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
 using UnityEngine.EventSystems;
@@ -25,11 +24,13 @@ public class FireWeapon : MonoBehaviour {
     [SerializeField] float attackSpeed;
     private float attackCooldown;
 
+    // used to reset dmg
     private float originalDamage;
     private float originalFirerate;
 
     [SerializeField] PlayerCamera playerCamera;
 
+    // recoil fields
     [SerializeField] Vector3 VMrecoil;
     [SerializeField] Quaternion VMAngleRecoil;
 

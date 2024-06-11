@@ -24,6 +24,13 @@ public class DeathZone : MonoBehaviour {
             }
             // tp player back to spawnpoint so they wont get softlocked at death zone
             playerMovement.SetPosition(new Vector3(0, 10, 0));
+            while (thingTouchingRigidBody.transform.position != new Vector3(0, 10, 0)) {
+                thingTouchingRigidBody.GetComponent<CharacterController>().enabled = false;
+                thingTouchingRigidBody.transform.position = new Vector3(0, 10, 0);
+
+            }
+
+            thingTouchingRigidBody.GetComponent<CharacterController>().enabled = true;
         }
     }
 }

@@ -28,8 +28,6 @@ public class LandmineSetter : MonoBehaviour {
     private List<Vector3> landmineSpawns = new List<Vector3>(); // the actual positions where the landmines will be at
     private List<GameObject> landmines = new List<GameObject>();
     private List<GameObject> landmineSpawnIndicators = new List<GameObject>();
-
-    private bool clearLandmines = false; // true if minefield is supposed to be cleared, false if it isn't 
     
     public WaveManager waveManager; // the wave manager, calculates landmine count by doing (wave x 5) + additional landmines
     public float additionalLandmines; // extra landmines from movement thingy
@@ -57,10 +55,20 @@ public class LandmineSetter : MonoBehaviour {
         }
     }
 
-    public void resetLandmineCount() {
+    public void resetMinefield() {
         additionalLandmines = 0;
+        foreach (GameObject indicator in landmineSpawnIndicators){
+            Destroy(indicator);
+
+        }
+
+        foreach (GameObject landmine in landmines) {
+            Destroy(landmine);
+
+        }
 
     }
+
 
     public void placeLandmines() {
         for (int i = 0; i < amountOfLandmines; i++) {

@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +9,9 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour {
     
     [SerializeField] Image healthbar;
-    [SerializeField] Image staminabar; 
+    [SerializeField] Image staminabar;
+
+    [SerializeField] float xOffset = -219.9f;
 
     private float health; // player's max health
     [SerializeField] float maxHealth;
@@ -100,7 +101,7 @@ public class UIManager : MonoBehaviour {
 
         }
         // lerp value for position is so high compared to its size because it actually does its job really well and finishes first
-        barTransform.anchoredPosition = Vector2.Lerp(barTransform.anchoredPosition, new Vector2(-267.5273f - barLost / 2, yOffset), 300 * Time.deltaTime);
+        barTransform.anchoredPosition = Vector2.Lerp(barTransform.anchoredPosition, new Vector2(xOffset - barLost / 2, yOffset), 300 * Time.deltaTime);
 
         if (barTransform.anchoredPosition.x < -475) {
             barTransform.anchoredPosition = new Vector2(-475, barTransform.anchoredPosition.y);

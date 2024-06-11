@@ -89,7 +89,8 @@ public class PlayerMovement : MonoBehaviour
             dashing = false;
 
         }
-     
+        
+        // had to hardcode death zone just in case box collider is unreliable
         if (transform.position.y < -10) {
             SetPosition(new Vector3(0, 10, 0));
             if (waveManager.isRunning()) {
@@ -97,7 +98,8 @@ public class PlayerMovement : MonoBehaviour
 
             }
         }
-
+        
+        // add gravity force to y movement
         yMovement.y += gravity * Time.deltaTime;
         controller.Move((movement * walkspeed + yMovement) * Time.deltaTime);
         //controller.Move(yMovement * Time.deltaTime);
@@ -111,11 +113,12 @@ public class PlayerMovement : MonoBehaviour
 
         staminaValue -= Time.deltaTime * 5f;
 
+        // move player
         controller.Move(movement * dashSpeed * Time.deltaTime);
 
+        // make enemies around player get knocked back
         dashAOE = Physics.OverlapSphere(transform.position, 3f);
         foreach (Collider c in dashAOE) {
-        
             if (c.tag.Equals("Enemy")) {
             c.gameObject.GetComponent<EnemyHealth>().takeDamage(0, 1.25f);
         
@@ -125,6 +128,7 @@ public class PlayerMovement : MonoBehaviour
         yield return null;
     }
 
+    // useful getters & setters
     public float getWalkspeed() {
         return walkspeed;
     }
@@ -137,6 +141,7 @@ public class PlayerMovement : MonoBehaviour
         StartCoroutine(SetPositionOfPlayer(position));
     }
 
+    //set player position to a set point, used to prevent softlock
     IEnumerator SetPositionOfPlayer(Vector3 position) {
         while (transform.position != position) {
             staminaValue = 0;

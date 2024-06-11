@@ -61,23 +61,23 @@ public class ProjectileBehavior : MonoBehaviour {
 
         GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
 
-        if (lopsided)
-        { // lopsided = transform scale isn't a cube
+        if (lopsided) { 
+            // lopsided = transform scale isn't a cube
             targetSize =
             new Vector3(explosionRadius, explosionRadius * 2, explosionRadius) / 2;
-        }
-        else
-        {
+        } else {
             targetSize = Vector3.one * explosionRadius;
 
         }
 
+        // look at player and go forward
         transform.LookAt(player.transform);
     }
 
-    // Update is called once per frame
+    // FixedUpdate is called once per frame
     void FixedUpdate() { 
 
+        // make thingy move forward
         if (walkspeed > 0 && rb != null) {
             rb.AddForce((transform.forward) * walkspeed, ForceMode.Impulse);
             if (rb.velocity.magnitude > walkspeed) {
@@ -85,8 +85,8 @@ public class ProjectileBehavior : MonoBehaviour {
 
             }
 
-            if (existenceTimer < lifespan)
-            {
+            // destroy projectile when it lasts too long
+            if (existenceTimer < lifespan) {
                 existenceTimer += Time.fixedDeltaTime;
 
             } else {
@@ -162,6 +162,7 @@ public class ProjectileBehavior : MonoBehaviour {
 
     }
 
+    // set damage, depending on mode
     public void setDamage(float newDamage, string mode) {
         if (mode.Contains("mult")) {
             damage *= newDamage;

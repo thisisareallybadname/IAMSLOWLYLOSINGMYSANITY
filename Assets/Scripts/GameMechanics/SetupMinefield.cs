@@ -45,9 +45,12 @@ public class LandmineSetter : MonoBehaviour {
             landmineSpawns.Add(transform.position);
 
             // make a landmine indicator at that position, make it a little crooked and place it on said point
-            GameObject newIndicator = Instantiate(landmineIndicator, transform.position, Quaternion.identity);
+            GameObject newIndicator = 
+            Instantiate(landmineIndicator, transform.position, Quaternion.identity);
+
+            // set up random rotation for sign
             Quaternion signRotation = 
-            Quaternion.Euler(-90 + Random.Range(-15, 15), Random.Range(-180, 180), Random.Range(-180, 180));
+            Quaternion.Euler(-90, Random.Range(-180, 180), Random.Range(-15, 15));
 
             newIndicator.transform.rotation = signRotation;
             landmineSpawnIndicators.Add(newIndicator);
@@ -55,6 +58,7 @@ public class LandmineSetter : MonoBehaviour {
         }
     }
 
+    // get rid of all mines and minefield indicators
     public void resetMinefield() {
         additionalLandmines = 0;
         foreach (GameObject indicator in landmineSpawnIndicators){
@@ -67,9 +71,11 @@ public class LandmineSetter : MonoBehaviour {
 
         }
 
+        landmineSpawns.Clear();
+
     }
 
-
+    // place landmine for every landmine indicator/spawn
     public void placeLandmines() {
         for (int i = 0; i < amountOfLandmines; i++) {
             GameObject newLandmine = Instantiate(landmine, landmineSpawns[0], Quaternion.identity);

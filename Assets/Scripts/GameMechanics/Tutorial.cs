@@ -158,6 +158,7 @@ public class Tutorial : MonoBehaviour {
 
     }
 
+    // returns true if the part given in parameters is beaten
     public bool finishedTutorial(float part) {
         
         // obligatory spaghetti code
@@ -177,6 +178,7 @@ public class Tutorial : MonoBehaviour {
 
     }
 
+    // finish tutorial
     public void automaticallyFinishTutorial() {
         instructionsBox.enabled = false;
         instructions.enabled = false;
@@ -184,30 +186,6 @@ public class Tutorial : MonoBehaviour {
         finishedPart2 = true;
         finishedPart3 = true;
         tutorialCanvas.enabled = false;
-
-    }
-
-    public void ResetTutorial() {
-        if (tutorialLandmine != null)
-        {
-            Destroy(tutorialLandmine);
-
-        }
-
-        if (spawnedEnemy != null)
-        {
-            Destroy(spawnedEnemy);
-
-        }
-
-        finishedPart1 = false;
-        finishedPart2 = false;
-        finishedPart3 = false;
-        finishedPart4 = false;
-        finishedPart3 = false;
-        finishedPart2 = false;
-        finishedPart1 = false;
-
 
     }
 

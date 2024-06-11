@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// kills entities that touch death zone
 public class DeathZone : MonoBehaviour {
     [SerializeField] TimeManager timeManager;
     [SerializeField] PlayerMovement playerMovement;

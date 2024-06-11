@@ -16,8 +16,6 @@ public class EnemyHealth : MonoBehaviour {
     [SerializeField] float immunityDuration;
     private float hitCooldown = 999;
 
-    private bool canTakeDamage = true;
-
     [SerializeField] Material FullHealthMeleeSprite; // melee enemy sprite when its health > 50
     [SerializeField] Material LowHealthMeleeSprite; // melee enemy sprite when its health < 50
 
@@ -29,7 +27,6 @@ public class EnemyHealth : MonoBehaviour {
     private Material LowHealthEnemySprite;
 
     [SerializeField] GameObject enemySprite;
-    [SerializeField] Collider collider;
 
     private Rigidbody rb;
 

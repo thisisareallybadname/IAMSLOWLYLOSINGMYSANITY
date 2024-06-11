@@ -10,7 +10,7 @@ using UnityEngine.Assertions.Must;
 using UnityEngine.EventSystems;
 using UnityEngine.Playables;
 
-// lets player fight enemies
+// lets player fight enemies with weapons
 public class FireWeapon : MonoBehaviour {
 
     // position where raycast will start
@@ -34,17 +34,17 @@ public class FireWeapon : MonoBehaviour {
     [SerializeField] Vector3 VMrecoil;
     [SerializeField] Quaternion VMAngleRecoil;
 
+    // camera recoil fields
     [SerializeField] Vector3 cameraRecoil;
     [SerializeField] Quaternion cameraAngleRecoil;
 
     [SerializeField] VMEffects handRecoil;
     [SerializeField] bool isRightHand;
+
+    // used to determine if player is holding correct mouse button down
     private bool mouseDown;
 
     [SerializeField] float damage;
-    [SerializeField] GameObject weapon;
-
-    private List<LineRenderer> listOfTracers;
 
     // Start is called before the first frame update
     void Start() {
@@ -56,8 +56,6 @@ public class FireWeapon : MonoBehaviour {
 
         originalDamage = damage;
         originalFirerate = attackSpeed;
-
-        listOfTracers = new List<LineRenderer>();
 
         // if hand is the right hand, alternate the thingy
         if (isRightHand) {

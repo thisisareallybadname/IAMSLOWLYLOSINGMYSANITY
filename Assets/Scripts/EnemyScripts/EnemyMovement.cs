@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// script that controls the enemy's AI
+// script that controls the enemy's AI and projectile firerate and stuff
 public class EnemyMovement : MonoBehaviour {
 
     [SerializeField] GameObject player;
@@ -93,6 +93,7 @@ public class EnemyMovement : MonoBehaviour {
     }
 
     // set the movespeed of the enemy
+    // mode is self explanatory
     public void setWalkspeed(float newWalkspeed, string mode) {
         if (mode.Contains("mult")) {
             walkspeed *= newWalkspeed;

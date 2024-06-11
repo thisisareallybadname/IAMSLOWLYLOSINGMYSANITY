@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// pause the gme when they press P
 public class PauseGame : MonoBehaviour {
 
+    // serialize field stuff
     [SerializeField] Canvas pauseUI;
     [SerializeField] Canvas playerCanvas;
     [SerializeField] Tutorial tutorial;
@@ -23,11 +25,16 @@ public class PauseGame : MonoBehaviour {
     }
 
     void Update() {
+
+        // pause game if you aren't in the main menu
         if (!buttonManager.viewingMainMenu()) {
+
+            // press p to pause game
             if (Input.GetKeyDown(KeyCode.P)) {
                 visible = true;
                 pauseGame();
 
+            // hide pause menu UI, useful for taking ss
             } else if (Input.GetKeyDown(KeyCode.H)) {
                 visible = !visible;
                 pauseUI.enabled = visible;
@@ -42,7 +49,7 @@ public class PauseGame : MonoBehaviour {
 
     // let player pause game
     public void pauseGame() {
-        Time.timeScale = 0;
+        Time.timeScale = 0; // pause game
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         pauseUI.enabled = visible;
@@ -50,7 +57,7 @@ public class PauseGame : MonoBehaviour {
 
     // let player unpause game
     public void UnpauseGame() {
-        Time.timeScale = 1;
+        Time.timeScale = 1; // unpause game
         pauseUI.enabled = false;
 
         Cursor.lockState = CursorLockMode.Locked;

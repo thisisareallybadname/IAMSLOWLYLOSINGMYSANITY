@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// spawns falling enemy effect in main menu
 public class MainMenuEnemyEffect : MonoBehaviour {
 
     [SerializeField] GameObject enemy;
@@ -17,9 +18,7 @@ public class MainMenuEnemyEffect : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-
-        Application.targetFrameRate = 60;
-
+        // summon enemy every 1/4th of a second
         if (spawnEnemies) {
             if (timer < 0.25f) {
                 timer += Time.deltaTime;
@@ -37,6 +36,8 @@ public class MainMenuEnemyEffect : MonoBehaviour {
         GameObject newEnemy = 
         Instantiate(enemy, transform.position + transform.right * Random.Range(-15, 15), Quaternion.identity);
         newEnemy.transform.LookAt(target.transform);
+
+        // instantly kill enemy 
         newEnemy.GetComponent<EnemyHealth>().enabled = true;
         newEnemy.GetComponent<EnemyHealth>().setLieOnFloorTime(3);
         newEnemy.GetComponent<EnemyMovement>().enabled = false;

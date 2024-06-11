@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+// let player and enemy get buffed every wave
 public class PerkManager : MonoBehaviour { 
 
     // perk enemy stuff

@@ -95,13 +95,17 @@ public class UIManager : MonoBehaviour {
     // lerp bar's position and size
     IEnumerator updateBar(RectTransform barTransform, float barLost, float ratio, float yOffset) {
 
+        float healthbarLost = barLost / 2;
+
         barTransform.sizeDelta = Vector2.Lerp(barTransform.sizeDelta, new Vector2(258f * ratio, 21.6f), 3 * Time.deltaTime);
         if (barTransform.sizeDelta.x > 258) {
             barTransform.sizeDelta = new Vector2(258, 21.6f);
 
         }
         // lerp value for position is so high compared to its size because it actually does its job really well and finishes first
-        barTransform.anchoredPosition = Vector2.Lerp(barTransform.anchoredPosition, new Vector2(xOffset - barLost / 2, yOffset), 300 * Time.deltaTime);
+        // got this from unity forums (google up how to lerp with time delta time)
+        barTransform.anchoredPosition = Vector2.Lerp
+       (barTransform.anchoredPosition, new Vector2(xOffset - healthbarLost, yOffset), 300 * Time.deltaTime);
 
         if (barTransform.anchoredPosition.x < -475) {
             barTransform.anchoredPosition = new Vector2(-475, barTransform.anchoredPosition.y);

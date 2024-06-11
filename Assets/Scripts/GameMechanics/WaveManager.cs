@@ -19,13 +19,10 @@ public class WaveManager : MonoBehaviour {
     private float enemiesSpawned;
 
     [SerializeField] bool spawningEnemies = false;
-    [SerializeField] bool intermission;
 
     [SerializeField] GameObject enemy;
-    private EnemyHealth enemyHealth;
 
     [SerializeField] float wave = 0;
-    private float highestWave;
     [SerializeField] TMP_Text waveCounter; // thingy in "Wave : [wave]" ui
 
     HashSet<GameObject> enemies = new HashSet<GameObject>(); // keeps track of enemy count
@@ -43,7 +40,6 @@ public class WaveManager : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        enemyHealth = enemy.GetComponent<EnemyHealth>();
         running = false;
     }
 
@@ -101,8 +97,6 @@ public class WaveManager : MonoBehaviour {
 
         waveCounter.text = "Wave " + wave;
         waveReached.text = "Reached Wave " + wave;
-
-        intermission = false;
 
         enemiesSpawned = 0;
         enemiesPerWave = 2 * wave;
